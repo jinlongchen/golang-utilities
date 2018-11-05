@@ -24,7 +24,7 @@ func Execute(s Service) {
 	}
 }
 
-func (s *Executor) Init(env go_svc.Environment) error {
+func (e *Executor) Init(env go_svc.Environment) error {
 	if env.IsWindowsService() {
 		dir := filepath.Dir(os.Args[0])
 		return os.Chdir(dir)
@@ -35,10 +35,10 @@ func (s *Executor) Init(env go_svc.Environment) error {
 
 	flag.Parse()
 
-	s.cfg = config.NewConfig(*cfgName, *aesKeyKey)
+	e.cfg = config.NewConfig(*cfgName, *aesKeyKey)
 
-	log.InitLogger(s.cfg.GetString("application.name"),
-		log.LogLevel(s.cfg.GetString("log.level")),
+	log.InitLogger(e.cfg.GetString("application.name"),
+		log.LogLevel(e.cfg.GetString("log.level")),
 		log.LOG_FORMAT_JSON,
 		true)
 
