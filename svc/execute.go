@@ -31,11 +31,10 @@ func (e *Executor) Init(env go_svc.Environment) error {
 	}
 
 	cfgName := flag.String("conf", "./conf-file.json", "")
-	aesKeyKey := flag.String("aesKeyKey", "jin^_^longchen", "")
 
 	flag.Parse()
 
-	e.cfg = config.NewConfig(*cfgName, *aesKeyKey)
+	e.cfg = config.NewConfig(*cfgName)
 
 	log.InitLogger(e.cfg.GetString("application.name"),
 		log.LogLevel(e.cfg.GetString("log.level")),

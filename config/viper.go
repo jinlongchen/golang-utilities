@@ -13,6 +13,9 @@ import (
 	"io/ioutil"
 )
 
+var (
+	aesKeyKey string
+)
 type Config struct {
 	cache     map[string]interface{}
 	v         *viper.Viper
@@ -20,7 +23,7 @@ type Config struct {
 	aesKeyKey []byte
 }
 
-func NewConfig(path string, aesKeyKey string) *Config {
+func NewConfig(path string) *Config {
 	ret := &Config{
 		cache:     make(map[string]interface{}),
 		v:         viper.New(),
@@ -173,11 +176,4 @@ func (cfg *Config) Save(path string) error {
 		err = ioutil.WriteFile(path, data, 0666)
 	}
 	return err
-}
-func (cfg *Config) AllSettings() string {
-	data, err := toml.Marshal(cfg.v.AllSettings())
-	if err != nil {
-		return err.Error()
-	}
-	return string(data)
 }
