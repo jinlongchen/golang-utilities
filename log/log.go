@@ -46,7 +46,7 @@ func InitLogger(app string, level LogLevel, format LogFormat, disableColors bool
 
 	logger.SetLevel(lvl)
 
-	if format == "json" {
+	if format == LOG_FORMAT_JSON {
 		logger.Formatter = new(logrus.JSONFormatter)
 	} else {
 		logger.Formatter = &logrus.TextFormatter{FullTimestamp: true, DisableColors: disableColors}
