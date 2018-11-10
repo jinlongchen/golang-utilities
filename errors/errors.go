@@ -62,17 +62,16 @@ type WithCodeError struct {
 	message string
 }
 
-func (w *WithCodeError) Error() string { return w.code + ": " + w.message }
-func (w *WithCodeError) Cause() error  {
-	return w.cause
-}
-func (w *WithCodeError) Code() string  { return w.code }
+func (w *WithCodeError) Error() string   { return w.code + ": " + w.message }
+func (w *WithCodeError) Cause() error    { return w.cause }
+func (w *WithCodeError) Code() string    { return w.code }
+func (w *WithCodeError) Message() string { return w.message }
 func (w *WithCodeError) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
 			fmt.Fprintf(s, "%+v\n", w.Cause())
-			io.WriteString(s, w.code + ":" + w.message)
+			io.WriteString(s, w.code+":"+w.message)
 			return
 		}
 		fallthrough
