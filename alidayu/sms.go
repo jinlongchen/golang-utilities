@@ -12,6 +12,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/rand"
 	"github.com/jinlongchen/golang-utilities/http"
 	"yijiu.com/common/log"
+	"github.com/jinlongchen/golang-utilities/errors"
 )
 
 const (
@@ -162,6 +163,10 @@ func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templat
 	err = json.Unmarshal(respData, smsResp)
 	if err != nil {
 		return nil, err
+	}
+
+	if smsResp.Code != "OK" {
+		return smsResp, errors.WithCode(nil, smsResp.Code, smsResp.Message)
 	}
 
 	return smsResp, nil
