@@ -7,7 +7,6 @@ import (
 	"crypto/sha1"
 	"strings"
 	"encoding/base64"
-	"log"
 	"encoding/json"
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/rand"

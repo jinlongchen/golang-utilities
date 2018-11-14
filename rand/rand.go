@@ -69,3 +69,7 @@ func GetNormalTimestampRandString() string {
 
 	return resIdStr
 }
+
+func GetRandInt64(min int64, max int64) int64 {
+	return min + r.Int63n(max - min)
+}
