@@ -45,12 +45,9 @@ func (w *withStack) Format(s fmt.State, verb rune) {
 	}
 }
 
-func WithCode(err error, code string, message string) error {
-	if err == nil {
-		return nil
-	}
+func WithCode(cause error, code string, message string) error {
 	return &WithCodeError{
-		cause:   err,
+		cause:   cause,
 		code:    code,
 		message: message,
 	}
@@ -93,4 +90,15 @@ func Cause(err error) error {
 		err = cause.Cause()
 	}
 	return err
+}
+func Code(err error) string {
+	type withCodeError interface {
+		Code() string
+	}
+
+	withCode, ok := err.(withCodeError)
+	if !ok {
+		return ""
+	}
+	return withCode.Code()
 }

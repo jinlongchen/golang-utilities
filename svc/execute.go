@@ -41,6 +41,7 @@ func (e *Executor) Init(env go_svc.Environment) error {
 		log.LOG_FORMAT_JSON,
 		true)
 
+	log.Infof("log level:%s", e.cfg.GetString("log.level"))
 	return nil
 }
 

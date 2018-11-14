@@ -11,8 +11,8 @@ import (
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/rand"
 	"github.com/jinlongchen/golang-utilities/http"
-	"yijiu.com/common/log"
 	"github.com/jinlongchen/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 
 const (
@@ -165,9 +165,12 @@ func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templat
 		return nil, err
 	}
 
+
 	if smsResp.Code != "OK" {
+		log.Debugf("[SmsHelper.SendSms]send sms resp:%s", smsResp.Code)
 		return smsResp, errors.WithCode(nil, smsResp.Code, smsResp.Message)
 	}
+	log.Debugf("[SmsHelper.SendSms]send sms resp 2:%s", smsResp.Code)
 
 	return smsResp, nil
 }
