@@ -139,7 +139,7 @@ type (
 		BizId string `json:"BizId"`
 	}
 )
-func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templateParam, orderId string) (*SmsResp, error) {
+func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templateParam, outId string) (*SmsResp, error) {
 	smsReq := ss.getSmsReq()
 	smsResp := new(SmsResp)
 
@@ -147,7 +147,7 @@ func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templat
 	smsReq.PhoneNumbers = phoneNumber
 	smsReq.TemplateCode = templateCode
 	smsReq.TemplateParam = templateParam
-	smsReq.OutId = orderId
+	smsReq.OutId = outId
 	ss.sign(smsReq)
 
 	query := ss.req2Query(smsReq)
