@@ -11,6 +11,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/rand"
 	"github.com/jinlongchen/golang-utilities/http"
+	"yijiu.com/common/log"
 )
 
 const (
@@ -63,6 +64,7 @@ func NewSmsHelper(cfg *config.Config) *SmsHelper {
 func (ss *SmsHelper) getSmsReq() *SmsReq {
 	timeStamp := time.Now().In(time.UTC).Format("2006-01-02T15:04:05Z")
 
+	log.Infof("alidayu access key id:%s", ss.cfg.GetString("alidayu.accessKeyID"))
 	return &SmsReq{
 		AccessKeyId:      ss.cfg.GetString("alidayu.accessKeyID"),
 		Action:           "SendSms",
