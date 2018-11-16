@@ -30,7 +30,7 @@ func (e *Executor) Init(env go_svc.Environment) error {
 		return os.Chdir(dir)
 	}
 
-	cfgName := flag.String("conf", "./conf-file.json", "")
+	cfgName := flag.String("conf", "./conf-file.toml", "")
 
 	flag.Parse()
 
