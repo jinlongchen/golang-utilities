@@ -67,12 +67,6 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 
 	ret = respData
 
-	//err = json.Unmarshal(respData, &ret)
-	//if err != nil {
-	//	log.Errorf("err6:%s", err.Error())
-	//	return
-	//}
-
 	return
 }
 
@@ -119,8 +113,8 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 }
 */
 type IDCardFace struct {
-	Address  string `json:"address"`
-	Birth    string `json:"birth"`
+	Address     string `json:"address"`
+	Birth       string `json:"birth"`
 	ConfigStr   string `json:"config_str"`
 	Name        string `json:"name"`
 	Nationality string `json:"nationality"`
@@ -128,7 +122,7 @@ type IDCardFace struct {
 	RequestID   string `json:"request_id"`
 	Sex         string `json:"sex"`
 	Success     bool   `json:"success"`
-	FaceRect struct {
+	FaceRect    struct {
 		Angle  float64 `json:"angle"`
 		Center struct {
 			X float64 `json:"x"`
@@ -157,9 +151,9 @@ type IDCardFace struct {
 */
 type IDCardBack struct {
 	ConfigStr string `json:"config_str"`
-	EndDate string `json:"end_date"`
-	Issue string `json:"issue"`
+	EndDate   string `json:"end_date"`
+	Issue     string `json:"issue"`
 	RequestID string `json:"request_id"`
 	StartDate string `json:"start_date"`
-	Success bool `json:"success"`
+	Success   bool   `json:"success"`
 }
