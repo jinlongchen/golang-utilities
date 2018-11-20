@@ -11,6 +11,8 @@ import (
 	"github.com/jinlongchen/golang-utilities/errors"
 	"fmt"
 	"bytes"
+	"io"
+	"encoding/json"
 )
 
 func GetData(reqURL string) ([]byte, error) {
@@ -58,7 +60,6 @@ func GetData(reqURL string) ([]byte, error) {
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
-
 func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, []byte, error) {
 	tr := &gohttp.Transport{
 		TLSClientConfig: &tls.Config{},
@@ -107,6 +108,13 @@ func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, 
 		return response.Header, body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
+func GetJSON(url string, out interface{}) error {
+	resp, err := gohttp.Get(url)
+	if err != nil {
+		return err
+	}
+	return readJSON(resp, out)
+}
 
 func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 	timeout := time.Duration(15 * time.Second)
@@ -147,7 +155,6 @@ func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
-
 func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte) (gohttp.Header, []byte, error) {
 	tr := &gohttp.Transport{
 		TLSClientConfig: &tls.Config{
@@ -201,4 +208,34 @@ func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string
 	} else {
 		return response.Header, body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
+}
+
+func readJSON(resp *gohttp.Response, out interface{}) (err error) {
+	defer resp.Body.Close()
+
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(resp.Body)
+		defer reader.Close()
+	default:
+		reader = resp.Body
+	}
+
+	if resp.StatusCode >= 400 {
+		body, err := ioutil.ReadAll(reader)
+		if err != nil {
+			return err
+		}
+
+		return errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode), string(body))
+	}
+
+	if out == nil {
+		io.Copy(ioutil.Discard, reader)
+		return nil
+	}
+
+	decoder := json.NewDecoder(reader)
+	return decoder.Decode(out)
 }
