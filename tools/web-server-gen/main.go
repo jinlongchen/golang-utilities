@@ -17,6 +17,10 @@ import (
 
 var version = "dev"
 
+/*
+sample:
+./web-server-gen g -o ~/work/go/src/yijiu-tech.com/website -n static
+*/
 func main() {
 	app := cli.NewApp()
 	app.Name = "web-server-gen"
