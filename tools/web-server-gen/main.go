@@ -252,26 +252,30 @@ func (d *Service) GetName() string {
 func (d *Service) Main(cfg *config.Config) {
 	fmt.Println(version.String(cfg.GetString("application.name"), BINARY))
 
-	connStr, err := url.Parse(cfg.GetString("database.pg.connStr"))
-	if err != nil {
-		log.Fatalf("conn str err %%s", err.Error())
+	ctx := &helper.Context{
+		Config:   cfg,
 	}
 
-	connection := &database.SQLConnection{
-		URL: connStr,
+	connStrCfg := cfg.GetString("database.pg.connStr")
+	if connStrCfg != "" {
+		connStr, err := url.Parse(connStrCfg)
+		if err == nil {
+			log.Fatalf("conn str err %%s", err.Error())
+		}
+		connection := &database.SQLConnection{
+			URL: connStr,
+		}
+		ctx.Database = connection.GetDatabase()
 	}
 
 	cacheServers := cfg.GetStringMapString("cache.redis.addresses")
-	redisCache := cache.NewRedisCache(
-		cacheServers,
-		cfg.GetString("cache.redis.password"),
-	)
-
-	ctx := &helper.Context{
-		Config:   cfg,
-		Database: connection.GetDatabase(),
-		Cache:    redisCache,
+	if cacheServers != nil {
+		ctx.Cache = cache.NewRedisCache(
+			cacheServers,
+			cfg.GetString("cache.redis.password"),
+		)
 	}
+
 
 	httpHandler := newHttpHandler(ctx)
 
@@ -286,6 +290,7 @@ func (d *Service) Exit() {
 	d.httpHandler.Exit()
 	d.waitGroup.Wait()
 }
+
 `, webServerName, pkgPath, webServerName, webServerName))
 }
 
@@ -518,7 +523,7 @@ func (d *sqlData) ToTestItem() *model.TestItem {
 	}
 	err = d.Image.To(ret.Image)
 	if err != nil {
-		log.Debugf("Image err:%s", err.Error())
+		log.Debugf("Image err:%%s", err.Error())
 	}
 
 	return ret
@@ -531,7 +536,7 @@ func (m *SQLManager) CreateSchemas() (int, error) {
 	migrate.SetTable(` + "`" + `` + "`" + ` + SQL_DB_NAME + ` + "`" + `_migration` + "`" + `)
 	n, err := migrate.Exec(m.DB.DB, m.DB.DriverName(), migrations, migrate.Up)
 	if err != nil {
-		return 0, fmt.Errorf("could not migrate sql schema, applied %d migrations", n)
+		return 0, fmt.Errorf("could not migrate sql schema, applied %%d migrations", n)
 	}
 	return n, nil
 }
@@ -553,10 +558,10 @@ func (m *SQLManager) GetTestItems() (testItems []*model.TestItem, totalCount int
 			&d,
 			m.DB.Rebind(` + "`" + `SELECT ` + "`" + `+strings.Join(sqlParams, ", ")+` + "`" + ` FROM ` + "`" + ` + SQL_DB_NAME + ` + "`" + `  ORDER BY id DESC ` + "`" + `))
 		if err != nil {
-			log.Errorf("get testItems err:%s", err.Error())
+			log.Errorf("get testItems err:%%s", err.Error())
 		}
 	} else {
-		log.Errorf("get count err:%s", err.Error())
+		log.Errorf("get count err:%%s", err.Error())
 	}
 	if err == sql.ErrNoRows {
 		return nil, 0, err
