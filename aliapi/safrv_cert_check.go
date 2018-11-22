@@ -4,7 +4,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/http"
 	gohttp "net/http"
 	"net/url"
-	"yijiu.com/common/log"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 const (
 	IDCardCert_API_URL = "https://idcardcert.market.alicloudapi.com/idCardCert"
