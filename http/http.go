@@ -13,6 +13,9 @@ import (
 	"bytes"
 	"io"
 	"encoding/json"
+	"mime/multipart"
+	"os"
+	"path/filepath"
 )
 
 func GetData(reqURL string) ([]byte, error) {
@@ -210,6 +213,72 @@ func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string
 	}
 }
 
+func PostFiles(reqURL string, values map[string][]string, progressReporter func(r int64)) (ret []byte, err error) {
+	var b ProgressReader
+	b.Reporter = progressReporter
+
+	w := multipart.NewWriter(&b)
+	for key, files := range values {
+		for _, file := range files {
+			var fw io.Writer
+			fileName := filepath.Base(file)
+			if fw, err = w.CreateFormFile(key, fileName); err != nil {
+				return
+			}
+			f, err := os.Open(file)
+			if err != nil {
+				return nil, err
+			}
+
+			if _, err = io.Copy(fw, f); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	w.Close()
+
+	client := &gohttp.Client{}
+	request, _ := gohttp.NewRequest("POST", reqURL, &b)
+
+	request.Header.Set("Content-Type", w.FormDataContentType())
+
+	response, err := client.Do(request)
+	if err != nil {
+		return
+	}
+
+	defer response.Body.Close()
+
+	var body []byte
+
+	switch response.Header.Get("Content-Encoding") {
+	case "gzip":
+		var reader *gzip.Reader
+		reader, err = gzip.NewReader(response.Body)
+		if err != nil {
+			return
+		}
+		defer reader.Close()
+
+		body, err = ioutil.ReadAll(reader)
+		if err != nil {
+			return
+		}
+	default:
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			return
+		}
+	}
+
+	if response.StatusCode == 200 {
+		return body, nil
+	} else {
+		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
+	}
+}
+
 func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	defer resp.Body.Close()
 
@@ -239,3 +308,4 @@ func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	decoder := json.NewDecoder(reader)
 	return decoder.Decode(out)
 }
+
