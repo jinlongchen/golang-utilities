@@ -177,3 +177,30 @@ func GetValueAsFloat64(m map[string]interface{}, path string, defaultValue float
 		return converter.AsFloat64(m[path], defaultValue)
 	}
 }
+func GetValueAsMap(m map[string]interface{}, path string, defaultValue map[string]interface{}) map[string]interface{} {
+	if path == "" {
+		return m
+	}
+
+	index := strings.Index(path, ".")
+	if index > 0 {
+		child := m[path[:index]]
+		if child == nil {
+			return defaultValue
+		}
+		switch child.(type) {
+		case map[string]interface{}:
+			return GetValueAsMap(child.(map[string]interface{}), path[index+1:], defaultValue)
+		default:
+			return defaultValue
+		}
+	} else {
+		child := m[path]
+		switch child.(type) {
+		case map[string]interface{}:
+			return child.(map[string]interface{})
+		default:
+			return defaultValue
+		}
+	}
+}
