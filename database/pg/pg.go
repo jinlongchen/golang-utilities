@@ -126,7 +126,7 @@ func (p *JsonbMapArray) To(src interface{}) error {
 type Array []interface{}
 
 func (p Array) Value() (driver.Value, error) {
-	j, err := json.Marshal(p)
+	j, err := json.Marshal(&p)
 	return j, err
 }
 func (p *Array) Scan(src interface{}) error {
@@ -171,7 +171,7 @@ func (p Array) To(src interface{}) error {
 	if src == nil {
 		return nil
 	}
-	source, err := json.Marshal(p)
+	source, err := json.Marshal(&p)
 	if err != nil {
 		return errors.New("type assertion .([]byte) failed")
 	}
