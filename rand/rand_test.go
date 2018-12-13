@@ -11,6 +11,7 @@ func TestGetNormalTimestampRandString(t *testing.T) {
 	t.Log(GetNormalTimestampRandString())
 }
 func TestGetShortTimestampRandString(t *testing.T) {
+<<<<<<< HEAD
 	timeStamp1 := time.Date(2018, 11, 1, 1, 0, 0, 0, time.Local).Unix() - 1466006400
 	timeStamp2 := time.Date(2018, 11, 1, 2, 0, 0, 0, time.Local).Unix() - 1466006400
 	timeStamp3 := time.Date(2018, 11, 1, 3, 0, 0, 0, time.Local).Unix() - 1466006400
@@ -37,6 +38,35 @@ func TestGetShortTimestampRandString(t *testing.T) {
 	timeStamp24 := time.Date(2018, 11, 1, 24, 0, 0, 0, time.Local).Unix() - 1466006400
 	timeStamp25 := time.Date(2018, 11, 1, 25, 0, 0, 0, time.Local).Unix() - 1466006400
 	timeStamp26 := time.Date(2018, 11, 1, 26, 0, 0, 0, time.Local).Unix() - 1466006400
+=======
+	timeStamp1 := time.Date(2018, 11, 1, 1,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp2 := time.Date(2018, 11, 1, 2,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp3 := time.Date(2018, 11, 1, 3,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp4 := time.Date(2018, 11, 1, 4,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp5 := time.Date(2018, 11, 1, 5,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp6 := time.Date(2018, 11, 1, 6,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp7 := time.Date(2018, 11, 1, 7,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp8 := time.Date(2018, 11, 1, 8,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp9 := time.Date(2018, 11, 1, 9,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp10 := time.Date(2018, 11, 1, 10,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp11 := time.Date(2018, 11, 1, 11,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp12 := time.Date(2018, 11, 1, 12,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp13 := time.Date(2018, 11, 1, 13,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp14 := time.Date(2018, 11, 1, 14,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp15 := time.Date(2018, 11, 1, 15,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp16 := time.Date(2018, 11, 1, 16,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp17 := time.Date(2018, 11, 1, 17,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp18 := time.Date(2018, 11, 1, 18,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp19 := time.Date(2018, 11, 1, 19,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp20 := time.Date(2018, 11, 1, 20,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp21 := time.Date(2018, 11, 1, 21,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp22 := time.Date(2018, 11, 1, 22,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp23 := time.Date(2018, 11, 1, 23,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp24 := time.Date(2018, 11, 1, 0,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp25 := time.Date(2018, 11, 1, 0,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp26 := time.Date(2018, 11, 1, 0,0,0,0,time.Local).Unix()- 1466035200
+	timeStamp27 := time.Date(2085, 6, 8, 13,45,35,0,time.Local).Unix()- 1466035200
+>>>>>>> 36455912a9377ee996159a79869fe60505aaa679
 
 	println("timeStamp1:", strconv.FormatInt(timeStamp1, 36))
 	println("timeStamp2:", strconv.FormatInt(timeStamp2, 36))
@@ -64,6 +94,8 @@ func TestGetShortTimestampRandString(t *testing.T) {
 	println("timeStamp24:", strconv.FormatInt(timeStamp24, 36))
 	println("timeStamp25:", strconv.FormatInt(timeStamp25, 36))
 	println("timeStamp26:", strconv.FormatInt(timeStamp26, 36))
+	println("timeStamp27:", strconv.FormatInt(timeStamp27, 36))
+	//	"zzzzzz" := time.Date(2085, 6, 8, 13,45,35,0,time.Local).Unix()- 1466035200
 
 	t.Log(GetShortTimestampRandString())
 }
