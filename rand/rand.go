@@ -39,7 +39,7 @@ func GetNonceString(n int) string {
 }
 
 func GetShortTimestampRandString() string {
-	timeStamp := time.Now().Unix() - 1466006400
+	timeStamp := time.Now().Unix() - 1466035200
 	sn := atomic.AddUint64(&seqNo, 1)
 
 	buf := new(bytes.Buffer)
