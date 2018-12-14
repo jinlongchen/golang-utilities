@@ -11,6 +11,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/naoina/toml"
 	"io/ioutil"
+	"time"
 )
 
 var (
@@ -66,6 +67,15 @@ func (cfg *Config) GetInt(path string) int {
 	return ret
 }
 
+func (cfg *Config) GetInt32(path string) int32 {
+	if val, ok := cfg.cache[path]; ok {
+		return converter.AsInt32(val, 0)
+	}
+	ret := cfg.v.GetInt32(path)
+	cfg.cache[path] = ret
+	return ret
+}
+
 func (cfg *Config) GetInt64(path string) int64 {
 	if val, ok := cfg.cache[path]; ok {
 		return converter.AsInt64(val, 0)
@@ -80,6 +90,14 @@ func (cfg *Config) GetBool(path string) bool {
 		return converter.AsBool(val, false)
 	}
 	ret := cfg.v.GetBool(path)
+	cfg.cache[path] = ret
+	return ret
+}
+func (cfg *Config) GetDuration(path string) time.Duration {
+	if val, ok := cfg.cache[path]; ok {
+		return converter.AsDuration(val, 0)
+	}
+	ret := cfg.v.GetDuration(path)
 	cfg.cache[path] = ret
 	return ret
 }
