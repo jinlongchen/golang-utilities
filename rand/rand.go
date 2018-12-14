@@ -43,11 +43,10 @@ func GetShortTimestampRandString() string {
 	sn := atomic.AddUint64(&seqNo, 1)
 
 	buf := new(bytes.Buffer)
-	write62N(buf, uint64(timeStamp))
+	write35N(buf, uint64(timeStamp))
+	write35N(buf, uint64(address))
 	buf.WriteByte('0')
-	write62N(buf, uint64(address))
-	buf.WriteByte('0')
-	write62N(buf, sn)
+	write35N(buf, sn)
 	return buf.String()
 }
 
@@ -107,7 +106,7 @@ func writeN(buffer *bytes.Buffer, x uint64, width int) {
 
 const digits = "123456789abcdefghijklmnopqrstuvwxyz"
 
-func write62N(buffer *bytes.Buffer, u uint64) {
+func write35N(buffer *bytes.Buffer, u uint64) {
 	base := 35
 
 	var buf [64 + 1]byte
