@@ -73,14 +73,16 @@ func TestGetShortTimestampRandString(t *testing.T) {
 func TestGetShortTimestampRandString2(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		t.Log(GetShortTimestampRandString())
+		//5kxSz18pHe014
+		//1awhw59zovg014
 	}
 }
 func TestWrite62N(t *testing.T) {
 	buf := new(bytes.Buffer)
 	//timeStamp1 := time.Date(2085, 6, 8, 13,45,35,0,time.Local).Unix()- 1466035200
 	timeStamp1 := time.Date(2074, 9, 16, 13,20,24,0,time.Local).Unix()- 1466035200
-	write35N(buf, uint64(timeStamp1))
-	//write35N(buf, uint64(255))
+	write62N(buf, uint64(timeStamp1))
+	//write62N(buf, uint64(255))
 	t.Log(buf.String())
 }
 func BenchmarkGetShortTimestampRandString(b *testing.B) {

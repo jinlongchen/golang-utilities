@@ -1,6 +1,7 @@
 package rand
 
 import (
+	"encoding/binary"
 	mrand "math/rand"
 	"time"
 	"sync/atomic"
@@ -12,22 +13,12 @@ var (
 	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	r       = mrand.New(mrand.NewSource(time.Now().UnixNano()))
 	seqNo   uint64
-	address uint8
+	address uint64
 )
 
 func init() {
-	address = uint8(r.Intn(255))
-	addrs, err := net.InterfaceAddrs()
-	if err == nil {
-		for _, addr := range addrs {
-			if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-				ip4 := ipnet.IP.To4()
-				if ip4 != nil {
-					address = uint8([]byte(ip4)[3])
-				}
-			}
-		}
-	}
+	address = uint64(getIpAddr())
+	//address = getMacAddr()
 }
 
 func GetNonceString(n int) string {
@@ -43,10 +34,10 @@ func GetShortTimestampRandString() string {
 	sn := atomic.AddUint64(&seqNo, 1)
 
 	buf := new(bytes.Buffer)
-	write35N(buf, uint64(timeStamp))
-	write35N(buf, uint64(address))
+	write62N(buf, uint64(timeStamp))
+	write62N(buf, uint64(address))
 	buf.WriteByte('0')
-	write35N(buf, sn)
+	write62N(buf, sn)
 	return buf.String()
 }
 
@@ -104,10 +95,10 @@ func writeN(buffer *bytes.Buffer, x uint64, width int) {
 	}
 }
 
-const digits = "123456789abcdefghijklmnopqrstuvwxyz"
+const digits = "_123456789abcdefghijklmnopqrstuvwxyz"
 
-func write35N(buffer *bytes.Buffer, u uint64) {
-	base := 35
+func write62N(buffer *bytes.Buffer, u uint64) {
+	base := 36
 
 	var buf [64 + 1]byte
 	i := len(buf)
@@ -125,4 +116,34 @@ func write35N(buffer *bytes.Buffer, u uint64) {
 	for k := i; k < 65; k++ {
 		buffer.WriteByte(buf[k])
 	}
+}
+
+func getMacAddr() (addr uint64) {
+	interfaces, err := net.Interfaces()
+	if err == nil {
+		for _, i := range interfaces {
+			if i.Flags&net.FlagUp != 0 && bytes.Compare(i.HardwareAddr, nil) != 0 {
+				b := i.HardwareAddr
+				addr = uint64(b[5])<<16 | uint64(b[4])<<24 |
+					uint64(b[3])<<32 | uint64(b[2])<<40 | uint64(b[1])<<48 | uint64(b[0])<<56
+				break
+			}
+		}
+	}
+	return
+}
+func getIpAddr() (addr uint32) {
+	addrs, err := net.InterfaceAddrs()
+	if err == nil {
+		for _, a := range addrs {
+			if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+				println(ipnet.IP.String())
+				ip4 := ipnet.IP.To4()
+				if ip4 != nil {
+					addr = binary.BigEndian.Uint32(ip4)
+				}
+			}
+		}
+	}
+	return
 }
