@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"encoding/json"
+	"time"
 )
 
 func AsInt(v interface{}, defaultValue int) int {
@@ -233,6 +234,44 @@ func AsMap(v interface{}) map[string]interface{} {
 		}
 	}
 	return nil
+}
+func AsDuration(v interface{}, defaultValue time.Duration) time.Duration {
+	if v != nil {
+		switch v.(type) {
+		case int:
+			return time.Duration(v.(int))
+		case int8:
+			return time.Duration(v.(int8))
+		case int16:
+			return time.Duration(v.(int16))
+		case int32:
+			return time.Duration(v.(int32))
+		case int64:
+			return time.Duration(v.(int64))
+		case time.Duration:
+			return v.(time.Duration)
+
+		case uint:
+			return time.Duration(v.(uint))
+		case uint8:
+			return time.Duration(v.(uint8))
+		case uint16:
+			return time.Duration(v.(uint16))
+		case uint32:
+			return time.Duration(v.(uint32))
+		case uint64:
+			return time.Duration(v.(uint64))
+
+		case float32:
+			return time.Duration(v.(float32))
+		case float64:
+			return time.Duration(v.(float64))
+
+		default:
+			return defaultValue
+		}
+	}
+	return defaultValue
 }
 
 func ConvertToMap(s interface{}) map[string]interface{} {

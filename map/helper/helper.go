@@ -12,16 +12,16 @@ func SetValue(m map[string]interface{}, path string, val interface{}) {
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
+		pp := path[:index]
+		child := m[pp]
 		if child == nil {
-			return
+			child = make(map[string]interface{})
+			m[pp] = child
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			SetValue(child.(map[string]interface{}), path[index+1:], val)
-		default:
-			return
+		if childM, ok := child.(map[string]interface{});ok{
+			SetValue(childM, path[index+1:], val)
 		}
+		return
 	} else {
 		m[path] = val
 	}

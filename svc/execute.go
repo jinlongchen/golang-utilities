@@ -46,8 +46,8 @@ func (e *Executor) Init(env go_svc.Environment) error {
 }
 
 func (e *Executor) Start() error {
-	banner.Print(e.s.GetName())
 	e.s.Main(e.cfg)
+	banner.Print(e.s.GetName())
 	return nil
 }
 
