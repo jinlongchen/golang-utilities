@@ -10,3 +10,7 @@ func BenchmarkString_GetMd5(b *testing.B) {
 	}
 }
 
+func TestString_GetMd5String(t *testing.T) {
+	println(String("").GetMd5String())
+	println(len(String("").GetMd5String()))
+}

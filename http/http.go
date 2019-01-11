@@ -1,21 +1,21 @@
 package http
 
 import (
-	"crypto/tls"
-	"github.com/jinlongchen/golang-utilities/log"
-	gohttp "net/http"
-	"net/http/cookiejar"
-	"time"
-	"compress/gzip"
-	"io/ioutil"
-	"github.com/jinlongchen/golang-utilities/errors"
-	"fmt"
 	"bytes"
-	"io"
+	"compress/gzip"
+	"crypto/tls"
 	"encoding/json"
+	"fmt"
+	"github.com/jinlongchen/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/log"
+	"io"
+	"io/ioutil"
 	"mime/multipart"
+	"net/http/cookiejar"
 	"os"
 	"path/filepath"
+	"time"
+	gohttp "net/http"
 )
 
 func GetData(reqURL string) ([]byte, error) {
@@ -212,6 +212,48 @@ func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string
 		return response.Header, body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
+func PostJSON(reqURL string, objToSend interface{}, out interface{}) error {
+	jsonData, err := json.Marshal(objToSend)
+	if err != nil {
+		log.Errorf("marshal json err:%s", err.Error())
+		return err
+	}
+
+	resp, err := gohttp.Post(reqURL, "application/json;charset=utf-8", bytes.NewReader(jsonData))
+	if err != nil {
+		log.Errorf("post json data to(%s)  err:%s", reqURL, err.Error())
+		return err
+	}
+	return readJSON(resp, out)
+}
+func PostDataSsl(reqURL string, dataToSend, certPEMBlock, keyPEMBlock []byte) (respData []byte, err error) {
+	cert, err := tls.X509KeyPair(certPEMBlock, keyPEMBlock)
+	if err != nil {
+		return nil, err
+	}
+
+	tr := &gohttp.Transport{
+		TLSClientConfig: &tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true},
+	}
+	client := &gohttp.Client{Transport: tr}
+
+	ret, err := client.Post(reqURL, "application/x-www-form-urlencoded", bytes.NewReader(dataToSend))
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		err = ret.Body.Close()
+		log.Errorf(err.Error())
+	}()
+
+	data, err := ioutil.ReadAll(ret.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, err
+}
 
 func PostFiles(reqURL string, values map[string][]string, progressReporter func(r int64)) (ret []byte, err error) {
 	var b ProgressReader
@@ -308,4 +350,3 @@ func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	decoder := json.NewDecoder(reader)
 	return decoder.Decode(out)
 }
-

@@ -137,7 +137,6 @@ func getIpAddr() (addr uint32) {
 	if err == nil {
 		for _, a := range addrs {
 			if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-				println(ipnet.IP.String())
 				ip4 := ipnet.IP.To4()
 				if ip4 != nil {
 					addr = binary.BigEndian.Uint32(ip4)

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	gohttp "net/http"
 	"github.com/jinlongchen/golang-utilities/http"
-	"fmt"
 )
 
 const (
@@ -53,7 +52,7 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 		Configure: string(confBody),
 	})
 	println(string(jsonBody))
-	respHeader, respData, err := http.PostDataWithHeaders(
+	_, respData, err := http.PostDataWithHeaders(
 		OCR_IDCARD_API_URL,
 		gohttp.Header{
 			"Authorization": []string{"APPCODE " + api.cfg.GetString("aliapi.ocr.idcard.appcode")},
@@ -62,8 +61,8 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 		jsonBody,
 	)
 
-	fmt.Printf("%v\n", respHeader)
-	fmt.Println(string(respData))
+	//fmt.Printf("%v\n", respHeader)
+	//fmt.Println(string(respData))
 
 	ret = respData
 
