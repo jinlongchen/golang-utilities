@@ -2,9 +2,12 @@ package crypto
 
 import (
 	"bytes"
+	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/pem"
 	"github.com/jinlongchen/golang-utilities/errors"
 )
@@ -13,16 +16,16 @@ var (
 	ErrNotRSAPrivateKey    = errors.New("Key is not a valid RSA private key")
 )
 
-func RSAEncrypt(keyPem []byte, data []byte) ([]byte, error) {
+func RSAEncrypt(pubKey *rsa.PublicKey, data []byte) ([]byte, error) {
 	var err error
-	key, err := ParseRSAPublicKeyFromPEM(keyPem)
-	if err != nil {
-		return nil, err
-	}
-	klen := key.N.BitLen()/8 - 11
+	//key, err := ParseRSAPublicKeyFromPEM(keyPem)
+	//if err != nil {
+	//	return nil, err
+	//}
+	klen := pubKey.N.BitLen()/8 - 11
 	if len(data) <= klen {
 		var bb []byte
-		if bb, err = rsa.EncryptPKCS1v15(rand.Reader, key, data); err != nil {
+		if bb, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, data); err != nil {
 			return nil, err
 		}
 		return bb, nil
@@ -31,13 +34,13 @@ func RSAEncrypt(keyPem []byte, data []byte) ([]byte, error) {
 	var bb []byte
 	for i, w, r := 0, 0, len(data); r > 0; i, r = i+w, r-w {
 		if r <= klen {
-			if bb, err = rsa.EncryptPKCS1v15(rand.Reader, key, data[i:]); err != nil {
+			if bb, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, data[i:]); err != nil {
 				return nil, err
 			}
 			buf.Write(bb)
 			w = r
 		} else {
-			if bb, err = rsa.EncryptPKCS1v15(rand.Reader, key, data[i:i+klen]); err != nil {
+			if bb, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, data[i:i+klen]); err != nil {
 				return nil, err
 			}
 			buf.Write(bb)
@@ -46,18 +49,18 @@ func RSAEncrypt(keyPem []byte, data []byte) ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
-func RSADecrypt(keyPem []byte, data []byte) ([]byte, error) {
+func RSADecrypt(privateKey *rsa.PrivateKey, data []byte) ([]byte, error) {
 	var err error
 
-	key, err := ParseRSAPrivateKeyFromPEM(keyPem)
-	if err != nil {
-		return nil, err
-	}
+	//key, err := ParseRSAPrivateKeyFromPEM(keyPem)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	klen := key.N.BitLen() / 8
+	klen := privateKey.N.BitLen() / 8
 	if len(data) <= klen {
 		var bb []byte
-		if bb, err = rsa.DecryptPKCS1v15(rand.Reader, key, data); err != nil {
+		if bb, err = rsa.DecryptPKCS1v15(rand.Reader, privateKey, data); err != nil {
 			return nil, err
 		}
 		return bb, nil
@@ -66,13 +69,13 @@ func RSADecrypt(keyPem []byte, data []byte) ([]byte, error) {
 	var bb []byte
 	for i, w, r := 0, 0, len(data); r > 0; i, r = i+w, r-w {
 		if r <= klen {
-			if bb, err = rsa.DecryptPKCS1v15(rand.Reader, key, data[i:]); err != nil {
+			if bb, err = rsa.DecryptPKCS1v15(rand.Reader, privateKey, data[i:]); err != nil {
 				return nil, err
 			}
 			buf.Write(bb)
 			w = r
 		} else {
-			if bb, err = rsa.DecryptPKCS1v15(rand.Reader, key, data[i:i+klen]); err != nil {
+			if bb, err = rsa.DecryptPKCS1v15(rand.Reader, privateKey, data[i:i+klen]); err != nil {
 				return nil, err
 			}
 			buf.Write(bb)
@@ -80,6 +83,34 @@ func RSADecrypt(keyPem []byte, data []byte) ([]byte, error) {
 		}
 	}
 	return buf.Bytes(), nil
+}
+func RSASign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
+	var bb []byte
+	var err error
+
+	h := sha1.New()
+	h.Write([]byte(data))
+	digest := h.Sum(nil)
+
+	bb, err = rsa.SignPKCS1v15(nil, privateKey, crypto.SHA1, digest)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(bb), nil
+}
+
+func RSAVerify(pubKey *rsa.PublicKey, data []byte, sign string) error {
+	bs, err := base64.StdEncoding.DecodeString(sign)
+	if err != nil {
+		return err
+	}
+
+	hash := crypto.SHA1
+	h := hash.New()
+	h.Write(data)
+	hashed := h.Sum(nil)
+
+	return rsa.VerifyPKCS1v15(pubKey, hash, hashed, bs)
 }
 
 func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) {
@@ -106,7 +137,6 @@ func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) {
 
 	return pkey, nil
 }
-
 func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) {
 	var err error
 
@@ -134,3 +164,45 @@ func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) {
 
 	return pkey, nil
 }
+
+func ParseRSAPublicKey(key []byte) (*rsa.PublicKey, error) {
+	var err error
+
+	// Parse the key
+	var parsedKey interface{}
+	if parsedKey, err = x509.ParsePKIXPublicKey(key); err != nil {
+		if cert, err := x509.ParseCertificate(key); err == nil {
+			parsedKey = cert.PublicKey
+		} else {
+			return nil, err
+		}
+	}
+
+	var pkey *rsa.PublicKey
+	var ok bool
+	if pkey, ok = parsedKey.(*rsa.PublicKey); !ok {
+		return nil, ErrNotRSAPrivateKey
+	}
+
+	return pkey, nil
+}
+
+//
+//func RsaPrivateKey2Pem(key *rsa.PrivateKey) []byte {
+//	der := x509.MarshalPKCS1PrivateKey(key)
+//	block := &pem.Block{
+//		Type:  "RSA PRIVATE KEY",
+//		Bytes: der,
+//	}
+//	return pem.EncodeToMemory(block)
+//}
+//
+//func RsaPublicKey2Pem(key *rsa.PublicKey) []byte {
+//	der := x509.MarshalPKCS1PublicKey(key)
+//	block := &pem.Block{
+//		Type:  "RSA PUBLIC KEY",
+//		Bytes: der,
+//	}
+//	return pem.EncodeToMemory(block)
+//}
+//

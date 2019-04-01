@@ -1,112 +1,210 @@
 package log
 
 import (
-	"github.com/sirupsen/logrus"
 	"encoding/json"
+	"fmt"
+	"github.com/natefinch/lumberjack"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"os"
 )
 
-type LogLevel string
-type LogFormat string
+type Level string
+type Format string
 
 var (
-	appName string
-	logger = logrus.New()
+	globalZapLogger *zap.Logger
+	//globalLogrusLogger = logrus.New()
+	globalAppName string
+	globalLevel   Level
+	globalFormat  Format
 )
 
 const (
-	LOG_FORMAT_JSON LogFormat = "json"
-	LOG_FORMAT_TEXT LogFormat = "text"
+	FormatJSON Format = "json"
+	FormatText Format = "text"
 
-	LOG_LEVEL_DEBUG LogLevel = "debug"
-	LOG_LEVEL_INFO LogLevel = "info"
-	LOG_LEVEL_WARN LogLevel = "warn"
-	LOG_LEVEL_ERROR LogLevel = "error"
-	LOG_LEVEL_FATAL LogLevel = "fatal"
+	LevelDebug Level = "debug"
+	LevelInfo  Level = "info"
+	LevelWarn  Level = "warn"
+	LevelError Level = "error"
+	LevelFatal Level = "fatal"
+	LevelPanic Level = "panic"
 )
 
-func InitLogger(app string, level LogLevel, format LogFormat, disableColors bool) *logrus.Logger {
-	appName = app
+func Config(appName string, level Level, console bool, filename string, maxSize int, maxBackups int, maxAge int) {
+	globalAppName = appName
+	globalLevel = level
 
-	lvl := logrus.InfoLevel
-
-	switch level {
-	case LOG_LEVEL_DEBUG:
-		lvl = logrus.DebugLevel
-	case LOG_LEVEL_INFO:
-		lvl = logrus.InfoLevel
-	case LOG_LEVEL_WARN:
-		lvl = logrus.WarnLevel
-	case LOG_LEVEL_ERROR:
-		lvl = logrus.ErrorLevel
-	case LOG_LEVEL_FATAL:
-		lvl = logrus.FatalLevel
-	default:
-		lvl = logrus.InfoLevel
+	levels := map[Level]zapcore.Level{
+		LevelDebug: zap.DebugLevel,
+		LevelInfo:  zap.InfoLevel,
+		LevelWarn:  zap.WarnLevel,
+		LevelError: zap.ErrorLevel,
+		LevelFatal: zap.PanicLevel,
+		LevelPanic: zap.FatalLevel,
 	}
 
-	logger.SetLevel(lvl)
+	zaplvl := levels[level]
 
-	if format == LOG_FORMAT_JSON {
-		logger.Formatter = new(logrus.JSONFormatter)
-	} else {
-		logger.Formatter = &logrus.TextFormatter{FullTimestamp: true, DisableColors: disableColors}
+	levelFunc := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= zaplvl
+	})
+
+	cores := make([]zapcore.Core, 0)
+
+	if console {
+		consoleDebugging := zapcore.Lock(os.Stdout)
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		consoleCore := zapcore.NewCore(consoleEncoder, consoleDebugging, levelFunc)
+
+		cores = append(cores, consoleCore)
 	}
-	return logger
+	if filename != "" {
+		hook := lumberjack.Logger{
+			Filename:   filename,
+			MaxSize:    maxSize, // megabytes
+			MaxBackups: maxBackups,
+			MaxAge:     maxAge, //days
+			Compress:   false,  // disabled by default
+		}
+
+		fileWriter := zapcore.AddSync(&hook)
+		fileEncoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+		fileCore := zapcore.NewCore(fileEncoder, fileWriter, levelFunc)
+
+		cores = append(cores, fileCore)
+	}
+
+	core := zapcore.NewTee(
+		cores...,
+	)
+
+	logger := zap.New(core)
+
+	if globalZapLogger != nil {
+		globalZapLogger.Sync()
+	}
+	globalZapLogger = logger
 }
 
-func AddHook(hook logrus.Hook) {
-	logger.AddHook(hook)
-}
-func DefaultLogger() *logrus.Logger {
-	return logger
-}
+//func Config(appName string, level Level, format Format) {
+//	globalAppName = appName
+//	globalLevel = level
+//	globalFormat = format
+//
+//	switch level {
+//	case LevelNone:
+//		globalLogrusLogger = nil
+//	case LevelDebug:
+//		globalLogrusLogger.SetLevel(logrus.DebugLevel)
+//	case LevelInfo:
+//		globalLogrusLogger.SetLevel(logrus.InfoLevel)
+//	case LevelWarn:
+//		globalLogrusLogger.SetLevel(logrus.WarnLevel)
+//	case LevelError:
+//		globalLogrusLogger.SetLevel(logrus.ErrorLevel)
+//	case LevelFatal:
+//		globalLogrusLogger.SetLevel(logrus.FatalLevel)
+//	case LevelPanic:
+//		globalLogrusLogger.SetLevel(logrus.PanicLevel)
+//	default:
+//		globalLogrusLogger.SetLevel(logrus.InfoLevel)
+//	}
+//
+//	if format == FormatJSON {
+//		if globalLogrusLogger != nil {
+//			globalLogrusLogger.Formatter = new(logrus.JSONFormatter)
+//		}
+//	} else {
+//		if globalLogrusLogger != nil {
+//			globalLogrusLogger.Formatter = &logrus.TextFormatter{FullTimestamp: true, DisableColors: true}
+//		}
+//	}
+//}
+
+//func SetOutput(out io.Writer) {
+//	if out == nil {
+//		return
+//	}
+//	globalLogrusLogger.SetOutput(out)
+//}
+//func AddHook(hook logrus.Hook) {
+//	globalLogrusLogger.AddHook(hook)
+//}
 func Panicf(fmt string, args ...interface{}) {
-	write(logrus.PanicLevel, fmt, args...)
+	write(LevelPanic, fmt, args...)
 }
 func Fatalf(fmt string, args ...interface{}) {
-	write(logrus.FatalLevel, fmt, args...)
+	write(LevelFatal, fmt, args...)
 }
 func Errorf(fmt string, args ...interface{}) {
-	write(logrus.ErrorLevel, fmt, args...)
+	write(LevelError, fmt, args...)
 }
 func Infof(fmt string, args ...interface{}) {
-	write(logrus.InfoLevel, fmt, args...)
+	write(LevelInfo, fmt, args...)
 }
 func Debugf(fmt string, args ...interface{}) {
-	write(logrus.DebugLevel, fmt, args...)
+	write(LevelDebug, fmt, args...)
 }
 func Warnf(fmt string, args ...interface{}) {
-	write(logrus.WarnLevel, fmt, args...)
+	write(LevelWarn, fmt, args...)
+}
+func Messagef(level Level, fmt string, args ...interface{}) {
+	write(level, fmt, args...)
+}
+func Flush() {
+	if globalZapLogger != nil {
+		globalZapLogger.Sync()
+	}
 }
 func Json(j interface{}) {
 	jd, err := json.Marshal(j)
 	if err != nil {
 		return
 	}
-	write(logrus.InfoLevel, "%s", string(jd))
+	write(LevelInfo, "%s", string(jd))
 }
-
 func DumpFormattedJson(j interface{}) {
-	jd, err := json.MarshalIndent(j,"", " ")
+	jd, err := json.MarshalIndent(j, "", " ")
 	if err != nil {
 		return
 	}
 	println(string(jd))
 }
+func write(level Level, format string, args ...interface{}) {
+	//if globalLogrusLogger == nil {
+	//	return
+	//}
+	////callStack := string(stack(0))
+	//if level == LevelPanic {
+	//	globalLogrusLogger.WithField("app", globalAppName).Panicf(format, args...)
+	//} else if level == LevelFatal {
+	//	globalLogrusLogger.WithField("app", globalAppName).Fatalf(format, args...)
+	//} else if level == LevelError {
+	//	globalLogrusLogger.WithField("app", globalAppName).Errorf(format, args...)
+	//} else if level == LevelWarn {
+	//	globalLogrusLogger.WithField("app", globalAppName).Warnf(format, args...)
+	//} else if level == LevelInfo {
+	//	globalLogrusLogger.WithField("app", globalAppName).Infof(format, args...)
+	//} else if level == LevelDebug {
+	//	globalLogrusLogger.WithField("app", globalAppName).Debugf(format, args...)
+	//}
+	if globalZapLogger == nil {
+		return
+	}
 
-func write(level logrus.Level, fmt string, args ...interface{}) {
-	callstack := string(stack(0))
-	if level == logrus.PanicLevel {
-		logger.WithField("app", appName).WithField("caller", callstack).Panicf(fmt, args...)
-	} else if level == logrus.FatalLevel {
-		logger.WithField("app", appName).WithField("caller", callstack).Fatalf(fmt, args...)
-	} else if level == logrus.ErrorLevel {
-		logger.WithField("app", appName).WithField("caller", callstack).Errorf(fmt, args...)
-	} else if level == logrus.WarnLevel {
-		logger.WithField("app", appName).WithField("caller", callstack).Warnf(fmt, args...)
-	} else if level == logrus.InfoLevel {
-		logger.WithField("app", appName).Infof(fmt, args...)
-	} else if level == logrus.DebugLevel {
-		logger.WithField("app", appName).Debugf(fmt, args...)
+	if level == LevelPanic {
+		globalZapLogger.Panic(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	} else if level == LevelFatal {
+		globalZapLogger.Fatal(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	} else if level == LevelError {
+		globalZapLogger.Error(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	} else if level == LevelWarn {
+		globalZapLogger.Warn(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	} else if level == LevelInfo {
+		globalZapLogger.Info(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	} else if level == LevelDebug {
+		globalZapLogger.Debug(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	}
 }

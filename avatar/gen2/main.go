@@ -189,7 +189,7 @@ var (
 		"Straightbun",
 	}
 	facialHairStyles = []string{
-		"BeardMustache",
+		//"BeardMustache",
 		"Mustache",
 		"Goatee",
 		"Shadow",
@@ -251,7 +251,7 @@ var (
 		//"675E97",
 		//"5AC4D4",
 		"DEE1F5",
-		"6c4545",
+		"6C4545",
 		//"F29C65",
 		//"E16381",
 		//"E15C66",
@@ -424,7 +424,7 @@ func saveImage(fileName string, img image.Image) error {
 }
 
 func GetRandomAvatar(seed int64) (image.Image, error) {
-	var size = 192
+	var size = 256
 	var color string
 	var style string
 	var svgData string
@@ -612,5 +612,5 @@ func getHtml(name string, size int, fill string) string {
 }
 
 func main() {
-	SaveAll(32 * 5)
+	SaveAll(256)
 }

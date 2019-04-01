@@ -2,18 +2,17 @@ package avatar
 
 import (
 	"bytes"
-	"github.com/o1egl/govatar"
 	"image/png"
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime/pprof"
 	"testing"
 	"time"
-	"runtime/pprof"
 )
 
 func TestGenerateFromUsername(t *testing.T) {
-	img ,err :=  randomAvatar(time.Now().Unix())
+	img, err := GenerateFromUsername("bbbb")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -30,7 +29,6 @@ func TestGenerateFromUsername(t *testing.T) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	govatar.GenerateFromUsername(govatar.MALE, "i")
 }
 func BenchmarkGenerateFromUsername(b *testing.B) {
 	f, err := os.Create("/Users/chenjinlong/work/go/src/github.com/jinlongchen/golang-utilities/avatar/test/t.prof")

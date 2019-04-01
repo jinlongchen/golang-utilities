@@ -33,11 +33,21 @@ func GenerateFromUsername(username string) (image.Image, error) {
 
 func randomAvatar(seed int64) (image.Image, error) {
 	rnd := rand.New(rand.NewSource(seed))
-	avatar := image.NewRGBA(image.Rect(0, 0, 160, 160))
+	avatar := image.NewRGBA(image.Rect(0, 0, 256, 256))
 	var err error
 	//20:background 30:skin 70:Hair 75:body 80:Mouth 90:FacialHair 100:Nose 110:Eyes
-	backgroundColor := backgroundColors[rnd.Intn(len(backgroundColors))]
-	background := color.RGBA{backgroundColor[0], backgroundColor[1], backgroundColor[2], 0xFF}
+	//backgroundColor := backgroundColors[rnd.Intn(len(backgroundColors))]
+	//background := color.RGBA{backgroundColor[0], backgroundColor[1], backgroundColor[2], 0xFF}
+	r := backgroundColors[rnd.Intn(len(backgroundColors))]
+	g := backgroundColors[rnd.Intn(len(backgroundColors))]
+	for g == r {
+		g = backgroundColors[rnd.Intn(len(backgroundColors))]
+	}
+	b := backgroundColors[rnd.Intn(len(backgroundColors))]
+	for b == g || b == r {
+		b = backgroundColors[rnd.Intn(len(backgroundColors))]
+	}
+	background := color.RGBA{backgroundColors[rnd.Intn(len(backgroundColors))], backgroundColors[rnd.Intn(len(backgroundColors))], backgroundColors[rnd.Intn(len(backgroundColors))], 0xFF}
 
 	draw.Draw(avatar, avatar.Bounds(), &image.Uniform{background}, image.Point{X: 0, Y: 0}, draw.Src)
 

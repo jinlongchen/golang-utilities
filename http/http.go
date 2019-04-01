@@ -13,6 +13,7 @@ import (
 	"mime/multipart"
 	"net/http/cookiejar"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
 	gohttp "net/http"
@@ -112,7 +113,15 @@ func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, 
 	}
 }
 func GetJSON(url string, out interface{}) error {
-	resp, err := gohttp.Get(url)
+	//resp, err := gohttp.Get(url)
+
+	client := &gohttp.Client{}
+	request, _ := gohttp.NewRequest("GET", url, nil)
+
+	//request.Header.Set("Accept-Encoding", "gzip")
+
+	resp, err := client.Do(request)
+
 	if err != nil {
 		return err
 	}
@@ -320,13 +329,74 @@ func PostFiles(reqURL string, values map[string][]string, progressReporter func(
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
+func DownloadFile(reqURL string, filePath string) error {
+	tr := &gohttp.Transport{
+		//TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	cookieJar, _ := cookiejar.New(nil)
+
+	client := &gohttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
+	request, _ := gohttp.NewRequest("GET", reqURL, nil)
+
+	response, err := client.Do(request)
+
+	if err != nil {
+		log.Errorf("Get data error:%s", err.Error())
+		return err
+	}
+
+	defer response.Body.Close()
+
+	dir := path.Dir(filePath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	switch response.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err := gzip.NewReader(response.Body)
+		if err != nil {
+			return err
+		}
+		defer reader.Close()
+
+		writer, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			return err
+		}
+		defer writer.Close()
+
+		_, err = io.Copy(writer, reader)
+		if err != nil {
+			return err
+		}
+	default:
+		writer, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			return err
+		}
+		defer writer.Close()
+
+		_, err = io.Copy(writer, response.Body)
+		if err != nil {
+			return err
+		}
+	}
+	if response.StatusCode == 200 {
+		return nil
+	} else {
+		return errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
+	}
+}
 
 func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	defer resp.Body.Close()
 
 	var reader io.ReadCloser
+	//log.Infof("Content-Encoding:%s", resp.Header.Get("Content-Encoding"))
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
+		log.Infof("response:gzip")
 		reader, err = gzip.NewReader(resp.Body)
 		defer reader.Close()
 	default:

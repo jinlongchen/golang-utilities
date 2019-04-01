@@ -85,6 +85,15 @@ func (cfg *Config) GetInt64(path string) int64 {
 	return ret
 }
 
+func (cfg *Config) GetFloat64(path string) float64 {
+	if val, ok := cfg.cache[path]; ok {
+		return converter.AsFloat64(val, 0.0)
+	}
+	ret := cfg.v.GetFloat64(path)
+	cfg.cache[path] = ret
+	return ret
+}
+
 func (cfg *Config) GetBool(path string) bool {
 	if val, ok := cfg.cache[path]; ok {
 		return converter.AsBool(val, false)

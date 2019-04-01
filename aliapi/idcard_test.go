@@ -17,7 +17,7 @@ func TestOCRIDCard(t *testing.T) {
 
 	config.AesKeyKey = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
-	helper := NewSAliApiHelper(cfg)
+	helper := NewAliApiHelper(cfg)
 
 	ret, err := helper.OCRIDCardFace(data)
 	if err != nil {
@@ -35,7 +35,7 @@ func TestOCRIDCard2(t *testing.T) {
 
 	config.AesKeyKey = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
-	helper := NewSAliApiHelper(cfg)
+	helper := NewAliApiHelper(cfg)
 
 	ret, err := helper.OCRIDCardBack(data)
 	if err != nil {
