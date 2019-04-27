@@ -18,7 +18,7 @@ func TestAliApiHelper_OCRVehicleLicenseFace(t *testing.T) {
 	config.AesKeyKey = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 
-	helper := NewSAliApiHelper(cfg)
+	helper := NewAliApiHelper(cfg)
 
 	ret, err := helper.OCRVehicleLicenseFace(data)
 	if err != nil {
@@ -37,7 +37,7 @@ func TestAliApiHelper_OCRVehicleLicenseBack(t *testing.T) {
 	config.AesKeyKey = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 
-	helper := NewSAliApiHelper(cfg)
+	helper := NewAliApiHelper(cfg)
 
 	ret, err := helper.OCRVehicleLicenseBack(data)
 	if err != nil {

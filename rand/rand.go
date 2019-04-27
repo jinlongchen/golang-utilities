@@ -2,7 +2,9 @@ package rand
 
 import (
 	"encoding/binary"
+	"github.com/jinlongchen/golang-utilities/errors"
 	mrand "math/rand"
+	"strings"
 	"time"
 	"sync/atomic"
 	"net"
@@ -13,11 +15,11 @@ var (
 	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	r       = mrand.New(mrand.NewSource(time.Now().UnixNano()))
 	seqNo   uint64
-	address uint64
+	Address uint64
 )
 
 func init() {
-	address = uint64(getIpAddr())
+	Address = uint64(getIpAddr())
 	//address = getMacAddr()
 }
 
@@ -30,14 +32,40 @@ func GetNonceString(n int) string {
 }
 
 func GetShortTimestampRandString() string {
-	timeStamp := time.Now().Unix() - 1466035200
+	return GetRandStringWithTimestamp(time.Now().Unix())
+}
+
+// 返回：timeStamp(unix epoch),ip address, random number
+func ParseShortTimestampRandString(str string) (int64, uint64, int64) {
+	parts := strings.Split(str, "0")
+	if len(parts) == 3 {
+		ts, err := read36N(parts[0])
+		if err != nil {
+			return 0, 0, 0
+		}
+		addr, err := read36N(parts[1])
+		if err != nil {
+			return 0, 0, 0
+		}
+		sn, err := read36N(parts[2])
+		if err != nil {
+			return 0, 0, 0
+		}
+
+		return int64(ts) + 1466035200, addr, int64(sn)
+	}
+	return 0, 0, 0
+}
+func GetRandStringWithTimestamp(epochTime int64) string {
+	timeStamp := epochTime - 1466035200
 	sn := atomic.AddUint64(&seqNo, 1)
 
 	buf := new(bytes.Buffer)
-	write62N(buf, uint64(timeStamp))
-	write62N(buf, uint64(address))
+	write36N(buf, uint64(timeStamp))
 	buf.WriteByte('0')
-	write62N(buf, sn)
+	write36N(buf, Address)
+	buf.WriteByte('0')
+	write36N(buf, sn)
 	return buf.String()
 }
 
@@ -59,7 +87,7 @@ func GetNormalTimestampRandString() string {
 	buf.WriteByte('-')
 	writeN(buf, sn, 2)
 	buf.WriteByte('-')
-	writeN(buf, uint64(address), 2)
+	writeN(buf, Address, 2)
 	writeN(buf, uint64(r.Intn(0xFF)), 1)
 
 	return buf.String()
@@ -67,6 +95,9 @@ func GetNormalTimestampRandString() string {
 
 func GetRandInt64(min int64, max int64) int64 {
 	return min + r.Int63n(max-min)
+}
+func GetRandInt32(min int32, max int32) int32 {
+	return min + r.Int31n(max-min)
 }
 func GetRandInt(min int, max int) int {
 	return min + r.Intn(max-min)
@@ -98,10 +129,11 @@ func writeN(buffer *bytes.Buffer, x uint64, width int) {
 	}
 }
 
-const digits = "_123456789abcdefghijklmnopqrstuvwxyz"
+const digits = "123456789abcdefghijklmnopqrstuvwxyz"
+const maxUint64 = (1<<64 - 1)
 
-func write62N(buffer *bytes.Buffer, u uint64) {
-	base := 36
+func write36N(buffer *bytes.Buffer, u uint64) {
+	base := 35
 
 	var buf [64 + 1]byte
 	i := len(buf)
@@ -120,6 +152,62 @@ func write62N(buffer *bytes.Buffer, u uint64) {
 		buffer.WriteByte(buf[k])
 	}
 }
+func read36N(s string) (uint64, error) {
+	if len(s) == 0 {
+		return 0, errors.New("syntaxError")
+	}
+	base := 35
+
+	bitSize := 64
+
+	// Cutoff is the smallest number such that cutoff*base > maxUint64.
+	// Use compile-time constants for common cases.
+	var cutoff uint64
+	switch base {
+	case 10:
+		cutoff = maxUint64/10 + 1
+	case 16:
+		cutoff = maxUint64/16 + 1
+	default:
+		cutoff = maxUint64/uint64(base) + 1
+	}
+
+	maxVal := uint64(1)<<uint(bitSize) - 1
+
+	var n uint64
+	for _, c := range []byte(s) {
+		var d byte
+		switch {
+		case '1' <= c && c <= '9':
+			d = c - '1'
+		case 'a' <= c && c <= 'z':
+			d = c - 'a' + 9
+		case 'A' <= c && c <= 'Z':
+			d = c - 'A' + 9
+		default:
+			return 0, errors.New("syntaxError")
+		}
+
+		if d >= byte(base) {
+			return 0, errors.New("syntaxError")
+		}
+
+		if n >= cutoff {
+			// n*base overflows
+			return maxVal, errors.New("syntaxError")
+		}
+		n *= uint64(base)
+
+		n1 := n + uint64(d)
+		if n1 < n || n1 > maxVal {
+			// n+v overflows
+			return maxVal, errors.New("rangeError")
+		}
+		n = n1
+	}
+
+	return n, nil
+}
 
 func getMacAddr() (addr uint64) {
 	interfaces, err := net.Interfaces()
@@ -135,15 +223,14 @@ func getMacAddr() (addr uint64) {
 	}
 	return
 }
-func getIpAddr() (addr uint32) {
+func getIpAddr() (addr uint64) {
 	addrs, err := net.InterfaceAddrs()
 	if err == nil {
 		for _, a := range addrs {
 			if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-				println(ipnet.IP.String())
 				ip4 := ipnet.IP.To4()
 				if ip4 != nil {
-					addr = binary.BigEndian.Uint32(ip4)
+					addr = uint64(binary.BigEndian.Uint32(ip4))
 				}
 			}
 		}

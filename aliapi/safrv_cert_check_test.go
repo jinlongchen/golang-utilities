@@ -9,13 +9,13 @@ import (
 )
 
 func TestAliApiHelper_CheckIdCardNameMatch(t *testing.T) {
-	log.InitLogger("test", "debug", log.LOG_FORMAT_JSON, true)
+	log.Config("test", "debug", log.FormatJSON)
 	_, filename, _, _ := runtime.Caller(0)
 
 	config.AesKeyKey = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 
-	helper := NewSAliApiHelper(cfg)
+	helper := NewAliApiHelper(cfg)
 
 	ret, err := helper.CheckIdCardNameMatch("6540****0386", "梁素华")
 	if err != nil {

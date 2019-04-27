@@ -6,6 +6,6 @@ type AliApiHelper struct {
 	cfg *config.Config
 }
 
-func NewSAliApiHelper(cfg *config.Config) *AliApiHelper {
+func NewAliApiHelper(cfg *config.Config) *AliApiHelper {
 	return &AliApiHelper{cfg: cfg}
 }
