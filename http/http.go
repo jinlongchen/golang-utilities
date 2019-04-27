@@ -1,21 +1,22 @@
 package http
 
 import (
-	"crypto/tls"
-	"github.com/jinlongchen/golang-utilities/log"
-	gohttp "net/http"
-	"net/http/cookiejar"
-	"time"
-	"compress/gzip"
-	"io/ioutil"
-	"github.com/jinlongchen/golang-utilities/errors"
-	"fmt"
 	"bytes"
-	"io"
+	"compress/gzip"
+	"crypto/tls"
 	"encoding/json"
+	"fmt"
+	"github.com/jinlongchen/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/log"
+	"io"
+	"io/ioutil"
 	"mime/multipart"
+	"net/http/cookiejar"
 	"os"
+	"path"
 	"path/filepath"
+	"time"
+	gohttp "net/http"
 )
 
 func GetData(reqURL string) ([]byte, error) {
@@ -112,7 +113,15 @@ func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, 
 	}
 }
 func GetJSON(url string, out interface{}) error {
-	resp, err := gohttp.Get(url)
+	//resp, err := gohttp.Get(url)
+
+	client := &gohttp.Client{}
+	request, _ := gohttp.NewRequest("GET", url, nil)
+
+	//request.Header.Set("Accept-Encoding", "gzip")
+
+	resp, err := client.Do(request)
+
 	if err != nil {
 		return err
 	}
@@ -212,6 +221,48 @@ func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string
 		return response.Header, body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
+func PostJSON(reqURL string, objToSend interface{}, out interface{}) error {
+	jsonData, err := json.Marshal(objToSend)
+	if err != nil {
+		log.Errorf("marshal json err:%s", err.Error())
+		return err
+	}
+
+	resp, err := gohttp.Post(reqURL, "application/json;charset=utf-8", bytes.NewReader(jsonData))
+	if err != nil {
+		log.Errorf("post json data to(%s)  err:%s", reqURL, err.Error())
+		return err
+	}
+	return readJSON(resp, out)
+}
+func PostDataSsl(reqURL string, dataToSend, certPEMBlock, keyPEMBlock []byte) (respData []byte, err error) {
+	cert, err := tls.X509KeyPair(certPEMBlock, keyPEMBlock)
+	if err != nil {
+		return nil, err
+	}
+
+	tr := &gohttp.Transport{
+		TLSClientConfig: &tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true},
+	}
+	client := &gohttp.Client{Transport: tr}
+
+	ret, err := client.Post(reqURL, "application/x-www-form-urlencoded", bytes.NewReader(dataToSend))
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		err = ret.Body.Close()
+		log.Errorf(err.Error())
+	}()
+
+	data, err := ioutil.ReadAll(ret.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, err
+}
 
 func PostFiles(reqURL string, values map[string][]string, progressReporter func(r int64)) (ret []byte, err error) {
 	var b ProgressReader
@@ -278,13 +329,74 @@ func PostFiles(reqURL string, values map[string][]string, progressReporter func(
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
+func DownloadFile(reqURL string, filePath string) error {
+	tr := &gohttp.Transport{
+		//TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	cookieJar, _ := cookiejar.New(nil)
+
+	client := &gohttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
+	request, _ := gohttp.NewRequest("GET", reqURL, nil)
+
+	response, err := client.Do(request)
+
+	if err != nil {
+		log.Errorf("Get data error:%s", err.Error())
+		return err
+	}
+
+	defer response.Body.Close()
+
+	dir := path.Dir(filePath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	switch response.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err := gzip.NewReader(response.Body)
+		if err != nil {
+			return err
+		}
+		defer reader.Close()
+
+		writer, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			return err
+		}
+		defer writer.Close()
+
+		_, err = io.Copy(writer, reader)
+		if err != nil {
+			return err
+		}
+	default:
+		writer, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			return err
+		}
+		defer writer.Close()
+
+		_, err = io.Copy(writer, response.Body)
+		if err != nil {
+			return err
+		}
+	}
+	if response.StatusCode == 200 {
+		return nil
+	} else {
+		return errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
+	}
+}
 
 func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	defer resp.Body.Close()
 
 	var reader io.ReadCloser
+	//log.Infof("Content-Encoding:%s", resp.Header.Get("Content-Encoding"))
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
+		log.Infof("response:gzip")
 		reader, err = gzip.NewReader(resp.Body)
 		defer reader.Close()
 	default:
@@ -308,4 +420,3 @@ func readJSON(resp *gohttp.Response, out interface{}) (err error) {
 	decoder := json.NewDecoder(reader)
 	return decoder.Decode(out)
 }
-

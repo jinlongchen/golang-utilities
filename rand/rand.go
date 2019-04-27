@@ -68,6 +68,9 @@ func GetNormalTimestampRandString() string {
 func GetRandInt64(min int64, max int64) int64 {
 	return min + r.Int63n(max-min)
 }
+func GetRandInt(min int, max int) int {
+	return min + r.Intn(max-min)
+}
 func writeN(buffer *bytes.Buffer, x uint64, width int) {
 	u := uint(x)
 	if x < 0 {
