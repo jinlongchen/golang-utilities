@@ -1,8 +1,8 @@
 package retry
 
 import (
-	"time"
 	"github.com/jinlongchen/golang-utilities/log"
+	"time"
 )
 
 func Run(maxWait time.Duration, failAfter time.Duration, f func() error) (err error) {
