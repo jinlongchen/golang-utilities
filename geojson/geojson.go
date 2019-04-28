@@ -5,7 +5,14 @@ import (
 	"github.com/gobuffalo/packr"
 	"github.com/jinlongchen/golang-utilities/map/helper"
 	"github.com/paulmach/go.geojson"
+	"math"
 	"sync"
+)
+
+const (
+	X_PI   = math.Pi * 3000.0 / 180.0
+	OFFSET = 0.00669342162296594323
+	AXIS   = 6378245.0
 )
 
 var (
@@ -148,7 +155,7 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
 	if fcProvinces, ok := geoFeatures[100000]; ok && fcProvinces != nil {
 		for _, pf := range fcProvinces.Features {
 			adCodeT := helper.GetValueAsInt(pf.Properties, "adcode", 0)
-			if provinceAdCode ==  adCodeT {
+			if provinceAdCode == adCodeT {
 				provinceFeature = pf
 				break
 			}
@@ -158,7 +165,7 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
 		return nil
 	}
 
-	if adCode % 1000 == 0 {
+	if adCode%1000 == 0 {
 		return provinceFeature
 	}
 
@@ -166,7 +173,7 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
 	if fcCities, ok := geoFeatures[provinceAdCode]; ok && fcCities != nil {
 		for _, cf := range fcCities.Features {
 			adCodeT := helper.GetValueAsInt(cf.Properties, "adcode", 0)
-			if cityAdCode ==  adCodeT {
+			if cityAdCode == adCodeT {
 				cityFeature = cf
 				break
 			}
@@ -180,6 +187,39 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
 	return provinceFeature
 }
 
+func ConvertCoordinates(geoStr string, from, to string) string {
+	fc, err := geojson.UnmarshalFeatureCollection([]byte(geoStr))
+	if err != nil {
+		return geoStr
+	}
+	for _, feature := range fc.Features {
+		if feature.Geometry == nil {
+			continue
+		}
+		if feature.Geometry.Type == "Polygon" {
+			if len(feature.Geometry.Polygon) > 0 {
+				polygon := make([][][]float64, len(feature.Geometry.Polygon))
+				for pointsIndex, points := range feature.Geometry.Polygon {
+					if len(points) > 0 {
+						polygon[pointsIndex] = make([][]float64, len(points))
+						for pointIndex, point := range points {
+							lng, lat := convertGeoPoint(point[0], point[1], from, to)
+							polygon[pointsIndex][pointIndex] = []float64{
+								lng, lat,
+							}
+						}
+					}
+				}
+				feature.Geometry.Polygon = polygon
+			}
+		}
+	}
+	converted, err := fc.MarshalJSON()
+	if err != nil {
+		return geoStr
+	}
+	return string(converted)
+}
 func containsPoint(polygon [][]float64, testp []float64) bool {
 	minX := polygon[0][0]
 	maxX := polygon[0][0]
@@ -220,4 +260,42 @@ func max(n1, n2 float64) float64 {
 		return n1
 	}
 	return n2
+}
+func convertGeoPoint(lng, lat float64, from, to string) (float64, float64) {
+	if from == "WGS84" && to == "GCJ02" {
+		mgLng, mgLat := delta(lng, lat)
+		return mgLng, mgLat
+	}
+	return lng, lat
+}
+func delta(lon, lat float64) (float64, float64) {
+	dlat, dlon := transform(lon-105.0, lat-35.0)
+	radlat := lat / 180.0 * math.Pi
+	magic := math.Sin(radlat)
+	magic = 1 - OFFSET*magic*magic
+	sqrtmagic := math.Sqrt(magic)
+
+	dlat = (dlat * 180.0) / ((AXIS * (1 - OFFSET)) / (magic * sqrtmagic) * math.Pi)
+	dlon = (dlon * 180.0) / (AXIS / sqrtmagic * math.Cos(radlat) * math.Pi)
+
+	mgLat := lat + dlat
+	mgLon := lon + dlon
+
+	return mgLon, mgLat
+}
+func transform(lon, lat float64) (x, y float64) {
+	var lonlat = lon * lat
+	var absX = math.Sqrt(math.Abs(lon))
+	var lonPi, latPi = lon*math.Pi, lat*math.Pi
+	var d = 20.0*math.Sin(6.0*lonPi) + 20.0*math.Sin(2.0*lonPi)
+	x, y = d, d
+	x += 20.0*math.Sin(latPi) + 40.0*math.Sin(latPi/3.0)
+	y += 20.0*math.Sin(lonPi) + 40.0*math.Sin(lonPi/3.0)
+	x += 160.0*math.Sin(latPi/12.0) + 320*math.Sin(latPi/30.0)
+	y += 150.0*math.Sin(lonPi/12.0) + 300.0*math.Sin(lonPi/30.0)
+	x *= 2.0 / 3.0
+	y *= 2.0 / 3.0
+	x += -100.0 + 2.0*lon + 3.0*lat + 0.2*lat*lat + 0.1*lonlat + 0.2*absX
+	y += 300.0 + lon + 2.0*lat + 0.1*lon*lon + 0.1*lonlat + 0.1*absX
+	return
 }
