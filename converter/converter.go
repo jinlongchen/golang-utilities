@@ -60,9 +60,9 @@ func AsInt32(v interface{}, defaultValue int32) int32 {
 		case int16:
 			return int32(v.(int16))
 		case int32:
-			return int32(v.(int32))
-		case int64:
 			return v.(int32)
+		case int64:
+			return int32(v.(int64))
 
 		case uint:
 			return int32(v.(uint))
@@ -79,16 +79,43 @@ func AsInt32(v interface{}, defaultValue int32) int32 {
 			return int32(v.(float32))
 		case float64:
 			return int32(v.(float64))
-		case string:
-			ret, err := strconv.ParseInt(v.(string), 10, 32)
-			if err != nil {
-				ret1, err := strconv.ParseFloat(v.(string), 32)
-				if err != nil {
-					return defaultValue
-				}
-				return int32(ret1)
-			}
-			return int32(ret)
+
+		default:
+			return defaultValue
+		}
+	}
+	return defaultValue
+}
+func AsUInt32(v interface{}, defaultValue uint32) uint32 {
+	if v != nil {
+		switch v.(type) {
+		case int:
+			return uint32(v.(int))
+		case int8:
+			return uint32(v.(int8))
+		case int16:
+			return uint32(v.(int16))
+		case int32:
+			return uint32(v.(int32))
+		case int64:
+			return uint32(v.(int64))
+
+		case uint:
+			return uint32(v.(uint))
+		case uint8:
+			return uint32(v.(uint8))
+		case uint16:
+			return uint32(v.(uint16))
+		case uint32:
+			return v.(uint32)
+		case uint64:
+			return uint32(v.(uint64))
+
+		case float32:
+			return uint32(v.(float32))
+		case float64:
+			return uint32(v.(float64))
+
 		default:
 			return defaultValue
 		}
