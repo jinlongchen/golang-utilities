@@ -3,6 +3,7 @@ package log
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jinlongchen/golang-utilities/converter"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -171,6 +172,12 @@ func DumpFormattedJson(j interface{}) {
 		return
 	}
 	println(string(jd))
+}
+func DumpKeyValue(j interface{}) {
+	m := converter.ConvertToMap(j)
+	for key, value := range m {
+		fmt.Printf("%s:%v\n", key, value)
+	}
 }
 func write(level Level, format string, args ...interface{}) {
 	//if globalLogrusLogger == nil {

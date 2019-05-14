@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
@@ -98,6 +99,20 @@ func RSASign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(bb), nil
 }
+func RSA256Sign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
+	var bb []byte
+	var err error
+
+	h := sha256.New()
+	h.Write([]byte(data))
+	digest := h.Sum(nil)
+
+	bb, err = rsa.SignPKCS1v15(nil, privateKey, crypto.SHA256, digest)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(bb), nil
+}
 
 func RSAVerify(pubKey *rsa.PublicKey, data []byte, sign string) error {
 	bs, err := base64.StdEncoding.DecodeString(sign)
@@ -106,6 +121,20 @@ func RSAVerify(pubKey *rsa.PublicKey, data []byte, sign string) error {
 	}
 
 	hash := crypto.SHA1
+	h := hash.New()
+	h.Write(data)
+	hashed := h.Sum(nil)
+
+	return rsa.VerifyPKCS1v15(pubKey, hash, hashed, bs)
+}
+
+func RSA256Verify(pubKey *rsa.PublicKey, data []byte, sign string) error {
+	bs, err := base64.StdEncoding.DecodeString(sign)
+	if err != nil {
+		return err
+	}
+
+	hash := crypto.SHA256
 	h := hash.New()
 	h.Write(data)
 	hashed := h.Sum(nil)

@@ -1,8 +1,9 @@
 package helper
 
 import (
-	"strings"
 	"github.com/jinlongchen/golang-utilities/converter"
+	"reflect"
+	"strings"
 )
 
 func SetValue(m map[string]interface{}, path string, val interface{}) {
@@ -14,11 +15,11 @@ func SetValue(m map[string]interface{}, path string, val interface{}) {
 	if index > 0 {
 		pp := path[:index]
 		child := m[pp]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			child = make(map[string]interface{})
 			m[pp] = child
 		}
-		if childM, ok := child.(map[string]interface{});ok{
+		if childM, ok := child.(map[string]interface{}); ok {
 			SetValue(childM, path[index+1:], val)
 		}
 		return
@@ -34,13 +35,17 @@ func GetValue(m map[string]interface{}, path string) interface{} {
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return nil
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValue(child.(map[string]interface{}), path[index+1:])
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValue(m, path[index+1:])
+			}
 			return nil
 		}
 	} else {
@@ -52,17 +57,20 @@ func GetValueAsInt(m map[string]interface{}, path string, defaultValue int) int 
 	if path == "" {
 		return converter.AsInt(m, defaultValue)
 	}
-
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsInt(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsInt(m, path[index+1:], defaultValue)
+			}
 			return defaultValue
 		}
 	} else {
@@ -77,13 +85,17 @@ func GetValueAsInt32(m map[string]interface{}, path string, defaultValue int32) 
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsInt32(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsInt32(m, path[index+1:], defaultValue)
+			}
 			return defaultValue
 		}
 	} else {
@@ -98,13 +110,17 @@ func GetValueAsInt64(m map[string]interface{}, path string, defaultValue int64) 
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsInt64(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsInt64(m, path[index+1:], defaultValue)
+			}
 			return defaultValue
 		}
 	} else {
@@ -112,7 +128,7 @@ func GetValueAsInt64(m map[string]interface{}, path string, defaultValue int64) 
 	}
 }
 func GetValueAsString(m map[string]interface{}, path string, defaultValue string) string {
-	if m == nil {
+	if m == nil || reflect.ValueOf(m).IsNil() {
 		return defaultValue
 	}
 	if path == "" {
@@ -122,13 +138,18 @@ func GetValueAsString(m map[string]interface{}, path string, defaultValue string
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
+
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsString(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsString(m, path[index+1:], defaultValue)
+			}
 			return converter.AsString(child, defaultValue)
 		}
 	} else {
@@ -143,13 +164,17 @@ func GetValueAsBool(m map[string]interface{}, path string, defaultValue bool) bo
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsBool(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsBool(m, path[index+1:], defaultValue)
+			}
 			return converter.AsBool(child, defaultValue)
 		}
 	} else {
@@ -164,13 +189,17 @@ func GetValueAsFloat64(m map[string]interface{}, path string, defaultValue float
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsFloat64(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsFloat64(m, path[index+1:], defaultValue)
+			}
 			return defaultValue
 		}
 	} else {
@@ -185,13 +214,17 @@ func GetValueAsMap(m map[string]interface{}, path string, defaultValue map[strin
 	index := strings.Index(path, ".")
 	if index > 0 {
 		child := m[path[:index]]
-		if child == nil {
+		if child == nil || reflect.ValueOf(child).IsNil() {
 			return defaultValue
 		}
 		switch child.(type) {
 		case map[string]interface{}:
 			return GetValueAsMap(child.(map[string]interface{}), path[index+1:], defaultValue)
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return m
+			}
 			return defaultValue
 		}
 	} else {
@@ -200,6 +233,10 @@ func GetValueAsMap(m map[string]interface{}, path string, defaultValue map[strin
 		case map[string]interface{}:
 			return child.(map[string]interface{})
 		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return m
+			}
 			return defaultValue
 		}
 	}

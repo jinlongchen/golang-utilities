@@ -212,6 +212,26 @@ func ConvertCoordinates(geoStr string, from, to string) string {
 				}
 				feature.Geometry.Polygon = polygon
 			}
+		} else if feature.Geometry.Type == "MultiPolygon" {
+			if len(feature.Geometry.MultiPolygon) > 0 {
+				multiPolygon := make([][][][]float64, len(feature.Geometry.MultiPolygon))
+				for polygonIndex, polygon := range feature.Geometry.MultiPolygon {
+					nPolygon := make([][][]float64, len(polygon))
+					for pointsIndex, points := range polygon {
+						if len(points) > 0 {
+							nPolygon[pointsIndex] = make([][]float64, len(points))
+							for pointIndex, point := range points {
+								lng, lat := convertGeoPoint(point[0], point[1], from, to)
+								nPolygon[pointsIndex][pointIndex] = []float64{
+									lng, lat,
+								}
+							}
+						}
+					}
+					multiPolygon[polygonIndex] = nPolygon
+				}
+				feature.Geometry.MultiPolygon = multiPolygon
+			}
 		}
 	}
 	converted, err := fc.MarshalJSON()
@@ -265,6 +285,10 @@ func convertGeoPoint(lng, lat float64, from, to string) (float64, float64) {
 	if from == "WGS84" && to == "GCJ02" {
 		mgLng, mgLat := delta(lng, lat)
 		return mgLng, mgLat
+	}
+	if from == "GCJ02" && to == "WGS84" {
+		mgLon, mgLat := delta(lng, lat)
+		return lng*2 - mgLon, lat*2 - mgLat
 	}
 	return lng, lat
 }
