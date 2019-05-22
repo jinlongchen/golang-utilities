@@ -56,3 +56,4 @@ func TestGenResidentIdCard(t *testing.T) {
 	}
 
 }
+
