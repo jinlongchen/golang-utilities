@@ -1,32 +1,33 @@
 package config
 
 import (
-	"github.com/jinlongchen/golang-utilities/crypto"
-	"github.com/jinlongchen/golang-utilities/log"
-	"github.com/jinlongchen/golang-utilities/converter"
 	"crypto/aes"
 	"encoding/base64"
-	"strings"
-	"github.com/spf13/viper"
 	"github.com/fsnotify/fsnotify"
+	"github.com/jinlongchen/golang-utilities/crypto"
+	"github.com/jinlongchen/golang-utilities/log"
+	gusync "github.com/jinlongchen/golang-utilities/sync"
 	"github.com/naoina/toml"
+	"github.com/spf13/viper"
 	"io/ioutil"
+	"strings"
+	"sync"
 	"time"
 )
 
 var (
 	AesKeyKey string
 )
+
 type Config struct {
-	cache     map[string]interface{}
-	v         *viper.Viper
-	aesKey    []byte
+	cache  sync.Map //map[string]interface{}
+	v      *viper.Viper
+	aesKey []byte
 }
 
 func NewConfig(path string) *Config {
 	ret := &Config{
-		cache:     make(map[string]interface{}),
-		v:         viper.New(),
+		v: viper.New(),
 	}
 	ret.v.SetConfigFile(path)
 	err := ret.v.ReadInConfig()
@@ -36,7 +37,7 @@ func NewConfig(path string) *Config {
 	ret.v.WatchConfig()
 	ret.v.OnConfigChange(func(e fsnotify.Event) {
 		log.Debugf("reload config")
-		ret.cache = make(map[string]interface{})
+		gusync.EraseSyncMap(&ret.cache)
 	})
 	return ret
 }
@@ -47,99 +48,115 @@ func (cfg *Config) SetDefault(key string, value interface{}) {
 	cfg.v.SetDefault(key, value)
 }
 func (cfg *Config) GetString(path string) string {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsString(val, "")
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(string); ok {
+			return c
+		}
 	}
+
 	ret := cfg.v.GetString(path)
 	if strings.HasPrefix(ret, "aes:") {
 		ret = cfg.DecryptString(ret[4:])
 	}
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
+	//[path] = ret
 	return ret
 }
 
 func (cfg *Config) GetInt(path string) int {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsInt(val, 0)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(int); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetInt(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetInt32(path string) int32 {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsInt32(val, 0)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(int32); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetInt32(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetInt64(path string) int64 {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsInt64(val, 0)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(int64); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetInt64(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetFloat64(path string) float64 {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsFloat64(val, 0.0)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(float64); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetFloat64(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetBool(path string) bool {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsBool(val, false)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(bool); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetBool(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 func (cfg *Config) GetDuration(path string) time.Duration {
-	if val, ok := cfg.cache[path]; ok {
-		return converter.AsDuration(val, 0)
+	if v, ok := cfg.cache.Load(path); ok {
+		if c, ok := v.(time.Duration); ok {
+			return c
+		}
 	}
 	ret := cfg.v.GetDuration(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetStringSlice(path string) []string {
-	if val, ok := cfg.cache[path]; ok {
-		if r, ok := val.([]string); ok {
+	if v, ok := cfg.cache.Load(path); ok {
+		if r, ok := v.([]string); ok {
 			return r
 		}
 	}
 
 	ret := cfg.v.GetStringSlice(path) //map_helper.GetValue(cfg.data, path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetStringMapString(path string) map[string]string {
-	if val, ok := cfg.cache[path]; ok {
-		if r, ok := val.(map[string]string); ok {
+	if v, ok := cfg.cache.Load(path); ok {
+		if r, ok := v.(map[string]string); ok {
 			return r
 		}
 	}
 	ret := cfg.v.GetStringMapString(path) //map_helper.GetValue(cfg.data, path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 
 func (cfg *Config) GetValue(path string) interface{} {
-	if val, ok := cfg.cache[path]; ok {
-		return val
+	if v, ok := cfg.cache.Load(path); ok {
+		return v
 	}
 	ret := cfg.v.Get(path)
-	cfg.cache[path] = ret
+	cfg.cache.Store(path, ret)
 	return ret
 }
 

@@ -81,7 +81,7 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 		cores...,
 	)
 
-	logger := zap.New(core)
+	logger := zap.New(core, zap.AddStacktrace(zap.ErrorLevel))
 
 	if globalZapLogger != nil {
 		globalZapLogger.Sync()

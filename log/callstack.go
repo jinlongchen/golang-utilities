@@ -1,6 +1,7 @@
 package log
 
 import (
+	"go.uber.org/zap/zapcore"
 	"runtime"
 	"github.com/sirupsen/logrus"
 	"fmt"
@@ -94,4 +95,8 @@ func function(pc uintptr) []byte {
 	}
 	name = bytes.Replace(name, centerDot, dot, -1)
 	return name
+}
+
+func zapCaller(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(string(stack(8)))
 }

@@ -1,9 +1,16 @@
 package crypto
 import (
+	"crypto/sha1"
 	"encoding/hex"
 	"crypto/sha256"
 	"golang.org/x/crypto/sha3"
 )
+
+func GetSha1Hash(s string) string {
+	h := sha1.New()
+	h.Write([]byte(s))
+	return hex.EncodeToString(h.Sum(nil))
+}
 
 func GetSha256Hash(s string) string {
 	h := sha256.New()

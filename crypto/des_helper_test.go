@@ -22,7 +22,7 @@ func TestDecryptDes(t *testing.T) {
 		t.Fatal(err)
 	}
 	//data, _ = base64.StdEncoding.DecodeString("LDiFUdf0iew=")
-	data, err = DesDecrypt(data, []byte("12345678"))
+	data, err = DecryptDes(data, []byte("12345678"))
 	if err != nil {
 		t.Fatal(err)
 	}
