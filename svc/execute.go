@@ -32,7 +32,7 @@ func (e *Executor) Init(env go_svc.Environment) error {
 		}
 	}
 
-	cfgName := flag.String("conf", "./conf-file.toml", "")
+	cfgName := flag.String("conf", "conf-file.toml", "")
 
 	flag.Parse()
 

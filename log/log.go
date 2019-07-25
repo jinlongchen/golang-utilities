@@ -33,6 +33,17 @@ const (
 	LevelPanic Level = "panic"
 )
 
+func init() {
+	Config("update location",
+		Level("debug"),
+		true,
+		"",
+		0,
+		0,
+		0,
+	)
+}
+
 func Config(appName string, level Level, console bool, filename string, maxSize int, maxBackups int, maxAge int) {
 	globalAppName = appName
 	globalLevel = level
@@ -203,8 +214,10 @@ func write(level Level, format string, args ...interface{}) {
 
 	if level == LevelPanic {
 		globalZapLogger.Panic(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		os.Exit(1)
 	} else if level == LevelFatal {
 		globalZapLogger.Fatal(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		os.Exit(1)
 	} else if level == LevelError {
 		globalZapLogger.Error(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	} else if level == LevelWarn {

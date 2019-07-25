@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"encoding/base64"
 	"github.com/fsnotify/fsnotify"
+	"github.com/jinlongchen/golang-utilities/converter"
 	"github.com/jinlongchen/golang-utilities/crypto"
 	"github.com/jinlongchen/golang-utilities/log"
 	gusync "github.com/jinlongchen/golang-utilities/sync"
@@ -147,6 +148,24 @@ func (cfg *Config) GetStringMapString(path string) map[string]string {
 		}
 	}
 	ret := cfg.v.GetStringMapString(path) //map_helper.GetValue(cfg.data, path)
+	cfg.cache.Store(path, ret)
+	return ret
+}
+
+func (cfg *Config) GetMapSlice(path string) []map[string]interface{} {
+	if v, ok := cfg.cache.Load(path); ok {
+		if r, ok := v.([]map[string]interface{}); ok {
+			return r
+		}
+	}
+	mapSlice := cfg.v.Get(path)
+	ret := converter.AsMapSlice(mapSlice)
+
+	//ret, ok := cfg.v.Get(path).([]map[string]interface{})
+	//if !ok {
+	//	return nil
+	//}
+
 	cfg.cache.Store(path, ret)
 	return ret
 }

@@ -8,12 +8,18 @@ import (
 	"bytes"
 )
 
+func TestGetRandInt(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		println(GetRandInt(0, 2))
+	}
+}
 func TestGetNormalTimestampRandString(t *testing.T) {
 	t.Log(GetNormalTimestampRandString())
 }
 func TestParseShortTimestampRandString(t *testing.T) {
 	//2m2hs502kyv66909
-	epochTime, _, _ := ParseShortTimestampRandString("2ml1uk02rjxg4t03")
+	epochTime, _, _ := ParseShortTimestampRandString("2r961n02kypbt104s17")
+	println(epochTime)
 	println(time.Unix(epochTime, 0).String())
 }
 func TestGetShortTimestampRandString(t *testing.T) {

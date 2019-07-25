@@ -156,6 +156,35 @@ func GetValueAsString(m map[string]interface{}, path string, defaultValue string
 		return converter.AsString(m[path], defaultValue)
 	}
 }
+func GetValueAsStringSlice(m map[string]interface{}, path string, defaultValue []string) []string {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
+	if path == "" {
+		return converter.AsStringSlice(m, defaultValue)
+	}
+
+	index := strings.Index(path, ".")
+	if index > 0 {
+		child := m[path[:index]]
+		if child == nil || reflect.ValueOf(child).IsNil() {
+			return defaultValue
+		}
+
+		switch child.(type) {
+		case map[string]interface{}:
+			return GetValueAsStringSlice(child.(map[string]interface{}), path[index+1:], defaultValue)
+		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return GetValueAsStringSlice(m, path[index+1:], defaultValue)
+			}
+			return converter.AsStringSlice(child, defaultValue)
+		}
+	} else {
+		return converter.AsStringSlice(m[path], defaultValue)
+	}
+}
 func GetValueAsBool(m map[string]interface{}, path string, defaultValue bool) bool {
 	if path == "" {
 		return converter.AsBool(m, defaultValue)

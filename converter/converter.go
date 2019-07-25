@@ -152,6 +152,12 @@ func AsInt64(v interface{}, defaultValue int64) int64 {
 		case float64:
 			return int64(v.(float64))
 
+		case string:
+			ret, err := strconv.ParseInt(v.(string), 10, 64)
+			if err != nil {
+				return defaultValue
+			}
+			return ret
 		default:
 			return defaultValue
 		}
@@ -222,7 +228,7 @@ func AsArray(v interface{}) []interface{} {
 	}
 	return nil
 }
-func AsStringArray(v interface{}) []string {
+func AsStringSlice(v interface{}, defaultValue []string) []string {
 	if v != nil {
 		switch v.(type) {
 		case []string:
@@ -235,10 +241,10 @@ func AsStringArray(v interface{}) []string {
 			}
 			return r
 		default:
-			return nil
+			return defaultValue
 		}
 	}
-	return nil
+	return defaultValue
 }
 func AsBool(v interface{}, defaultValue bool) bool {
 	if v != nil {
@@ -256,6 +262,28 @@ func AsMap(v interface{}) map[string]interface{} {
 		switch v.(type) {
 		case map[string]interface{}:
 			return v.(map[string]interface{})
+		default:
+			return nil
+		}
+	}
+	return nil
+}
+func AsMapSlice(v interface{}) []map[string]interface{} {
+	if v != nil {
+		switch v.(type) {
+		case []interface{}:
+			s := v.([]interface{})
+			ret := make([]map[string]interface{}, len(s))
+			for index, item := range s {
+				if m, ok := item.(map[string]interface{}); ok {
+					ret[index] = m
+				} else {
+					ret[index] = nil
+				}
+			}
+			return ret
+		case []map[string]interface{}:
+			return v.([]map[string]interface{})
 		default:
 			return nil
 		}

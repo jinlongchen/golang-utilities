@@ -20,12 +20,12 @@ type Province struct {
 }
 func TestGenResidentIdCard(t *testing.T) {
 	streets := make([]*Street, 0)
-	err := json.Unmarshal([]byte(streetsJson), &streets)
+	err := json.Unmarshal([]byte(StreetsJson), &streets)
 	if err != nil {
 		return
 	}
 	provinces := make([]*Province, 0)
-	err = json.Unmarshal([]byte(provincesJson), &provinces)
+	err = json.Unmarshal([]byte(ProvincesJson), &provinces)
 	if err != nil {
 		return
 	}
@@ -57,3 +57,7 @@ func TestGenResidentIdCard(t *testing.T) {
 
 }
 
+func TestIsResidentIdCard(t *testing.T) {
+	valid, _, _ := IsResidentIdCard("510122199108247115")
+	println(valid)
+}

@@ -30,11 +30,16 @@ func main() {
 		return
 	}
 
-	for offset := 0; offset < 80; offset++ {
+	for offset := 0; offset < 100; offset++ {
 		areaIndex := rand.GetRandInt(0, len(streets))
 
-		t := time.Now().Add(-time.Hour * 24 * time.Duration(rand.GetRandInt(10, 365))).AddDate(-offset, 0,0)
+		var t time.Time
 
+		if offset == 0 {
+			t = time.Now()
+		} else {
+			t = time.Now().Add(-time.Hour * 24 * time.Duration(rand.GetRandInt(10, 365))).AddDate(-offset, 0,0)
+		}
 		var sexStr string
 		if rand.GetRandInt(0, 2) == 1 {
 			sexStr = "M"
