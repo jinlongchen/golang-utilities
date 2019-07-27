@@ -69,39 +69,6 @@ func (api *AliApiHelper) ocrVehicleLicense(data []byte, side string) (ret []byte
 	return
 }
 
-/*
-正面
-{
-    "addr": "内蒙古自****2单元4层2号",
-    "config_str": "{\"side\":\"face\"}",
-    "engine_num": "51***80",
-    "issue_date": "20130722",
-    "model": "解放牌CA4****EA80",
-    "owner": "呼伦贝尔市晓明运输有限公司",
-    "plate_num": "蒙E****8",
-    "register_date": "20101207",
-    "request_id": "20181116223213_f17142d3ee1205cc65e5d10619e65e12",
-    "success": true,
-    "use_character": "货运",
-    "vehicle_type": "重型半挂牵引车",
-    "vin": "LFWS****754"
-}
-反面
-{
-    "config_str":"{\"side\": \"back\" }", 
-    "appproved_passenger_capacity":"5人",   
-    "approved_load":"",                     
-    "file_no":"530100001466",               
-    "gross_mass":"2000kg",                  
-    "inspection_record":"检验有效期至2014年09月云A(01)", 
-    "overall_dimension":"4945x1845x1480mm",  
-    "traction_mass":"",                      
-    "unladen_mass":"1505kg"                  
-    "plate_num":"云AD8V02",                  
-    "success":true,             
-    "request_id":"20180131144149_c440540b20a4dc079a10680ff60b2d2a"
-}
-*/
 type VehicleLicenseFace struct {
 	Addr string `json:"addr" xml:"addr"`
 	ConfigStr string `json:"config_str" xml:"config_str"`

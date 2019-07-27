@@ -2,6 +2,7 @@ package avatar
 
 import (
 	"bytes"
+	"github.com/jinlongchen/golang-utilities/file"
 	"image/png"
 	"io/ioutil"
 	"log"
@@ -25,7 +26,7 @@ func TestGenerateFromUsername(t *testing.T) {
 
 	ret := w.Bytes()
 
-	err = ioutil.WriteFile("/Users/chenjinlong/work/go/src/github.com/jinlongchen/golang-utilities/avatar/test/test.png", ret, 0666)
+	err = ioutil.WriteFile(file.GetFilePathFromRuntime("test/test.png"), ret, 0666)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

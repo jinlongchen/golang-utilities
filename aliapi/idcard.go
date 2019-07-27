@@ -68,49 +68,6 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 
 	return
 }
-
-/*
-{
-    "address": "陕西省甘泉县****5号",
-    "birth": "19890218",
-    "config_str": "{\"side\":\"face\"}",
-    "face_rect": {
-        "angle": -89.867210388183594,
-        "center": {
-            "x": 675.3818359375,
-            "y": 272.56576538085938
-        },
-        "size": {
-            "height": 156.00003051757812,
-            "width": 156.00001525878906
-        }
-    },
-    "face_rect_vertices": [
-        {
-            "x": 753.20086669921875,
-            "y": 350.746337890625
-        },
-        {
-            "x": 597.20123291015625,
-            "y": 350.384765625
-        },
-        {
-            "x": 597.56280517578125,
-            "y": 194.38519287109375
-        },
-        {
-            "x": 753.56243896484375,
-            "y": 194.74676513671875
-        }
-    ],
-    "name": "高静",
-    "nationality": "汉",
-    "num": "6106****0067",
-    "request_id": "20181116130758_6b45831f0ea48f24e4992f6e4489ef5d",
-    "sex": "女",
-    "success": true
-}
-*/
 type IDCardFace struct {
 	Address     string `json:"address"`
 	Birth       string `json:"birth"`
@@ -138,16 +95,6 @@ type IDCardFace struct {
 	} `json:"face_rect_vertices"`
 }
 
-/*
-{
-    "config_str": "{\"side\":\"back\"}",
-    "end_date": "20251008",
-    "issue": "上海市公安局徐汇分局",
-    "request_id": "20181116132317_6800f0186340de14bf29ce6c60c6c5b9",
-    "start_date": "20051008",
-    "success": true
-}
-*/
 type IDCardBack struct {
 	ConfigStr string `json:"config_str"`
 	EndDate   string `json:"end_date"`
