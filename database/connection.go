@@ -17,8 +17,8 @@ import (
 )
 
 type SQLConnection struct {
-	db  *sqlx.DB
-	URL *url.URL
+	db         *sqlx.DB
+	URL        *url.URL
 	driverName string
 }
 

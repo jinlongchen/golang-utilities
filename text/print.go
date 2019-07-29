@@ -988,7 +988,7 @@ formatLoop:
 		for ; i < end; i++ {
 			n := format[i]
 			if '0' <= n && n <= '9' {
-				argNum = argNum * 10 + int(n - '0')
+				argNum = argNum*10 + int(n-'0')
 			} else if ':' == n {
 				i++
 				break

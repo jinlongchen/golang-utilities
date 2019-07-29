@@ -1,7 +1,6 @@
 package avatar
 
-var
-(
+var (
 	backgroundColors = []uint8{
 		0x93, 0xA7, 0xFF,
 		0xA9, 0xE7, 0x75,

@@ -3,8 +3,8 @@ package aliapi
 import (
 	"encoding/base64"
 	"encoding/json"
-	gohttp "net/http"
 	"github.com/jinlongchen/golang-utilities/http"
+	gohttp "net/http"
 )
 
 const (
@@ -68,6 +68,7 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 
 	return
 }
+
 type IDCardFace struct {
 	Address     string `json:"address"`
 	Birth       string `json:"birth"`

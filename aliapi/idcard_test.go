@@ -1,11 +1,11 @@
 package aliapi
 
 import (
-	"testing"
-	"runtime"
-	"path"
-	"io/ioutil"
 	"github.com/jinlongchen/golang-utilities/config"
+	"io/ioutil"
+	"path"
+	"runtime"
+	"testing"
 )
 
 func TestOCRIDCard(t *testing.T) {

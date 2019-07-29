@@ -11,12 +11,12 @@ import (
 	"io"
 	"io/ioutil"
 	"mime/multipart"
+	gohttp "net/http"
 	"net/http/cookiejar"
 	"os"
 	"path"
 	"path/filepath"
 	"time"
-	gohttp "net/http"
 )
 
 func GetData(reqURL string) ([]byte, error) {
@@ -169,8 +169,7 @@ func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 }
 func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte) (gohttp.Header, []byte, error) {
 	tr := &gohttp.Transport{
-		TLSClientConfig: &tls.Config{
-		},
+		TLSClientConfig: &tls.Config{},
 	}
 	client := &gohttp.Client{
 		Transport: tr,

@@ -1,9 +1,9 @@
 package errors
 
 import (
+	goerrors "errors"
 	"fmt"
 	"io"
-	goerrors "errors"
 )
 
 func New(message string) error {

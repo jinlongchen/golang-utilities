@@ -3,9 +3,9 @@ package aliapi
 import (
 	"encoding/base64"
 	"encoding/json"
-	gohttp "net/http"
-	"github.com/jinlongchen/golang-utilities/http"
 	"fmt"
+	"github.com/jinlongchen/golang-utilities/http"
+	gohttp "net/http"
 )
 
 const (
@@ -70,31 +70,31 @@ func (api *AliApiHelper) ocrVehicleLicense(data []byte, side string) (ret []byte
 }
 
 type VehicleLicenseFace struct {
-	Addr string `json:"addr" xml:"addr"`
-	ConfigStr string `json:"config_str" xml:"config_str"`
-	EngineNum string `json:"engine_num" xml:"engine_num"`
-	IssueDate string `json:"issue_date" xml:"issue_date"`
-	Model string `json:"model" xml:"model"`
-	Owner string `json:"owner" xml:"owner"`
-	PlateNum string `json:"plate_num" xml:"plate_num"`
+	Addr         string `json:"addr" xml:"addr"`
+	ConfigStr    string `json:"config_str" xml:"config_str"`
+	EngineNum    string `json:"engine_num" xml:"engine_num"`
+	IssueDate    string `json:"issue_date" xml:"issue_date"`
+	Model        string `json:"model" xml:"model"`
+	Owner        string `json:"owner" xml:"owner"`
+	PlateNum     string `json:"plate_num" xml:"plate_num"`
 	RegisterDate string `json:"register_date" xml:"register_date"`
-	RequestID string `json:"request_id" xml:"request_id"`
-	Success bool `json:"success" xml:"success"`
+	RequestID    string `json:"request_id" xml:"request_id"`
+	Success      bool   `json:"success" xml:"success"`
 	UseCharacter string `json:"use_character" xml:"use_character"`
-	VehicleType string `json:"vehicle_type" xml:"vehicle_type"`
-	Vin string `json:"vin" xml:"vin"`
+	VehicleType  string `json:"vehicle_type" xml:"vehicle_type"`
+	Vin          string `json:"vin" xml:"vin"`
 }
 type VehicleLicenseBack struct {
 	AppprovedPassengerCapacity string `json:"appproved_passenger_capacity" xml:"appproved_passenger_capacity"`
-	ApprovedLoad string `json:"approved_load" xml:"approved_load"`
-	ConfigStr string `json:"config_str" xml:"config_str"`
-	FileNo string `json:"file_no" xml:"file_no"`
-	GrossMass string `json:"gross_mass" xml:"gross_mass"`
-	InspectionRecord string `json:"inspection_record" xml:"inspection_record"`
-	OverallDimension string `json:"overall_dimension" xml:"overall_dimension"`
-	PlateNum string `json:"plate_num" xml:"plate_num"`
-	RequestID string `json:"request_id" xml:"request_id"`
-	Success bool `json:"success" xml:"success"`
-	TractionMass string `json:"traction_mass" xml:"traction_mass"`
-	UnladenMass string `json:"unladen_mass" xml:"unladen_mass"`
+	ApprovedLoad               string `json:"approved_load" xml:"approved_load"`
+	ConfigStr                  string `json:"config_str" xml:"config_str"`
+	FileNo                     string `json:"file_no" xml:"file_no"`
+	GrossMass                  string `json:"gross_mass" xml:"gross_mass"`
+	InspectionRecord           string `json:"inspection_record" xml:"inspection_record"`
+	OverallDimension           string `json:"overall_dimension" xml:"overall_dimension"`
+	PlateNum                   string `json:"plate_num" xml:"plate_num"`
+	RequestID                  string `json:"request_id" xml:"request_id"`
+	Success                    bool   `json:"success" xml:"success"`
+	TractionMass               string `json:"traction_mass" xml:"traction_mass"`
+	UnladenMass                string `json:"unladen_mass" xml:"unladen_mass"`
 }

@@ -1,11 +1,11 @@
 package rand
 
 import (
+	"bytes"
 	"encoding/binary"
 	"net"
 	"testing"
 	"time"
-	"bytes"
 )
 
 func TestGetRandInt(t *testing.T) {
@@ -26,7 +26,6 @@ func TestGetShortTimestampRandString(t *testing.T) {
 	time2 := time.Date(2019, 2, 23, 21, 32, 14, 0, time.Local)
 	randStr2 := GetRandStringWithTimestamp(time2.Unix())
 	t.Log("randStr2:", randStr2)
-
 
 	time0 := time.Date(2085, 6, 8, 13, 45, 35, 0, time.Local)
 	randStr := GetRandStringWithTimestamp(time0.Unix())

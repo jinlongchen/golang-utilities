@@ -22,7 +22,7 @@ func (wx *Wechat) GetShortURL(longURL string) (string, error) {
 	requestURL.RawQuery = parameters.Encode()
 
 	ret := &struct {
-		Errcode  int `json:"errcode" xml:"errcode"`
+		Errcode  int    `json:"errcode" xml:"errcode"`
 		Errmsg   string `json:"errmsg" xml:"errmsg"`
 		ShortURL string `json:"short_url" xml:"short_url"`
 	}{}

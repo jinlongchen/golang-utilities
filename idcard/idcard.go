@@ -2,10 +2,10 @@ package idcard
 
 import (
 	"fmt"
-	"time"
-	"strings"
 	"github.com/jinlongchen/golang-utilities/log"
-    "github.com/jinlongchen/golang-utilities/rand"
+	"github.com/jinlongchen/golang-utilities/rand"
+	"strings"
+	"time"
 )
 
 func IsResidentIdCard(number string) (valid bool, birthDate time.Time, sex string) {
@@ -50,7 +50,7 @@ func IsResidentIdCard(number string) (valid bool, birthDate time.Time, sex strin
 		return
 	}
 
-	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}
 	sum := 0
 	for idx := 0; idx < 17; idx++ {
 		sum = sum + int(number[idx]-'0')*factors[idx]
@@ -74,13 +74,13 @@ func UpgradeResidentIdCard(idCardNo string) string {
 	}
 	newIdCard := idCardNo[:6] + "19" + idCardNo[6:]
 
-	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}
 	sum := 0
 	for idx := 0; idx < 17; idx++ {
 		sum = sum + int(newIdCard[idx]-'0')*factors[idx]
 	}
 	code := "10X98765432"
-	h := code[sum%11];
+	h := code[sum%11]
 	return newIdCard[:17] + string(h)
 }
 func GenResidentIdCard(areaCode string, birthDate time.Time, sex string) (number string) {
@@ -94,7 +94,7 @@ func GenResidentIdCard(areaCode string, birthDate time.Time, sex string) (number
 	birthDateStr := birthDate.Format("20060102")
 
 	number = fmt.Sprintf("%s%s%d%s", areaCode, birthDateStr, rand.GetRandInt(10, 99), sexStr)
-	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+	factors := []int{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}
 	sum := 0
 	for idx := 0; idx < 17; idx++ {
 		sum = sum + int(number[idx]-'0')*factors[idx]

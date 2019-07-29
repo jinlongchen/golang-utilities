@@ -57,7 +57,7 @@ var (
 `
 		} else {
 			str2 += fmt.Sprintf(`
-		%d,//%s`,count, lastCategory)
+		%d,//%s`, count, lastCategory)
 			count = 1
 			str += `		},
 		{ // ` + category + `
@@ -70,17 +70,16 @@ var (
 		return nil
 	})
 
-
 	str += `		},
 	}
 `
 	str2 += fmt.Sprintf(`
-		%d,//%s`,count, lastCategory)
+		%d,//%s`, count, lastCategory)
 
 	str2 += `
 	}
 )
 `
-	_ = ioutil.WriteFile("/Users/chenjinlong/work/go/src/github.com/jinlongchen/golang-utilities/avatar/bindata.go", []byte(str + str2), 0666)
-	println(str+str2)
+	_ = ioutil.WriteFile("/Users/chenjinlong/work/go/src/github.com/jinlongchen/golang-utilities/avatar/bindata.go", []byte(str+str2), 0666)
+	println(str + str2)
 }

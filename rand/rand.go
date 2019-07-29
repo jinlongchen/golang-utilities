@@ -1,14 +1,14 @@
 package rand
 
 import (
+	"bytes"
 	"encoding/binary"
 	"github.com/jinlongchen/golang-utilities/errors"
 	mrand "math/rand"
-	"strings"
-	"time"
-	"sync/atomic"
 	"net"
-	"bytes"
+	"strings"
+	"sync/atomic"
+	"time"
 )
 
 var (

@@ -18,6 +18,7 @@ type Province struct {
 	Code string `json:"code" xml:"code"`
 	Name string `json:"name" xml:"name"`
 }
+
 func main() {
 	streets := make([]*Street, 0)
 	err := json.Unmarshal([]byte(idcard.StreetsJson), &streets)
@@ -38,7 +39,7 @@ func main() {
 		if offset == 0 {
 			t = time.Now()
 		} else {
-			t = time.Now().Add(-time.Hour * 24 * time.Duration(rand.GetRandInt(10, 365))).AddDate(-offset, 0,0)
+			t = time.Now().Add(-time.Hour*24*time.Duration(rand.GetRandInt(10, 365))).AddDate(-offset, 0, 0)
 		}
 		var sexStr string
 		if rand.GetRandInt(0, 2) == 1 {

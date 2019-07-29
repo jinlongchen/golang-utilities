@@ -88,4 +88,3 @@ func Render(svg io.Reader, size image.Point) (*image.RGBA, error) {
 		},
 	}, nil
 }
-

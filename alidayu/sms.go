@@ -2,17 +2,17 @@ package alidayu
 
 import (
 	"crypto/hmac"
-	"net/url"
-	"time"
 	"crypto/sha1"
-	"strings"
 	"encoding/base64"
 	"encoding/json"
 	"github.com/jinlongchen/golang-utilities/config"
-	"github.com/jinlongchen/golang-utilities/rand"
-	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/rand"
+	"net/url"
+	"strings"
+	"time"
 )
 
 const (
@@ -137,11 +137,12 @@ func encrypt(s, secret []byte, method string) (h string) {
 type (
 	SmsResp struct {
 		RequestId string `json:"RequestId"`
-		Code string `json:"Code"`
-		Message string `json:"Message"`
-		BizId string `json:"BizId"`
+		Code      string `json:"Code"`
+		Message   string `json:"Message"`
+		BizId     string `json:"BizId"`
 	}
 )
+
 func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templateParam, outId string) (*SmsResp, error) {
 	smsReq := ss.getSmsReq()
 	smsResp := new(SmsResp)
@@ -164,7 +165,6 @@ func (ss *SmsHelper) SendSms(phoneNumber string, signName, templateCode, templat
 	if err != nil {
 		return nil, err
 	}
-
 
 	if smsResp.Code != "OK" {
 		log.Debugf("[SmsHelper.SendSms]send sms resp:%s", smsResp.Code)

@@ -1,11 +1,11 @@
 package aliapi
 
 import (
-	"testing"
-	"runtime"
-	"path"
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/log"
+	"path"
+	"runtime"
+	"testing"
 )
 
 func TestAliApiHelper_CheckIdCardNameMatch(t *testing.T) {

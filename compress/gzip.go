@@ -1,8 +1,8 @@
 package compress
 
 import (
-	"compress/gzip"
 	"bytes"
+	"compress/gzip"
 )
 
 func CompressGzip(data []byte) ([]byte, error) {
@@ -12,7 +12,7 @@ func CompressGzip(data []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	_, err= w.Write(data)
+	_, err = w.Write(data)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func DecompressGzip(data []byte) ([]byte, error) {
 	}()
 
 	buf := new(bytes.Buffer)
-	_,err = buf.ReadFrom(r)
+	_, err = buf.ReadFrom(r)
 	if err != nil {
 		return nil, err
 	}

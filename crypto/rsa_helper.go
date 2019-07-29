@@ -12,6 +12,7 @@ import (
 	"encoding/pem"
 	"github.com/jinlongchen/golang-utilities/errors"
 )
+
 var (
 	ErrKeyMustBePEMEncoded = errors.New("Invalid Key: Key must be PEM encoded PKCS1 or PKCS8 private key")
 	ErrNotRSAPrivateKey    = errors.New("Key is not a valid RSA private key")

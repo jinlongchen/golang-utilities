@@ -9,8 +9,7 @@ func TestDumpKeyValue(t *testing.T) {
 	}
 
 	DumpKeyValue(&X{
-		A:"aaaa",
-		B:"bbb",
+		A: "aaaa",
+		B: "bbb",
 	})
 }
-

@@ -9,4 +9,3 @@ type Cache interface {
 	Get(key string, obj interface{}) error
 	Set(key string, obj interface{}, timeout time.Duration) error
 }
-

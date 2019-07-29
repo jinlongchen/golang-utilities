@@ -1,9 +1,9 @@
 package helper
 
 import (
+	"encoding/json"
 	"github.com/jinlongchen/golang-utilities/log"
 	"testing"
-	"encoding/json"
 	"time"
 )
 
@@ -14,12 +14,14 @@ func TestSetValue(t *testing.T) {
 	println(string(data))
 	time.Sleep(time.Second)
 }
+
 type M0 struct {
 	ByComplex string `json:"byComplex"`
 }
 type M1 struct {
 	M00 map[string]interface{} `json:"byComplex"`
 }
+
 func TestGetValueAsString(t *testing.T) {
 	m1 := &M1{
 		M00: nil,

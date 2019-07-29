@@ -34,12 +34,12 @@ func GetItems(items []interface{}, countSqlClause, dataSqlClause string, params 
 			log.Errorf("get count err:%s", err.Error())
 		}
 		if err == sql.ErrNoRows {
-			return  0, err
+			return 0, err
 		} else if err != nil {
 			return 0, err
 		}
 	} else {
-		return  0, errors.New("db error")
+		return 0, errors.New("db error")
 	}
 
 	return totalCount, nil

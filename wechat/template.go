@@ -20,9 +20,9 @@ func (wx *Wechat) SendTemplateMsg(param interface{}) error {
 	requestURL.RawQuery = parameters.Encode()
 
 	ret := &struct {
-		Errcode int `json:"errcode" xml:"errcode"`
+		Errcode int    `json:"errcode" xml:"errcode"`
 		Errmsg  string `json:"errmsg" xml:"errmsg"`
-		Msgid   int `json:"msgid" xml:"msgid"`
+		Msgid   int    `json:"msgid" xml:"msgid"`
 	}{}
 	err = http.PostJSON(
 		requestURL.String(),

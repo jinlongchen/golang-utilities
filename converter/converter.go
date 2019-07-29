@@ -1,10 +1,10 @@
 package converter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
-	"encoding/json"
 	"time"
 )
 

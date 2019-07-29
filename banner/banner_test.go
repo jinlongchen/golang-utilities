@@ -2,6 +2,6 @@ package banner
 
 import "testing"
 
-func TestPrint(t *testing.T)  {
+func TestPrint(t *testing.T) {
 	Print("Hello world")
 }

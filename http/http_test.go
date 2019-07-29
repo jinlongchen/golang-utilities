@@ -11,17 +11,18 @@ func TestGetJSON(t *testing.T) {
 	println(info.Nickname)
 	println(info.HeadImgURL)
 }
+
 type UserInfoResult struct {
-	Errcode int `json:"errcode,omitempty" xml:"errcode,omitempty" bson:"-"`
+	Errcode int    `json:"errcode,omitempty" xml:"errcode,omitempty" bson:"-"`
 	Errmsg  string `json:"errmsg,omitempty" xml:"errmsg,omitempty" bson:"-"`
 
-	City       string `json:"city" bson:"city" xml:"city"`
-	Country    string `json:"country" bson:"country" xml:"country"`
-	HeadImgURL string `json:"headimgurl" bson:"headImgURL" xml:"headimgurl"`
-	Language   string `json:"language" bson:"language" xml:"language"`
-	Nickname   string `json:"nickname" bson:"nickname" xml:"nickname"`
-	Openid     string `json:"openid" bson:"openId" xml:"openid"`
+	City       string   `json:"city" bson:"city" xml:"city"`
+	Country    string   `json:"country" bson:"country" xml:"country"`
+	HeadImgURL string   `json:"headimgurl" bson:"headImgURL" xml:"headimgurl"`
+	Language   string   `json:"language" bson:"language" xml:"language"`
+	Nickname   string   `json:"nickname" bson:"nickname" xml:"nickname"`
+	Openid     string   `json:"openid" bson:"openId" xml:"openid"`
 	Privilege  []string `json:"privilege" bson:"privilege" xml:"privilege"`
-	Province   string `json:"province" bson:"province" xml:"province"`
-	Sex        int `json:"sex" bson:"sex" xml:"sex"`
+	Province   string   `json:"province" bson:"province" xml:"province"`
+	Sex        int      `json:"sex" bson:"sex" xml:"sex"`
 }

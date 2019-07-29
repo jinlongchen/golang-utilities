@@ -13,8 +13,8 @@ type RedisCache struct {
 
 func NewRedisCache(addrs map[string]string, pwd string) Cache {
 	ring := redis.NewRing(&redis.RingOptions{
-		Addrs: addrs,
-		Password:pwd,
+		Addrs:    addrs,
+		Password: pwd,
 	})
 	codec := &go_redis_cache.Codec{
 		Redis: ring,
@@ -26,10 +26,9 @@ func NewRedisCache(addrs map[string]string, pwd string) Cache {
 		},
 	}
 	return &RedisCache{
-		codec:codec,
+		codec: codec,
 	}
 }
-
 
 func (c *RedisCache) Delete(key string) error {
 	return c.codec.Delete(key)

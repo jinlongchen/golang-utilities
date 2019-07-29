@@ -6,8 +6,8 @@ import (
 	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/jinlongchen/golang-utilities/rand"
-	"time"
 	gu_xml "github.com/jinlongchen/golang-utilities/xml"
+	"time"
 )
 
 var (

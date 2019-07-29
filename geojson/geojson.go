@@ -310,7 +310,7 @@ func delta(lon, lat float64) (float64, float64) {
 func transform(lon, lat float64) (x, y float64) {
 	var lonlat = lon * lat
 	var absX = math.Sqrt(math.Abs(lon))
-	var lonPi, latPi = lon*math.Pi, lat*math.Pi
+	var lonPi, latPi = lon * math.Pi, lat * math.Pi
 	var d = 20.0*math.Sin(6.0*lonPi) + 20.0*math.Sin(2.0*lonPi)
 	x, y = d, d
 	x += 20.0*math.Sin(latPi) + 40.0*math.Sin(latPi/3.0)

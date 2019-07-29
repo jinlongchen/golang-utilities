@@ -1,11 +1,11 @@
 package log
 
 import (
+	"bytes"
+	"fmt"
+	"github.com/sirupsen/logrus"
 	"go.uber.org/zap/zapcore"
 	"runtime"
-	"github.com/sirupsen/logrus"
-	"fmt"
-	"bytes"
 )
 
 var (

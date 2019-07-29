@@ -6,6 +6,7 @@ import (
 )
 
 type Data []byte
+
 func (d Data) GetMd5() []byte {
 	h := md5.New()
 	h.Write([]byte(d))
@@ -21,6 +22,7 @@ func (d Data) GetMd5String() string {
 }
 
 type String string
+
 func (d String) GetMd5() []byte {
 	h := md5.New()
 	h.Write([]byte(d))

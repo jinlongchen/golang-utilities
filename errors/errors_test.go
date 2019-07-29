@@ -1,9 +1,9 @@
 package errors
 
 import (
-	"testing"
 	goerrors "errors"
 	"fmt"
+	"testing"
 )
 
 func TestWithCode(t *testing.T) {

@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
-	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/jinlongchen/golang-utilities/config"
+	"github.com/jinlongchen/golang-utilities/log"
+	"io/ioutil"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 )
 
 func TestRSASign(t *testing.T) {
-	rsaKey , _ := rsa.GenerateKey(rand.Reader, 2048)
+	rsaKey, _ := rsa.GenerateKey(rand.Reader, 2048)
 	s, err := RSASign(rsaKey, []byte("123"))
 	if err != nil {
 		t.Fatal(err.Error())
