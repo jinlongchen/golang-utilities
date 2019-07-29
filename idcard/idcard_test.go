@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
-	"yijiu.com/common/rand"
+	"github.com/jinlongchen/golang-utilities/rand"
 )
 
 type Street struct {
