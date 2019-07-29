@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 	"strings"
-	"yijiu.com/common/log"
-	"yijiu.com/common/rand"
+	"github.com/jinlongchen/golang-utilities/log"
+    "github.com/jinlongchen/golang-utilities/rand"
 )
 
 func IsResidentIdCard(number string) (valid bool, birthDate time.Time, sex string) {
