@@ -17,13 +17,13 @@ import (
 )
 
 var (
-	AesKeyKey string
+	AesKeySalt string
 )
 
 type Config struct {
-	cache  sync.Map //map[string]interface{}
+	cache  sync.Map
 	v      *viper.Viper
-	aesKey []byte
+	AesKey []byte
 }
 
 func NewConfig(path string) *Config {
@@ -42,6 +42,7 @@ func NewConfig(path string) *Config {
 	})
 	return ret
 }
+
 func (cfg *Config) BindEnv(input ...string) error {
 	return cfg.v.BindEnv(input...)
 }
@@ -180,9 +181,9 @@ func (cfg *Config) GetValue(path string) interface{} {
 }
 
 func (cfg *Config) DecryptString(str string) string {
-	if cfg.aesKey == nil {
+	if cfg.AesKey == nil {
 		aesKey1 := cfg.GetString("crypto.aesKey")
-		cfg.aesKey = crypto.String(aesKey1 + AesKeyKey).GetMd5()
+		cfg.AesKey = crypto.String(aesKey1 + AesKeySalt).GetMd5()
 	}
 
 	eData, err := base64.StdEncoding.DecodeString(str)
@@ -190,7 +191,7 @@ func (cfg *Config) DecryptString(str string) string {
 		log.Errorf("config DecryptString(%s) err:%s", str, err.Error())
 		return ""
 	}
-	dData, err := crypto.AESDecryptCBC(eData, cfg.aesKey, cfg.aesKey[:aes.BlockSize])
+	dData, err := crypto.AESDecryptCBC(eData, cfg.AesKey, cfg.AesKey[:aes.BlockSize])
 	if err != nil {
 		log.Errorf("config DecryptString(%s) err:%s", str, err.Error())
 		return ""
@@ -200,13 +201,13 @@ func (cfg *Config) DecryptString(str string) string {
 }
 
 func (cfg *Config) EncryptString(str string) string {
-	if cfg.aesKey == nil {
+	if cfg.AesKey == nil {
 		aesKey1 := cfg.GetString("crypto.aesKey")
-		cfg.aesKey = crypto.String(aesKey1 + AesKeyKey).GetMd5()
+		cfg.AesKey = crypto.String(aesKey1 + AesKeySalt).GetMd5()
 	}
 
 	dData := []byte(str)
-	eData, err := crypto.AESEncryptCBC(dData, cfg.aesKey, cfg.aesKey[:aes.BlockSize])
+	eData, err := crypto.AESEncryptCBC(dData, cfg.AesKey, cfg.AesKey[:aes.BlockSize])
 	if err != nil {
 		log.Fatalf("config DecryptString(%s) err:%s", str, err.Error())
 	}
