@@ -193,10 +193,6 @@ func (cfg *Config) GetValue(path string) interface{} {
 }
 
 func (cfg *Config) DecryptString(str string) string {
-	if !strings.HasPrefix(str, "aes://") {
-		return str
-	}
-
 	if cfg.AesKey == nil {
 		aesKey1 := cfg.GetString("crypto.aesKey")
 		cfg.AesKey = crypto.String(aesKey1 + AesKeySalt).GetMd5()
