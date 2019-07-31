@@ -7,6 +7,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/converter"
 	"github.com/jinlongchen/golang-utilities/crypto"
 	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/map/helper"
 	gusync "github.com/jinlongchen/golang-utilities/sync"
 	"github.com/naoina/toml"
 	"github.com/spf13/viper"
@@ -46,9 +47,11 @@ func NewConfig(path string) *Config {
 func (cfg *Config) BindEnv(input ...string) error {
 	return cfg.v.BindEnv(input...)
 }
+
 func (cfg *Config) SetDefault(key string, value interface{}) {
 	cfg.v.SetDefault(key, value)
 }
+
 func (cfg *Config) GetString(path string) string {
 	if v, ok := cfg.cache.Load(path); ok {
 		if c, ok := v.(string); ok {
@@ -62,6 +65,14 @@ func (cfg *Config) GetString(path string) string {
 	}
 	cfg.cache.Store(path, ret)
 	//[path] = ret
+	return ret
+}
+
+func (cfg *Config) ExtractStringFromMap(m map[string]interface{}, path string, defaultValue string) string {
+	ret := helper.GetValueAsString(m, "store_path", "")
+	if strings.HasPrefix(ret, "aes://") {
+		ret = cfg.DecryptString(ret[6:])
+	}
 	return ret
 }
 
@@ -119,6 +130,7 @@ func (cfg *Config) GetBool(path string) bool {
 	cfg.cache.Store(path, ret)
 	return ret
 }
+
 func (cfg *Config) GetDuration(path string) time.Duration {
 	if v, ok := cfg.cache.Load(path); ok {
 		if c, ok := v.(time.Duration); ok {
@@ -181,6 +193,10 @@ func (cfg *Config) GetValue(path string) interface{} {
 }
 
 func (cfg *Config) DecryptString(str string) string {
+	if !strings.HasPrefix(str, "aes://") {
+		return str
+	}
+
 	if cfg.AesKey == nil {
 		aesKey1 := cfg.GetString("crypto.aesKey")
 		cfg.AesKey = crypto.String(aesKey1 + AesKeySalt).GetMd5()
@@ -214,6 +230,7 @@ func (cfg *Config) EncryptString(str string) string {
 
 	return base64.StdEncoding.EncodeToString(eData)
 }
+
 func (cfg *Config) Save(path string) error {
 	data, err := toml.Marshal(cfg.v.AllSettings())
 	if err != nil {
