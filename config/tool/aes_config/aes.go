@@ -18,7 +18,7 @@ func main() {
 	println("aeskey:", *aesKey)
 	println("aeskeysalt:", *aesKeySalt)
 	println("type:", *typ)
-	println("str:", *typ)
+	println("str:", *str)
 
 	cfg := &config.Config{
 		AesKey: crypto.String(*aesKey + *aesKeySalt).GetMd5(),
