@@ -69,7 +69,7 @@ func (cfg *Config) GetString(path string) string {
 }
 
 func (cfg *Config) ExtractStringFromMap(m map[string]interface{}, path string, defaultValue string) string {
-	ret := helper.GetValueAsString(m, "store_path", "")
+	ret := helper.GetValueAsString(m, path, "")
 	if strings.HasPrefix(ret, "aes://") {
 		ret = cfg.DecryptString(ret[6:])
 	}
