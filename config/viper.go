@@ -57,8 +57,8 @@ func (cfg *Config) GetString(path string) string {
 	}
 
 	ret := cfg.v.GetString(path)
-	if strings.HasPrefix(ret, "aes:") {
-		ret = cfg.DecryptString(ret[4:])
+	if strings.HasPrefix(ret, "aes://") {
+		ret = cfg.DecryptString(ret[6:])
 	}
 	cfg.cache.Store(path, ret)
 	//[path] = ret
