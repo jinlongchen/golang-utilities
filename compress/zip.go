@@ -1,13 +1,14 @@
 package compress
 
+
 import (
 	"bytes"
-	"compress/gzip"
+	"compress/zlib"
 )
 
-func Gzip(data []byte) ([]byte, error) {
+func Zip(data []byte) ([]byte, error) {
 	var buf bytes.Buffer
-	w, err := gzip.NewWriterLevel(&buf, gzip.BestCompression)
+	w, err := zlib.NewWriterLevel(&buf, zlib.BestCompression)
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +25,8 @@ func Gzip(data []byte) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func Gunzip(data []byte) ([]byte, error) {
-	r, err := gzip.NewReader(bytes.NewBuffer(data))
+func Unzip(data []byte) ([]byte, error) {
+	r, err := zlib.NewReader(bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
