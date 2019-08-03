@@ -1,6 +1,5 @@
 package middlewares
 
-
 import (
 	"fmt"
 	"github.com/jinlongchen/golang-utilities/log"
