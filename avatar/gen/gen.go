@@ -36,7 +36,7 @@ var (
 			log.Fatalln(err.Error())
 		}
 		oLen := len(data)
-		data, err = compress.CompressGzip(data)
+		data, err = compress.Gzip(data)
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
