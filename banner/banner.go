@@ -7,5 +7,5 @@ import (
 )
 
 func Print(s string) {
-	_ = figurine.Write(os.Stdout, s, "Bloody.flf")
+	_ = figurine.Write(os.Stdout, s, "Calvin S.flf")
 }
