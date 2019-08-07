@@ -1,14 +1,15 @@
 package cache
 
 import (
-	go_redis_cache "github.com/go-redis/cache"
+	redisCache "github.com/go-redis/cache"
 	"github.com/go-redis/redis"
 	"github.com/vmihailenco/msgpack"
 	"time"
 )
 
 type RedisCache struct {
-	codec *go_redis_cache.Codec
+	codec *redisCache.Codec
+	ring  *redis.Ring
 }
 
 func NewRedisCache(addrs map[string]string, pwd string) Cache {
@@ -16,7 +17,7 @@ func NewRedisCache(addrs map[string]string, pwd string) Cache {
 		Addrs:    addrs,
 		Password: pwd,
 	})
-	codec := &go_redis_cache.Codec{
+	codec := &redisCache.Codec{
 		Redis: ring,
 		Marshal: func(v interface{}) ([]byte, error) {
 			return msgpack.Marshal(v)
@@ -27,6 +28,7 @@ func NewRedisCache(addrs map[string]string, pwd string) Cache {
 	}
 	return &RedisCache{
 		codec: codec,
+		ring:  ring,
 	}
 }
 
@@ -43,9 +45,12 @@ func (c *RedisCache) Get(key string, obj interface{}) error {
 }
 
 func (c *RedisCache) Set(key string, obj interface{}, timeout time.Duration) error {
-	return c.codec.Set(&go_redis_cache.Item{
+	return c.codec.Set(&redisCache.Item{
 		Key:        key,
 		Object:     obj,
 		Expiration: timeout,
 	})
+}
+func (c *RedisCache) Close() error {
+	return c.ring.Close()
 }

@@ -15,8 +15,8 @@ require (
 	github.com/dgryski/go-sip13 v0.0.0-20190329191031-25c5027a8c7b // indirect
 	github.com/fsnotify/fsnotify v1.4.7
 	github.com/go-kit/kit v0.9.0
-	github.com/go-redis/cache v6.4.0+incompatible
-	github.com/go-redis/redis v6.15.2+incompatible
+	github.com/go-redis/cache v6.4.0+incompatible // indirect
+	github.com/go-redis/redis v6.15.2+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gobuffalo/logger v1.0.1 // indirect
 	github.com/gobuffalo/packr v1.30.1
