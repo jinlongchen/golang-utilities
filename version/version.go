@@ -5,9 +5,10 @@ import (
 )
 
 var (
-	build string
+	buildTime string
+	gitHash   string
 )
 
-func String(app string, binary string) string {
-	return fmt.Sprintf("%s v%s (build %s)", app, binary, build)
+func String(app string, version string) string {
+	return fmt.Sprintf("%s v%s (hash %s build %s)", app, version, gitHash, buildTime)
 }
