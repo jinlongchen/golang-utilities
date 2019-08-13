@@ -1,17 +1,26 @@
 package datetime
 
-import "time"
-
-const (
-	DateTimeFormatLayout = "2006-01-02 15:04:05"
+import (
+	"encoding/json"
+	"fmt"
+	"reflect"
 )
 
-func Date(t time.Time) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d, 0, 0, 0, 0, t.Location())
+type DateTime float64
+
+func (dt DateTime) MarshalJSON() ([]byte, error) {
+	uType := reflect.TypeOf(dt).Elem()
+
+	return []byte(fmt.Sprintf("%0.2f", n)), nil
 }
 
-func Today() time.Time {
-	t := time.Now()
-	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+func (n *DateTime) UnmarshalJSON(b []byte) error {
+	var f float64
+	err := json.Unmarshal(b, &f)
+	*n = DateTime(f)
+	return err
+}
+
+func (n DateTime) String() string {
+	return fmt.Sprintf("%0.2f", n)
 }
