@@ -37,5 +37,8 @@ func (m String) ToString() string {
 	if m == nil {
 		return ""
 	}
+	if bytes.Compare(sbArray, m) == 0 {
+		return ""
+	}
 	return string(m)
 }
