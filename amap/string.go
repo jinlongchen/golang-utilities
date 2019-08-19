@@ -19,6 +19,9 @@ func (m String) MarshalJSON() ([]byte, error) {
 	if bytes.Compare(sbArray, m) == 0 {
 		return []byte(`""`), nil
 	}
+	if len(m) == 0 {
+		return []byte(`""`), nil
+	}
 	return m, nil
 }
 
