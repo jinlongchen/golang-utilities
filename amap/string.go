@@ -3,6 +3,7 @@ package amap
 import (
 	"bytes"
 	"errors"
+	"github.com/jinlongchen/golang-utilities/json"
 )
 
 var (
@@ -45,5 +46,10 @@ func (m String) ToString() string {
 	if bytes.Compare(sbArray, m) == 0 {
 		return ""
 	}
-	return string(m)
+	var ret string
+	err := json.Unmarshal(m, &ret)
+	if err != nil {
+		return ""
+	}
+	return ret
 }
