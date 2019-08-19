@@ -13,7 +13,6 @@ type String []byte
 
 // MarshalJSON returns m as the JSON encoding of m.
 func (m String) MarshalJSON() ([]byte, error) {
-	println("MarshalJSON:", string(m))
 	if m == nil {
 		return []byte(`""`), nil
 	}
