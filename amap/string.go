@@ -8,7 +8,6 @@ import (
 
 var (
 	sbArray = []byte(`[]`)
-	q = []byte(`"`)
 )
 type String []byte
 
@@ -46,18 +45,16 @@ func (m *String) UnmarshalJSON(data []byte) error {
 
 func (m String) ToString() string {
 	if m == nil {
+		println("m == nil")
 		return ""
 	}
 	if bytes.Compare(sbArray, m) == 0 {
+		println("m is sb array")
 		return ""
 	}
 	if len(m) < 1 {
+		println("len(m) < 1")
 		return ""
 	}
-	var ret string
-	err := json.Unmarshal(m, &ret)
-	if err != nil {
-		return ""
-	}
-	return ret
+	return string(m)
 }
