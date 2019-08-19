@@ -14,3 +14,11 @@ func ParseJSON(ctx echo.Context, v interface{}) error {
 	}
 	return json.Unmarshal(data, v)
 }
+
+func WriteJSON(ctx echo.Context, code int, v interface{}) error {
+	data, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	return ctx.Blob(code, echo.MIMEApplicationJSON, data)
+}
