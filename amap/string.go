@@ -8,6 +8,7 @@ import (
 
 var (
 	sbArray = []byte(`[]`)
+	q = []byte(`"`)
 )
 type String []byte
 
@@ -22,7 +23,7 @@ func (m String) MarshalJSON() ([]byte, error) {
 	if len(m) == 0 {
 		return []byte(`""`), nil
 	}
-	return m, nil
+	return json.Marshal(string(m))
 }
 
 // UnmarshalJSON sets *m to a copy of data.
@@ -31,7 +32,7 @@ func (m *String) UnmarshalJSON(data []byte) error {
 		return errors.New("amap.String: UnmarshalJSON on nil pointer")
 	}
 	if bytes.Compare(sbArray, data) == 0 {
-		*m = []byte("")
+		*m = []byte(``)
 		return nil
 	}
 	var str string
@@ -39,7 +40,7 @@ func (m *String) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	*m = []byte(str) //append((*m)[0:0], data...)
+	*m = []byte(str) //
 	return nil
 }
 
