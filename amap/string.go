@@ -35,7 +35,12 @@ func (m *String) UnmarshalJSON(data []byte) error {
 		*m = []byte("")
 		return nil
 	}
-	*m = append((*m)[0:0], data...)
+	var str string
+	err := json.Unmarshal(data, &str)
+	if err != nil {
+		return err
+	}
+	*m = []byte(str) //append((*m)[0:0], data...)
 	return nil
 }
 
@@ -44,6 +49,9 @@ func (m String) ToString() string {
 		return ""
 	}
 	if bytes.Compare(sbArray, m) == 0 {
+		return ""
+	}
+	if len(m) < 1 {
 		return ""
 	}
 	var ret string
