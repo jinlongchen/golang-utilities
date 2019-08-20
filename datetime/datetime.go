@@ -1,26 +1,29 @@
 package datetime
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
+	"github.com/jinlongchen/golang-utilities/json"
+	"strings"
+	"time"
 )
 
-type DateTime float64
+type UTCTime time.Time
 
-func (dt DateTime) MarshalJSON() ([]byte, error) {
-	uType := reflect.TypeOf(dt).Elem()
-
-	return []byte(fmt.Sprintf("%0.2f", n)), nil
+func (dt UTCTime) MarshalJSON() ([]byte, error) {
+	tmp := time.Time(dt)
+	return json.ShouldMarshal(tmp.UTC().Format(time.RFC3339)), nil
 }
 
-func (n *DateTime) UnmarshalJSON(b []byte) error {
-	var f float64
-	err := json.Unmarshal(b, &f)
-	*n = DateTime(f)
-	return err
-}
+func (dt *UTCTime) UnmarshalJSON(p []byte) error {
+	t, err := time.Parse(time.RFC3339, strings.Replace(
+		string(p),
+		"\"",
+		"",
+		-1,
+	))
+	if err != nil {
+		return err
+	}
+	*dt = UTCTime(t)
 
-func (n DateTime) String() string {
-	return fmt.Sprintf("%0.2f", n)
+	return nil
 }
