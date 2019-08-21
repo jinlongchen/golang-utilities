@@ -61,7 +61,7 @@ func (dt *UTCTime) AfterEpoch() bool {
 	return t.After(time.Unix(0, 0))
 }
 
-func (dt *UTCTime)Unix() int64 {
+func (dt *UTCTime) Unix() int64 {
 	if dt == nil {
 		return 0
 	}
