@@ -60,3 +60,16 @@ func (dt *UTCTime) AfterEpoch() bool {
 	t := time.Time(*dt)
 	return t.After(time.Unix(0, 0))
 }
+
+func (dt *UTCTime)Unix() int64 {
+	if dt == nil {
+		return 0
+	}
+	t := time.Time(*dt)
+	return t.Unix()
+}
+
+func Unix(sec int64, nsec int64) UTCTime {
+	t := time.Unix(sec, nsec)
+	return UTCTime(t)
+}
