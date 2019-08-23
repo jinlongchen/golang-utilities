@@ -134,7 +134,7 @@ func PutDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string,
 	}
 	client := &gohttp.Client{
 		Transport: tr,
-		Timeout:   time.Duration(time.Second * 30),
+		Timeout:   time.Second * 30,
 	}
 
 	request, _ := gohttp.NewRequest("PUT", reqURL, bytes.NewReader(data))

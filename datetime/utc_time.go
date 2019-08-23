@@ -61,6 +61,22 @@ func (dt *UTCTime) AfterEpoch() bool {
 	return t.After(time.Unix(0, 0))
 }
 
+func (dt *UTCTime) Before(u time.Time) bool {
+	if dt == nil {
+		return false
+	}
+	t := time.Time(*dt)
+	return t.Before(u)
+}
+
+func (dt *UTCTime) After(u time.Time) bool {
+	if dt == nil {
+		return false
+	}
+	t := time.Time(*dt)
+	return t.After(u)
+}
+
 func (dt *UTCTime) Unix() int64 {
 	if dt == nil {
 		return 0
