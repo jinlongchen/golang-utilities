@@ -128,6 +128,60 @@ func GetJSON(url string, out interface{}) error {
 	return readJSON(resp, out)
 }
 
+func PutDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte) (gohttp.Header, []byte, error) {
+	tr := &gohttp.Transport{
+		TLSClientConfig: &tls.Config{},
+	}
+	client := &gohttp.Client{
+		Transport: tr,
+		Timeout:   time.Duration(time.Second * 30),
+	}
+
+	request, _ := gohttp.NewRequest("PUT", reqURL, bytes.NewReader(data))
+
+	if reqHeader != nil {
+		for key, value := range reqHeader {
+			if len(value) > 0 {
+				request.Header.Set(key, value[0])
+			}
+		}
+	}
+	request.Header.Set("Content-Type", bodyType)
+	response, err := client.Do(request)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	defer response.Body.Close()
+
+	var body []byte
+
+	switch response.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err := gzip.NewReader(response.Body)
+		if err != nil {
+			return nil, nil, err
+		}
+		defer reader.Close()
+
+		body, err = ioutil.ReadAll(reader)
+		if err != nil {
+			return nil, nil, err
+		}
+	default:
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+	if response.StatusCode == 200 {
+		return response.Header, body, nil
+	} else {
+		return response.Header, body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
+	}
+}
+
 func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 	timeout := time.Duration(15 * time.Second)
 	client := &gohttp.Client{
