@@ -53,6 +53,34 @@ func GetValue(m map[string]interface{}, path string) interface{} {
 	}
 }
 
+func Exists(m map[string]interface{}, path string) bool {
+	if path == "" {
+		return false
+	}
+	index := strings.Index(path, ".")
+	if index > 0 {
+		child := m[path[:index]]
+		if child == nil || reflect.ValueOf(child).IsNil() {
+			return false
+		}
+		switch child.(type) {
+		case map[string]interface{}:
+			return Exists(child.(map[string]interface{}), path[index+1:])
+		default:
+			m := converter.ConvertToMap(child)
+			if m != nil {
+				return Exists(m, path[index+1:])
+			}
+			return false
+		}
+	} else {
+		if _, ok := m[path]; ok {
+			return true
+		}
+		return false
+	}
+}
+
 func GetValueAsInt(m map[string]interface{}, path string, defaultValue int) int {
 	if path == "" {
 		return converter.AsInt(m, defaultValue)
