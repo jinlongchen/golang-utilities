@@ -92,7 +92,12 @@ func GetNormalTimestampRandString() string {
 
 	return buf.String()
 }
-
+func GetRandFloat64() float64 {
+	return r.Float64()
+}
+func GetRandFloat32() float32 {
+	return r.Float32()
+}
 func GetRandInt64(min int64, max int64) int64 {
 	return min + r.Int63n(max-min)
 }
