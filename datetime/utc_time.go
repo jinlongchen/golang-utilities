@@ -89,3 +89,11 @@ func Unix(sec int64, nsec int64) UTCTime {
 	t := time.Unix(sec, nsec)
 	return UTCTime(t)
 }
+
+func (dt *UTCTime) Format(layout string) string  {
+	if dt == nil {
+		return ""
+	}
+	t := time.Time(*dt)
+	return t.Format(layout)
+}
