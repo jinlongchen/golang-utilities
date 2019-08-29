@@ -221,13 +221,13 @@ func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
-func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte) (gohttp.Header, []byte, error) {
+func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte, timeout time.Duration) (gohttp.Header, []byte, error) {
 	tr := &gohttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
 	client := &gohttp.Client{
 		Transport: tr,
-		Timeout:   time.Duration(time.Second * 30),
+		Timeout:   timeout,
 	}
 
 	request, _ := gohttp.NewRequest("POST", reqURL, bytes.NewReader(data))

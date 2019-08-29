@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/jinlongchen/golang-utilities/http"
 	gohttp "net/http"
+	"time"
 )
 
 const (
@@ -59,6 +60,7 @@ func (api *AliApiHelper) ocrVehicleLicense(data []byte, side string) (ret []byte
 		},
 		"application/json",
 		jsonBody,
+		time.Minute,
 	)
 
 	fmt.Printf("%v\n", respHeader)
