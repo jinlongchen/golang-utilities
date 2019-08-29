@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/jinlongchen/golang-utilities/http"
 	gohttp "net/http"
+	"time"
 )
 
 const (
@@ -59,6 +60,7 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 		},
 		"application/json",
 		jsonBody,
+		time.Minute,
 	)
 
 	//fmt.Printf("%v\n", respHeader)
