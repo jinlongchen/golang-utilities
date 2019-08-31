@@ -3,18 +3,22 @@ package rand
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/jinlongchen/golang-utilities/errors"
 	mrand "math/rand"
 	"net"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/jinlongchen/golang-utilities/errors"
 )
 
 var (
 	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	r       = mrand.New(mrand.NewSource(time.Now().UnixNano()))
-	seqNo   uint64
+	//r       = mrand.New(mrand.NewSource(time.Now().UnixNano()))
+	r 		= mrand.New(&lockedSource{src: mrand.NewSource(time.Now().UnixNano()).(mrand.Source64)})
+
+seqNo   uint64
 	Address uint64
 )
 
@@ -93,6 +97,7 @@ func GetNormalTimestampRandString() string {
 	return buf.String()
 }
 func GetRandFloat64() float64 {
+	mrand.Float64()
 	return r.Float64()
 }
 func GetRandFloat32() float32 {
@@ -240,5 +245,64 @@ func getIpAddr() (addr uint64) {
 			}
 		}
 	}
+	return
+}
+
+
+type lockedSource struct {
+	lk  sync.Mutex
+	src mrand.Source64
+}
+
+func (r *lockedSource) Int63() (n int64) {
+	r.lk.Lock()
+	n = r.src.Int63()
+	r.lk.Unlock()
+	return
+}
+
+func (r *lockedSource) Uint64() (n uint64) {
+	r.lk.Lock()
+	n = r.src.Uint64()
+	r.lk.Unlock()
+	return
+}
+
+func (r *lockedSource) Seed(seed int64) {
+	r.lk.Lock()
+	r.src.Seed(seed)
+	r.lk.Unlock()
+}
+
+// seedPos implements Seed for a lockedSource without a race condition.
+func (r *lockedSource) seedPos(seed int64, readPos *int8) {
+	r.lk.Lock()
+	r.src.Seed(seed)
+	*readPos = 0
+	r.lk.Unlock()
+}
+
+// read implements Read for a lockedSource without a race condition.
+func (r *lockedSource) read(p []byte, readVal *int64, readPos *int8) (n int, err error) {
+	r.lk.Lock()
+	n, err = read(p, r.src.Int63, readVal, readPos)
+	r.lk.Unlock()
+	return
+}
+
+func read(p []byte, int63 func() int64, readVal *int64, readPos *int8) (n int, err error) {
+	pos := *readPos
+	val := *readVal
+	for n = 0; n < len(p); n++ {
+		if pos == 0 {
+			val = int63()
+			pos = 7
+		}
+		p[n] = byte(val)
+		val >>= 8
+		pos--
+	}
+	*readPos = pos
+	*readVal = val
 	return
 }
