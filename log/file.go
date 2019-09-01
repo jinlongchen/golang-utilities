@@ -10,11 +10,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func NewFileLogger(filePath string,
-	maxSize int,
-	maxBackups int,
-	maxAge int) *zap.Logger {
-
+type FileLogger struct {
+	zapLogger *zap.Logger
+}
+func NewFileLogger(filePath string, maxSize int, maxBackups int, maxAge int) *FileLogger {
 	hook := lumberjack.Logger{
 		Filename:   filePath,
 		MaxSize:    maxSize, // megabytes
@@ -35,5 +34,34 @@ func NewFileLogger(filePath string,
 		fileCore,
 	)
 
-	return zap.New(core)
+	return &FileLogger{
+		zap.New(core),
+	}
+}
+
+func (fileLogger *FileLogger)Panicf(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelPanic, fmt, args...)
+}
+func (fileLogger *FileLogger)Fatalf(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelFatal, fmt, args...)
+}
+func (fileLogger *FileLogger)Errorf(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelError, fmt, args...)
+}
+func (fileLogger *FileLogger)Infof(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelInfo, fmt, args...)
+}
+func (fileLogger *FileLogger)Debugf(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelDebug, fmt, args...)
+}
+func (fileLogger *FileLogger)Warnf(fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelWarn, fmt, args...)
+}
+func (fileLogger *FileLogger)Messagef(level Level, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, level, fmt, args...)
+}
+func (fileLogger *FileLogger)Flush() {
+	if fileLogger.zapLogger != nil {
+		fileLogger.zapLogger.Sync()
+	}
 }

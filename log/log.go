@@ -145,25 +145,25 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 //	globalLogrusLogger.AddHook(hook)
 //}
 func Panicf(fmt string, args ...interface{}) {
-	write(LevelPanic, fmt, args...)
+	write(globalZapLogger, LevelPanic, fmt, args...)
 }
 func Fatalf(fmt string, args ...interface{}) {
-	write(LevelFatal, fmt, args...)
+	write(globalZapLogger, LevelFatal, fmt, args...)
 }
 func Errorf(fmt string, args ...interface{}) {
-	write(LevelError, fmt, args...)
+	write(globalZapLogger, LevelError, fmt, args...)
 }
 func Infof(fmt string, args ...interface{}) {
-	write(LevelInfo, fmt, args...)
+	write(globalZapLogger, LevelInfo, fmt, args...)
 }
 func Debugf(fmt string, args ...interface{}) {
-	write(LevelDebug, fmt, args...)
+	write(globalZapLogger, LevelDebug, fmt, args...)
 }
 func Warnf(fmt string, args ...interface{}) {
-	write(LevelWarn, fmt, args...)
+	write(globalZapLogger, LevelWarn, fmt, args...)
 }
 func Messagef(level Level, fmt string, args ...interface{}) {
-	write(level, fmt, args...)
+	write(globalZapLogger, level, fmt, args...)
 }
 func Flush() {
 	if globalZapLogger != nil {
@@ -175,7 +175,7 @@ func Json(j interface{}) {
 	if err != nil {
 		return
 	}
-	write(LevelInfo, "%s", string(jd))
+	write(globalZapLogger, LevelInfo, "%s", string(jd))
 }
 func DumpFormattedJson(j interface{}) {
 	jd, err := json.MarshalIndent(j, "", " ")
@@ -190,41 +190,27 @@ func DumpKeyValue(j interface{}) {
 		fmt.Printf("%s:%v\n", key, value)
 	}
 }
-func write(level Level, format string, args ...interface{}) {
-	//if globalLogrusLogger == nil {
-	//	return
-	//}
-	////callStack := string(stack(0))
-	//if level == LevelPanic {
-	//	globalLogrusLogger.WithField("app", globalAppName).Panicf(format, args...)
-	//} else if level == LevelFatal {
-	//	globalLogrusLogger.WithField("app", globalAppName).Fatalf(format, args...)
-	//} else if level == LevelError {
-	//	globalLogrusLogger.WithField("app", globalAppName).Errorf(format, args...)
-	//} else if level == LevelWarn {
-	//	globalLogrusLogger.WithField("app", globalAppName).Warnf(format, args...)
-	//} else if level == LevelInfo {
-	//	globalLogrusLogger.WithField("app", globalAppName).Infof(format, args...)
-	//} else if level == LevelDebug {
-	//	globalLogrusLogger.WithField("app", globalAppName).Debugf(format, args...)
-	//}
-	if globalZapLogger == nil {
+func write(globalZapLogger, zapLogger *zap.Logger, level Level, format string, args ...interface{}) {
+	if zapLogger == nil {
+		zapLogger = globalZapLogger
+	}
+	if zapLogger == nil {
 		return
 	}
 
 	if level == LevelPanic {
-		globalZapLogger.Panic(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Panic(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 		os.Exit(1)
 	} else if level == LevelFatal {
-		globalZapLogger.Fatal(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Fatal(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 		os.Exit(1)
 	} else if level == LevelError {
-		globalZapLogger.Error(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Error(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	} else if level == LevelWarn {
-		globalZapLogger.Warn(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Warn(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	} else if level == LevelInfo {
-		globalZapLogger.Info(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Info(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	} else if level == LevelDebug {
-		globalZapLogger.Debug(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Debug(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	}
 }
