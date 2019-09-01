@@ -82,7 +82,7 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 		}
 
 		fileWriter := zapcore.AddSync(&hook)
-		fileEncoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+		fileEncoder := zapcore.NewJSONEncoder(newProductionEncoderConfig())
 		fileCore := zapcore.NewCore(fileEncoder, fileWriter, levelFunc)
 
 		cores = append(cores, fileCore)
@@ -212,5 +212,21 @@ func write(zapLogger *zap.Logger, level Level, format string, args ...interface{
 		zapLogger.Info(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
 	} else if level == LevelDebug {
 		zapLogger.Debug(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+	}
+}
+
+func newProductionEncoderConfig() zapcore.EncoderConfig {
+	return zapcore.EncoderConfig{
+		TimeKey:        "ts",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.LowercaseLevelEncoder,
+		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
 }
