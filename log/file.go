@@ -27,7 +27,7 @@ func NewFileLogger(filePath string, maxSize int, maxBackups int, maxAge int) *Fi
 	})
 
 	fileWriter := zapcore.AddSync(&hook)
-	fileEncoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	fileEncoder := zapcore.NewJSONEncoder(newProductionEncoderConfig())
 	fileCore := zapcore.NewCore(fileEncoder, fileWriter, levelFunc)
 
 	core := zapcore.NewTee(
