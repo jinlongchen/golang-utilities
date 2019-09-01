@@ -190,7 +190,7 @@ func DumpKeyValue(j interface{}) {
 		fmt.Printf("%s:%v\n", key, value)
 	}
 }
-func write(globalZapLogger, zapLogger *zap.Logger, level Level, format string, args ...interface{}) {
+func write(zapLogger *zap.Logger, level Level, format string, args ...interface{}) {
 	if zapLogger == nil {
 		zapLogger = globalZapLogger
 	}
