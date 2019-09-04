@@ -34,20 +34,11 @@ func GetValue(m map[string]interface{}, path string) interface{} {
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return nil
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValue(child.(map[string]interface{}), path[index+1:])
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValue(m, path[index+1:])
-			}
-			return nil
-		}
+		return GetValue(child, path[index+1:])
 	} else {
 		return m[path]
 	}
@@ -59,20 +50,11 @@ func Exists(m map[string]interface{}, path string) bool {
 	}
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return false
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return Exists(child.(map[string]interface{}), path[index+1:])
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return Exists(m, path[index+1:])
-			}
-			return false
-		}
+		return Exists(child, path[index+1:])
 	} else {
 		if _, ok := m[path]; ok {
 			return true
@@ -87,20 +69,11 @@ func GetValueAsInt(m map[string]interface{}, path string, defaultValue int) int 
 	}
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsInt(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsInt(m, path[index+1:], defaultValue)
-			}
-			return defaultValue
-		}
+		return GetValueAsInt(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsInt(m[path], defaultValue)
 	}
@@ -112,20 +85,11 @@ func GetValueAsInt32(m map[string]interface{}, path string, defaultValue int32) 
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsInt32(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsInt32(m, path[index+1:], defaultValue)
-			}
-			return defaultValue
-		}
+		return GetValueAsInt32(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsInt32(m[path], defaultValue)
 	}
@@ -137,20 +101,11 @@ func GetValueAsInt64(m map[string]interface{}, path string, defaultValue int64) 
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsInt64(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsInt64(m, path[index+1:], defaultValue)
-			}
-			return defaultValue
-		}
+		return GetValueAsInt64(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsInt64(m[path], defaultValue)
 	}
@@ -165,21 +120,11 @@ func GetValueAsString(m map[string]interface{}, path string, defaultValue string
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsString(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsString(m, path[index+1:], defaultValue)
-			}
-			return converter.AsString(child, defaultValue)
-		}
+		return GetValueAsString(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsString(m[path], defaultValue)
 	}
@@ -194,21 +139,11 @@ func GetValueAsStringSlice(m map[string]interface{}, path string, defaultValue [
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsStringSlice(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsStringSlice(m, path[index+1:], defaultValue)
-			}
-			return converter.AsStringSlice(child, defaultValue)
-		}
+		return GetValueAsStringSlice(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsStringSlice(m[path], defaultValue)
 	}
@@ -220,20 +155,11 @@ func GetValueAsBool(m map[string]interface{}, path string, defaultValue bool) bo
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsBool(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsBool(m, path[index+1:], defaultValue)
-			}
-			return converter.AsBool(child, defaultValue)
-		}
+		return GetValueAsBool(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsBool(m[path], defaultValue)
 	}
@@ -245,20 +171,11 @@ func GetValueAsFloat64(m map[string]interface{}, path string, defaultValue float
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsFloat64(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return GetValueAsFloat64(m, path[index+1:], defaultValue)
-			}
-			return defaultValue
-		}
+		return GetValueAsFloat64(child, path[index+1:], defaultValue)
 	} else {
 		return converter.AsFloat64(m[path], defaultValue)
 	}
@@ -270,20 +187,11 @@ func GetValueAsMap(m map[string]interface{}, path string, defaultValue map[strin
 
 	index := strings.Index(path, ".")
 	if index > 0 {
-		child := m[path[:index]]
-		if child == nil || reflect.ValueOf(child).IsNil() {
+		child := converter.ConvertToMap(m[path[:index]])
+		if child == nil {
 			return defaultValue
 		}
-		switch child.(type) {
-		case map[string]interface{}:
-			return GetValueAsMap(child.(map[string]interface{}), path[index+1:], defaultValue)
-		default:
-			m := converter.ConvertToMap(child)
-			if m != nil {
-				return m
-			}
-			return defaultValue
-		}
+		return GetValueAsMap(child, path[index+1:], defaultValue)
 	} else {
 		child := m[path]
 		switch child.(type) {

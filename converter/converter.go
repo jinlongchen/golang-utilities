@@ -330,6 +330,13 @@ func AsDuration(v interface{}, defaultValue time.Duration) time.Duration {
 }
 
 func ConvertToMap(s interface{}) map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	switch s.(type) {
+	case map[string]interface{}:
+		return s.(map[string]interface{})
+	}
 	data, err := json.Marshal(s)
 	if err != nil {
 		return nil
