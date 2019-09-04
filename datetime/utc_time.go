@@ -15,12 +15,13 @@ func (dt UTCTime) MarshalJSON() ([]byte, error) {
 }
 
 func (dt *UTCTime) UnmarshalJSON(p []byte) error {
-	t, err := dateparse.ParseAny(strings.Replace(
+	timeStr := strings.Replace(
 		string(p),
 		"\"",
 		"",
 		-1,
-	))
+	)
+	t, err := dateparse.ParseAny(timeStr)
 	if err != nil {
 		t, err = time.Parse(time.RFC3339, strings.Replace(
 			string(p),

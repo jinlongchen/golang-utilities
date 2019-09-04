@@ -1,8 +1,9 @@
 package helper
 
 import (
-	"encoding/json"
+	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/jinlongchen/golang-utilities/log"
+
 	"testing"
 	"time"
 )
@@ -32,4 +33,25 @@ func TestGetValueAsString(t *testing.T) {
 	log.DumpFormattedJson(m)
 	v := GetValueAsString(m, "created_by.user.id", "")
 	println(v == "")
+}
+func TestExists(t *testing.T) {
+	data := []byte(`{"id":"","member":{"id":"e8332630ae4a9c0ddc4d6ac0bc6a53d8","type":""},"type":"","title":"","message":"","amount":0,"balance":null,"payment_provider":"","time":0,"created_on":0,"created_by":""}`)
+	filter := make(map[string]interface{})
+	err := json.Unmarshal(data, &filter)
+	if err != nil {
+		panic(err)
+	}
+	type X struct {
+		Y string `json:"y"`
+	}
+	filter["abc"] = []X {X{
+		Y: "y",
+	}}
+	println(string(json.ShouldMarshal(X{
+		Y: "y",
+	})))
+	exists3 := Exists(filter, "abc.y")
+	exists := Exists(filter, "member.kk")
+	exists2 := Exists(filter, "amount.range.min")
+	println(exists, exists2, exists3)
 }
