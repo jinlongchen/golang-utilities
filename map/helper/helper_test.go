@@ -22,6 +22,17 @@ type M0 struct {
 type M1 struct {
 	M00 map[string]interface{} `json:"byComplex"`
 }
+type MemberRole string
+const (
+	MemberRoleB2bAgent   MemberRole = "b2b_agent"
+)
+func TestGetValueAsStringSlice(t *testing.T) {
+	f := map[string]interface{}{
+		"roles":[]MemberRole{MemberRoleB2bAgent},
+	}
+	roles := GetValueAsStringSlice(f, "roles", nil)
+	log.Infof("%v", roles)
+}
 
 func TestGetValueAsString(t *testing.T) {
 	m1 := &M1{
@@ -35,7 +46,7 @@ func TestGetValueAsString(t *testing.T) {
 	println(v == "")
 }
 func TestExists(t *testing.T) {
-	data := []byte(`{"id":"","member":{"id":"e8332630ae4a9c0ddc4d6ac0bc6a53d8","type":""},"type":"","title":"","message":"","amount":0,"balance":null,"payment_provider":"","time":0,"created_on":0,"created_by":""}`)
+	data := []byte(`{"member":{"id":"e8332630ae4a9c0ddc4d6ac0bc6a53d8","type":""},"type":"","title":"","message":"","amount":0,"balance":null,"payment_provider":"","time":0,"created_on":0,"created_by":""}`)
 	filter := make(map[string]interface{})
 	err := json.Unmarshal(data, &filter)
 	if err != nil {
@@ -50,7 +61,7 @@ func TestExists(t *testing.T) {
 	println(string(json.ShouldMarshal(X{
 		Y: "y",
 	})))
-	exists3 := Exists(filter, "abc.y")
+	exists3 := Exists(filter, "id")
 	exists := Exists(filter, "member.kk")
 	exists2 := Exists(filter, "amount.range.min")
 	println(exists, exists2, exists3)
