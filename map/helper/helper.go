@@ -1,9 +1,10 @@
 package helper
 
 import (
-	"github.com/jinlongchen/golang-utilities/converter"
 	"reflect"
 	"strings"
+
+	"github.com/jinlongchen/golang-utilities/converter"
 )
 
 func SetValue(m map[string]interface{}, path string, val interface{}) {

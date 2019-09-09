@@ -1,11 +1,12 @@
 package converter
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jinlongchen/golang-utilities/json"
 )
 
 func AsInt(v interface{}, defaultValue int) int {
@@ -229,6 +230,11 @@ func AsArray(v interface{}) []interface{} {
 	return nil
 }
 func AsStringSlice(v interface{}, defaultValue []string) []string {
+	defer func() {
+		if err := recover(); err != nil {
+			println("[AsStringSlice]panic :%v", err)
+		}
+	}()
 	if v != nil {
 		switch v.(type) {
 		case []string:
@@ -241,6 +247,15 @@ func AsStringSlice(v interface{}, defaultValue []string) []string {
 			}
 			return r
 		default:
+			x := make([]interface{}, 0)
+			x = ConvertToSlice(v, x)
+			if x != nil {
+				r := make([]string, len(x))
+				for key, value := range x {
+					r[key] = AsString(value, "")
+				}
+				return r
+			}
 			return defaultValue
 		}
 	}
@@ -356,6 +371,18 @@ func ConvertToInterface(m interface{}, template interface{}) interface{} {
 		return nil
 	}
 	err = json.Unmarshal(data, template)
+	if err != nil {
+		return nil
+	}
+	return template
+}
+
+func ConvertToSlice(m interface{}, template []interface{}) []interface{} {
+	data, err := json.Marshal(m)
+	if err != nil {
+		return nil
+	}
+	err = json.Unmarshal(data, &template)
 	if err != nil {
 		return nil
 	}
