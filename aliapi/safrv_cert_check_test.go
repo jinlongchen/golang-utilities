@@ -1,18 +1,27 @@
 package aliapi
 
 import (
-	"github.com/jinlongchen/golang-utilities/config"
-	"github.com/jinlongchen/golang-utilities/log"
 	"path"
 	"runtime"
 	"testing"
+
+	"github.com/jinlongchen/golang-utilities/config"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 
 func TestAliApiHelper_CheckIdCardNameMatch(t *testing.T) {
-	log.Config("test", "debug", log.FormatJSON)
+	log.Config("test",
+		log.Level("debug"),
+		true,
+		"",
+		0,
+		0,
+		0,
+	)
+
 	_, filename, _, _ := runtime.Caller(0)
 
-	config.AesKeyKey = getAesKeyKey(t)
+	config.AesKeySalt = getAesKeyKey(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 
 	helper := NewAliApiHelper(cfg)
