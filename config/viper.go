@@ -150,6 +150,11 @@ func (cfg *Config) GetStringSlice(path string) []string {
 	}
 
 	ret := cfg.v.GetStringSlice(path) //map_helper.GetValue(cfg.data, path)
+	for i, item := range ret {
+		if strings.HasPrefix(item, "aes://") {
+			ret[i] = cfg.DecryptString(item)
+		}
+	}
 	cfg.cache.Store(path, ret)
 	return ret
 }
