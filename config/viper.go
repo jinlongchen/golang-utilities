@@ -3,18 +3,20 @@ package config
 import (
 	"crypto/aes"
 	"encoding/base64"
+	"io/ioutil"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/fsnotify/fsnotify"
+	"github.com/naoina/toml"
+	"github.com/spf13/viper"
+
 	"github.com/jinlongchen/golang-utilities/converter"
 	"github.com/jinlongchen/golang-utilities/crypto"
 	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/jinlongchen/golang-utilities/map/helper"
 	gusync "github.com/jinlongchen/golang-utilities/sync"
-	"github.com/naoina/toml"
-	"github.com/spf13/viper"
-	"io/ioutil"
-	"strings"
-	"sync"
-	"time"
 )
 
 var (
