@@ -45,7 +45,6 @@ func (e *Executor) Init(env go_svc.Environment) error {
 	if remoteConfigURL != "" {
 		uRL, err := url.Parse(remoteConfigURL)
 		if err == nil {
-			log.Infof("Remote Config -> Schema: %s, Host: %s, Path: %s", uRL.Scheme, uRL.Host, uRL.Path)
 			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path)
 			if localConfigURL != "" {
 				_ = e.cfg.Save(localConfigURL)
