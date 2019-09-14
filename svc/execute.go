@@ -61,5 +61,8 @@ func (e *Executor) Stop() error {
 		e.s.Exit()
 	}
 	log.Flush()
+	if e.cfg != nil {
+		e.cfg.Exit()
+	}
 	return nil
 }
