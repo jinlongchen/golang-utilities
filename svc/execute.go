@@ -2,13 +2,15 @@ package svc
 
 import (
 	"flag"
-	"github.com/jinlongchen/golang-utilities/config"
-	"github.com/jinlongchen/golang-utilities/log"
-	go_svc "github.com/judwhite/go-svc/svc"
 	"net/url"
 	"os"
 	"path/filepath"
 	"syscall"
+
+	go_svc "github.com/judwhite/go-svc/svc"
+
+	"github.com/jinlongchen/golang-utilities/config"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 
 type Executor struct {
@@ -43,6 +45,7 @@ func (e *Executor) Init(env go_svc.Environment) error {
 	if remoteConfigURL != "" {
 		uRL, err := url.Parse(remoteConfigURL)
 		if err == nil {
+			log.Infof("Remote Config -> Schema: %s, Host: %s, Path: %s", uRL.Scheme, uRL.Host, uRL.Path)
 			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path)
 			if localConfigURL != "" {
 				_ = e.cfg.Save(localConfigURL)
