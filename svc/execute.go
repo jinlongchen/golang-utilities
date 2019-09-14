@@ -33,20 +33,23 @@ func (e *Executor) Init(env go_svc.Environment) error {
 		}
 	}
 	remoteConfigURL := os.Getenv("REMOTE_CONFIG_URL")
+	localConfigURL := os.Getenv("LOCAL_CONFIG_URL")
+	if localConfigURL == "" {
+		cfgName := flag.String("conf", "conf-file.toml", "")
+		flag.Parse()
+		localConfigURL = *cfgName
+	}
+
 	if remoteConfigURL != "" {
 		uRL, err := url.Parse(remoteConfigURL)
 		if err == nil {
 			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path)
+			if localConfigURL != "" {
+				_ = e.cfg.Save(localConfigURL)
+			}
 		}
 	}
-
 	if e.cfg == nil {
-		localConfigURL := os.Getenv("LOCAL_CONFIG_URL")
-		if localConfigURL == "" {
-			cfgName := flag.String("conf", "conf-file.toml", "")
-			flag.Parse()
-			localConfigURL = *cfgName
-		}
 		if localConfigURL != "" {
 			e.cfg = config.NewConfig(localConfigURL)
 		}
