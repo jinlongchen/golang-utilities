@@ -5,6 +5,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/log"
 	go_svc "github.com/judwhite/go-svc/svc"
+	"net/url"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -31,12 +32,25 @@ func (e *Executor) Init(env go_svc.Environment) error {
 			panic(err.Error())
 		}
 	}
+	remoteConfigURL := os.Getenv("REMOTE_CONFIG_URL")
+	if remoteConfigURL != "" {
+		uRL, err := url.Parse(remoteConfigURL)
+		if err == nil {
+			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path)
+		}
+	}
 
-	os.Getenv("")
-	cfgName := flag.String("conf", "conf-file.toml", "")
-	flag.Parse()
-
-	e.cfg = config.NewConfig(*cfgName)
+	if e.cfg == nil {
+		localConfigURL := os.Getenv("LOCAL_CONFIG_URL")
+		if localConfigURL == "" {
+			cfgName := flag.String("conf", "conf-file.toml", "")
+			flag.Parse()
+			localConfigURL = *cfgName
+		}
+		if localConfigURL != "" {
+			e.cfg = config.NewConfig(localConfigURL)
+		}
+	}
 
 	log.Config(e.cfg.GetString("application.name"),
 		log.Level(e.cfg.GetString("log.level")),
