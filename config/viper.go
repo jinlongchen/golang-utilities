@@ -49,12 +49,12 @@ func NewConfig(path string) *Config {
 	return ret
 }
 
-func NewEtcdConfig(etcdAddr string, path string) *Config {
+func NewRemoteConfig(provider, addr, path string) *Config {
 	ret := &Config{
 		v: viper.New(),
 	}
 	ret.v.SetConfigType("toml")
-	err := ret.v.AddRemoteProvider("etcd", etcdAddr, path)
+	err := ret.v.AddRemoteProvider(provider, addr, path)
 	if err != nil {
 		log.Errorf("read log file err:%s", err.Error())
 	}
