@@ -9,14 +9,17 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/jinlongchen/viper"
 	"github.com/naoina/toml"
-	"github.com/spf13/viper"
 
 	"github.com/jinlongchen/golang-utilities/converter"
 	"github.com/jinlongchen/golang-utilities/crypto"
+	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/jinlongchen/golang-utilities/map/helper"
 	gusync "github.com/jinlongchen/golang-utilities/sync"
+
+	_ "github.com/jinlongchen/viper/remote"
 )
 
 var (
@@ -43,6 +46,31 @@ func NewConfig(path string) *Config {
 		log.Debugf("reload config")
 		gusync.EraseSyncMap(&ret.cache)
 	})
+	return ret
+}
+
+func NewEtcdConfig(etcdAddr string, path string) *Config {
+	ret := &Config{
+		v: viper.New(),
+	}
+	ret.v.SetConfigType("toml")
+	err := ret.v.AddRemoteProvider("etcd", etcdAddr, path)
+	if err != nil {
+		log.Errorf("read log file err:%s", err.Error())
+	}
+	err = ret.v.ReadRemoteConfig()
+	if err != nil {
+		log.Errorf("read log file err:%s", err.Error())
+	}
+	err = ret.v.WatchRemoteConfigOnChannel()
+	if err != nil {
+		log.Infof("WatchRemoteConfigOnChannel err: %s", err.Error())
+	}
+	ret.v.OnConfigChange(func(e fsnotify.Event) {
+		log.Infof("reload config: %s", string(json.ShouldMarshal(ret.v.AllSettings())))
+		gusync.EraseSyncMap(&ret.cache)
+	})
+
 	return ret
 }
 
@@ -243,4 +271,8 @@ func (cfg *Config) Save(path string) error {
 		err = ioutil.WriteFile(path, data, 0666)
 	}
 	return err
+}
+
+func (cfg *Config) Exit() {
+	cfg.v.Exit()
 }
