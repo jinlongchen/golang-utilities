@@ -32,8 +32,8 @@ func (e *Executor) Init(env go_svc.Environment) error {
 		}
 	}
 
+	os.Getenv("")
 	cfgName := flag.String("conf", "conf-file.toml", "")
-
 	flag.Parse()
 
 	e.cfg = config.NewConfig(*cfgName)
