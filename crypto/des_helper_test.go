@@ -7,7 +7,7 @@ import (
 )
 
 func TestEncryptDes(t *testing.T) {
-	data, err := EncryptDes([]byte("123"), []byte("12345678"))
+	data, err := DesEncrypt([]byte("123"), []byte("12345678"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,7 +22,7 @@ func TestDecryptDes(t *testing.T) {
 		t.Fatal(err)
 	}
 	//data, _ = base64.StdEncoding.DecodeString("LDiFUdf0iew=")
-	data, err = DecryptDes(data, []byte("12345678"))
+	data, err = DesDecrypt(data, []byte("12345678"))
 	if err != nil {
 		t.Fatal(err)
 	}

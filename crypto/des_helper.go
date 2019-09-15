@@ -23,7 +23,7 @@ var (
 )
 
 // encrypt string to base64 crypto using des
-func EncryptDes(data []byte, key []byte) ([]byte, error) {
+func DesEncrypt(data []byte, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func EncryptDes(data []byte, key []byte) ([]byte, error) {
 	return cryted, nil
 }
 
-func DecryptDes(cipherText, key []byte) ([]byte, error) {
+func DesDecrypt(cipherText, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 
 	if err != nil {
