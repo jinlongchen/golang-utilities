@@ -275,6 +275,10 @@ func (cfg *Config) EncryptString(str string) string {
 	return base64.StdEncoding.EncodeToString(eData)
 }
 
+func (cfg *Config) GetAllKeys() []string {
+	return cfg.v.AllKeys()
+}
+
 func (cfg *Config) Save(path string) error {
 	data, err := toml.Marshal(cfg.v.AllSettings())
 	if err != nil {
