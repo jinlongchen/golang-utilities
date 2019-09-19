@@ -240,6 +240,11 @@ func (cfg *Config) GetValue(path string) interface{} {
 	return ret
 }
 
+func (cfg *Config) SetValue(path string, val interface{}) {
+	cfg.v.Set(path, val)
+	cfg.cache.Store(path, val)
+}
+
 func (cfg *Config) DecryptString(str string) string {
 	if cfg.AesKey == nil {
 		aesKey1 := cfg.GetString("crypto.aesKey")
