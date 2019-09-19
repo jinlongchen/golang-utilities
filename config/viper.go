@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"crypto/aes"
 	"encoding/base64"
 	"io/ioutil"
@@ -39,13 +40,24 @@ func NewConfig(path string) *Config {
 	ret.v.SetConfigFile(path)
 	err := ret.v.ReadInConfig()
 	if err != nil {
-		log.Errorf("read log file err:%s", err.Error())
+		log.Errorf("read config file err:%s", err.Error())
 	}
 	ret.v.WatchConfig()
 	ret.v.OnConfigChange(func(e fsnotify.Event) {
 		log.Debugf("reload config")
 		gusync.EraseSyncMap(&ret.cache)
 	})
+	return ret
+}
+
+func ParseConfig(configStr string) *Config {
+	ret := &Config{
+		v: viper.New(),
+	}
+	err := ret.v.ReadConfig(bytes.NewReader([]byte(configStr)))
+	if err != nil {
+		log.Errorf("read config err:%s", err.Error())
+	}
 	return ret
 }
 
