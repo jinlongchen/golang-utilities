@@ -50,10 +50,11 @@ func NewConfig(path string) *Config {
 	return ret
 }
 
-func ParseConfig(configStr string) *Config {
+func ParseConfig(configStr string, configType string) *Config {
 	ret := &Config{
 		v: viper.New(),
 	}
+	ret.v.SetConfigType(configType)
 	err := ret.v.ReadConfig(bytes.NewReader([]byte(configStr)))
 	if err != nil {
 		log.Errorf("read config err:%s", err.Error())
@@ -61,11 +62,11 @@ func ParseConfig(configStr string) *Config {
 	return ret
 }
 
-func NewRemoteConfig(provider, addr, path string) *Config {
+func NewRemoteConfig(provider, addr, path, configType string) *Config {
 	ret := &Config{
 		v: viper.New(),
 	}
-	ret.v.SetConfigType("toml")
+	ret.v.SetConfigType(configType)
 	err := ret.v.AddRemoteProvider(provider, addr, path)
 	if err != nil {
 		log.Errorf("read log file err:%s", err.Error())
