@@ -86,8 +86,12 @@ type WxPay struct {
 	appKey string
 }
 
-func NewWxPay() *WxPay {
-	ret := &WxPay{}
+func NewWxPay(appId string, mchId string, appKey string) *WxPay {
+	ret := &WxPay{
+		appId:appId,
+		mchId:mchId,
+		appKey:appKey,
+	}
 	return ret
 }
 
