@@ -178,3 +178,59 @@ func (p Array) To(src interface{}) error {
 
 	return json.Unmarshal(source, src)
 }
+
+type String string
+
+func (p String) Value() (driver.Value, error) {
+	j, err := json.Marshal(&p)
+	return j, err
+}
+func (p *String) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+	source, ok := src.([]byte)
+	if !ok {
+		return errors.New("type assertion .([]byte) failed")
+	}
+
+	var i String
+	err := json.Unmarshal(source, &i)
+	if err != nil {
+		return err
+	}
+
+	*p = i
+
+	return nil
+}
+func (p *String) From(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	source, err := json.Marshal(src)
+	if err != nil {
+		return errors.New("type assertion .([]byte) failed")
+	}
+
+	var i String
+	err = json.Unmarshal(source, &i)
+	if err != nil {
+		return err
+	}
+	*p = i
+
+	return nil
+}
+func (p String) To(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+	source, err := json.Marshal(&p)
+	if err != nil {
+		return errors.New("type assertion .([]byte) failed")
+	}
+
+	return json.Unmarshal(source, src)
+}
