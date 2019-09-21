@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	URL_REFUND = "https://api.mch.weixin.qq.com/secapi/pay/refund"
+	WxRefundURL = "https://api.mch.weixin.qq.com/secapi/pay/refund"
 )
 
 type RefundRequest struct {
@@ -96,7 +96,7 @@ func (wx *Wechat) Refund(orderId string, openId string, totalFee int) error {
 
 	response := RefundReponse{}
 
-	data, err := http.PostDataSsl(URL_REFUND, reqData, []byte(wx.config.GetString("wechat.payment.certStr")), []byte(wx.config.GetString("wechat.payment.keyStr")))
+	data, err := http.PostDataSsl(WxRefundURL, reqData, []byte(wx.config.GetString("wechat.payment.certStr")), []byte(wx.config.GetString("wechat.payment.keyStr")))
 
 	log.Debugf("refund resp:%s", string(data))
 
