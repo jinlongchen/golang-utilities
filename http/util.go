@@ -3,6 +3,7 @@ package http
 import (
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 func GetRequestBody(r *http.Request) []byte {
@@ -17,4 +18,15 @@ func GetRequestBody(r *http.Request) []byte {
 		println("method:", r.Method)
 	}
 	return nil
+}
+
+func AddURLQuery(reqURL string, key, value string) string {
+	x, err := url.Parse(reqURL)
+	if err != nil {
+		return reqURL
+	}
+	q := x.Query()
+	q.Set(key, value)
+	x.RawQuery = q.Encode()
+	return x.String()
 }
