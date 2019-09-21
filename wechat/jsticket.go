@@ -12,7 +12,7 @@ import (
 
 type TicketInfo struct {
 	Ticket    string `json:"ticket"`
-	ExpiresIn int64  `json:"expires_in"` // 有效时间, seconds
+	ExpiresIn int64  `json:"expires_in"` // seconds
 }
 
 func (wx *Wechat) GetJSTicket(appId, appSecret string) (string, error) {
