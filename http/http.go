@@ -5,28 +5,30 @@ import (
 	"compress/gzip"
 	"crypto/tls"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/jinlongchen/golang-utilities/errors"
 	"github.com/jinlongchen/golang-utilities/log"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
-	gohttp "net/http"
+	goHttp "net/http"
 	"net/http/cookiejar"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 func GetData(reqURL string) ([]byte, error) {
-	tr := &gohttp.Transport{
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
 	cookieJar, _ := cookiejar.New(nil)
 
-	client := &gohttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
-	request, _ := gohttp.NewRequest("GET", reqURL, nil)
+	client := &goHttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
+	request, _ := goHttp.NewRequest("GET", reqURL, nil)
 
 	response, err := client.Do(request)
 
@@ -64,14 +66,14 @@ func GetData(reqURL string) ([]byte, error) {
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
-func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, []byte, error) {
-	tr := &gohttp.Transport{
+func GetDataWithHeaders(reqURL string, reqHeader goHttp.Header) (goHttp.Header, []byte, error) {
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
 	cookieJar, _ := cookiejar.New(nil)
 
-	client := &gohttp.Client{Transport: tr, Jar: cookieJar}
-	request, _ := gohttp.NewRequest("GET", reqURL, nil)
+	client := &goHttp.Client{Transport: tr, Jar: cookieJar}
+	request, _ := goHttp.NewRequest("GET", reqURL, nil)
 
 	if reqHeader != nil {
 		for key, value := range reqHeader {
@@ -113,10 +115,10 @@ func GetDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, 
 	}
 }
 func GetJSON(url string, out interface{}) error {
-	//resp, err := gohttp.Get(url)
+	//resp, err := goHttp.Get(url)
 
-	client := &gohttp.Client{}
-	request, _ := gohttp.NewRequest("GET", url, nil)
+	client := &goHttp.Client{}
+	request, _ := goHttp.NewRequest("GET", url, nil)
 
 	//request.Header.Set("Accept-Encoding", "gzip")
 
@@ -128,16 +130,16 @@ func GetJSON(url string, out interface{}) error {
 	return readJSON(resp, out)
 }
 
-func PutDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte) (gohttp.Header, []byte, error) {
-	tr := &gohttp.Transport{
+func PutDataWithHeaders(reqURL string, reqHeader goHttp.Header, bodyType string, data []byte) (goHttp.Header, []byte, error) {
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
-	client := &gohttp.Client{
+	client := &goHttp.Client{
 		Transport: tr,
 		Timeout:   time.Second * 30,
 	}
 
-	request, _ := gohttp.NewRequest("PUT", reqURL, bytes.NewReader(data))
+	request, _ := goHttp.NewRequest("PUT", reqURL, bytes.NewReader(data))
 
 	if reqHeader != nil {
 		for key, value := range reqHeader {
@@ -184,7 +186,7 @@ func PutDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string,
 
 func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 	timeout := time.Duration(15 * time.Second)
-	client := &gohttp.Client{
+	client := &goHttp.Client{
 		Timeout: timeout,
 	}
 
@@ -221,16 +223,16 @@ func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
 		return body, errors.WithCode(nil, fmt.Sprintf("HTTP_%d", response.StatusCode), response.Status)
 	}
 }
-func PostDataWithHeaders(reqURL string, reqHeader gohttp.Header, bodyType string, data []byte, timeout time.Duration) (gohttp.Header, []byte, error) {
-	tr := &gohttp.Transport{
+func PostDataWithHeaders(reqURL string, reqHeader goHttp.Header, bodyType string, data []byte, timeout time.Duration) (goHttp.Header, []byte, error) {
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
-	client := &gohttp.Client{
+	client := &goHttp.Client{
 		Transport: tr,
 		Timeout:   timeout,
 	}
 
-	request, _ := gohttp.NewRequest("POST", reqURL, bytes.NewReader(data))
+	request, _ := goHttp.NewRequest("POST", reqURL, bytes.NewReader(data))
 
 	if reqHeader != nil {
 		for key, value := range reqHeader {
@@ -281,7 +283,7 @@ func PostJSON(reqURL string, objToSend interface{}, out interface{}) error {
 		return err
 	}
 
-	resp, err := gohttp.Post(reqURL, "application/json;charset=utf-8", bytes.NewReader(jsonData))
+	resp, err := goHttp.Post(reqURL, "application/json;charset=utf-8", bytes.NewReader(jsonData))
 	if err != nil {
 		log.Errorf("post json data to(%s)  err:%s", reqURL, err.Error())
 		return err
@@ -294,10 +296,10 @@ func PostDataSsl(reqURL string, dataToSend, certPEMBlock, keyPEMBlock []byte) (r
 		return nil, err
 	}
 
-	tr := &gohttp.Transport{
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true},
 	}
-	client := &gohttp.Client{Transport: tr}
+	client := &goHttp.Client{Transport: tr}
 
 	ret, err := client.Post(reqURL, "application/x-www-form-urlencoded", bytes.NewReader(dataToSend))
 	if err != nil {
@@ -313,6 +315,28 @@ func PostDataSsl(reqURL string, dataToSend, certPEMBlock, keyPEMBlock []byte) (r
 	if err != nil {
 		return nil, err
 	}
+
+	return data, err
+}
+
+func PostXml(reqURL string, xmlToSend string, objReceived interface{}) (respData []byte, err error) {
+	ret, err := goHttp.Post(reqURL, "application/x-www-form-urlencoded;charset=utf-8", strings.NewReader(xmlToSend))
+
+	if err != nil {
+		log.Errorf("post xml err:%s", err.Error())
+		return nil, err
+	}
+
+	defer ret.Body.Close()
+
+	data, err := ioutil.ReadAll(ret.Body)
+
+	if err != nil {
+		log.Errorf("post xml err:%s", err.Error())
+		return nil, err
+	}
+
+	err = xml.Unmarshal(data, objReceived)
 
 	return data, err
 }
@@ -342,8 +366,8 @@ func PostFiles(reqURL string, values map[string][]string, progressReporter func(
 
 	w.Close()
 
-	client := &gohttp.Client{}
-	request, _ := gohttp.NewRequest("POST", reqURL, &b)
+	client := &goHttp.Client{}
+	request, _ := goHttp.NewRequest("POST", reqURL, &b)
 
 	request.Header.Set("Content-Type", w.FormDataContentType())
 
@@ -383,13 +407,13 @@ func PostFiles(reqURL string, values map[string][]string, progressReporter func(
 	}
 }
 func DownloadFile(reqURL string, filePath string) error {
-	tr := &gohttp.Transport{
+	tr := &goHttp.Transport{
 		//TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	cookieJar, _ := cookiejar.New(nil)
 
-	client := &gohttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
-	request, _ := gohttp.NewRequest("GET", reqURL, nil)
+	client := &goHttp.Client{Transport: tr, Jar: cookieJar, Timeout: time.Duration(time.Second * 30)}
+	request, _ := goHttp.NewRequest("GET", reqURL, nil)
 
 	response, err := client.Do(request)
 
@@ -442,14 +466,14 @@ func DownloadFile(reqURL string, filePath string) error {
 	}
 }
 
-func DeleteDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Header, []byte, error) {
-	tr := &gohttp.Transport{
+func DeleteDataWithHeaders(reqURL string, reqHeader goHttp.Header) (goHttp.Header, []byte, error) {
+	tr := &goHttp.Transport{
 		TLSClientConfig: &tls.Config{},
 	}
 	cookieJar, _ := cookiejar.New(nil)
 
-	client := &gohttp.Client{Transport: tr, Jar: cookieJar}
-	request, _ := gohttp.NewRequest("DELETE", reqURL, nil)
+	client := &goHttp.Client{Transport: tr, Jar: cookieJar}
+	request, _ := goHttp.NewRequest("DELETE", reqURL, nil)
 
 	if reqHeader != nil {
 		for key, value := range reqHeader {
@@ -491,7 +515,7 @@ func DeleteDataWithHeaders(reqURL string, reqHeader gohttp.Header) (gohttp.Heade
 	}
 }
 
-func readJSON(resp *gohttp.Response, out interface{}) (err error) {
+func readJSON(resp *goHttp.Response, out interface{}) (err error) {
 	defer resp.Body.Close()
 
 	var reader io.ReadCloser
