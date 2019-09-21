@@ -81,10 +81,15 @@ const (
 	WxTradeTypeAPP    WxTradeType = "APP"
 )
 
-func (wx *Wechat) UnifiedOrder(productId, productName, orderId string, expire int64, openId string, totalFee int, tradeType WxTradeType, clientIp string, notifyURL string) (prepayId string, err error) {
+func (wx *Wechat) UnifiedOrder(
+	appId, mchId, appKey string,
+	productId, productName, orderId string,
+	expire int64, openId string,
+	totalFee int, tradeType WxTradeType,
+	clientIp string, notifyURL string) (prepayId string, err error) {
 	req := &UnifiedOrderRequest{
-		AppId: wx.config.GetString("wechat.appId"),
-		MchId: wx.config.GetString("wechat.payment.mchId"),
+		AppId: appId,// wx.config.GetString("wechat.payment.appId"),
+		MchId: mchId,// wx.config.GetString("wechat.payment.mchId"),
 	}
 
 	req.Body = productName
@@ -112,7 +117,7 @@ func (wx *Wechat) UnifiedOrder(productId, productName, orderId string, expire in
 	req.NotifyURL = notifyURL
 	req.TradeType = string(tradeType) //"JSAPI"
 
-	signMd5, _ := SignXmlMd5(*req, wx.config.GetString("wechat.payment.appKey"))
+	signMd5, _ := SignXmlMd5(*req, appKey) // wx.config.GetString("wechat.payment.appKey"))
 	req.Sign = signMd5
 
 	reqData, err := xml.Marshal(req)
