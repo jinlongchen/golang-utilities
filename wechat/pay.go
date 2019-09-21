@@ -3,15 +3,16 @@ package wechat
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
+
 	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/jinlongchen/golang-utilities/rand"
-	gu_xml "github.com/jinlongchen/golang-utilities/xml"
-	"time"
+	xmlHelper "github.com/jinlongchen/golang-utilities/xml"
 )
 
 var (
-	URL_UNIFIED_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+	WxUnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder"
 )
 
 type UnifiedOrderRequest struct {
@@ -53,21 +54,21 @@ func (v *UnifiedOrderRequest) Xml() error {
 
 type UnifiedOrderResponse struct {
 	XMLName    xml.Name     `xml:"xml"`
-	ReturnCode gu_xml.CData `xml:"return_code"`
-	ReturnMsg  gu_xml.CData `xml:"return_msg"`
+	ReturnCode xmlHelper.CData `xml:"return_code"`
+	ReturnMsg  xmlHelper.CData `xml:"return_msg"`
 
-	AppId      gu_xml.CData `xml:"appid"`
-	MchId      gu_xml.CData `xml:"mch_id"`
-	DeviceInfo gu_xml.CData `xml:"device_info,omitempty"`
-	NonceStr   gu_xml.CData `xml:"nonce_str"`
-	Sign       gu_xml.CData `xml:"sign"`
-	ResultCode gu_xml.CData `xml:"result_code"`
-	ErrCode    gu_xml.CData `xml:"err_code,omitempty"`
-	ErrCodeDes gu_xml.CData `xml:"err_code_des,omitempty"`
+	AppId      xmlHelper.CData `xml:"appid"`
+	MchId      xmlHelper.CData `xml:"mch_id"`
+	DeviceInfo xmlHelper.CData `xml:"device_info,omitempty"`
+	NonceStr   xmlHelper.CData `xml:"nonce_str"`
+	Sign       xmlHelper.CData `xml:"sign"`
+	ResultCode xmlHelper.CData `xml:"result_code"`
+	ErrCode    xmlHelper.CData `xml:"err_code,omitempty"`
+	ErrCodeDes xmlHelper.CData `xml:"err_code_des,omitempty"`
 
-	TradeType gu_xml.CData `xml:"trade_type,omitempty"`
-	PrepayId  gu_xml.CData `xml:"prepay_id,omitempty"`
-	CodeURL   gu_xml.CData `xml:"code_url,omitempty"`
+	TradeType xmlHelper.CData `xml:"trade_type,omitempty"`
+	PrepayId  xmlHelper.CData `xml:"prepay_id,omitempty"`
+	CodeURL   xmlHelper.CData `xml:"code_url,omitempty"`
 
 	ResponseXML string `xml:"-"`
 }
@@ -123,7 +124,7 @@ func (wx *Wechat) UnifiedOrder(productId, productName, orderId string, expire in
 
 	log.Debugf("Req Xml: %s", string(reqData))
 
-	respData, err := http.PostData(URL_UNIFIED_ORDER, "application/x-www-form-urlencoded", reqData)
+	respData, err := http.PostData(WxUnifiedOrderUrl, "application/x-www-form-urlencoded", reqData)
 
 	if err != nil {
 		return "", err
