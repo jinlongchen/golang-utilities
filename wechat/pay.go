@@ -53,7 +53,7 @@ func (v *UnifiedOrderRequest) Xml() error {
 }
 
 type UnifiedOrderResponse struct {
-	XMLName    xml.Name     `xml:"xml"`
+	XMLName    xml.Name        `xml:"xml"`
 	ReturnCode xmlHelper.CData `xml:"return_code"`
 	ReturnMsg  xmlHelper.CData `xml:"return_msg"`
 
@@ -88,8 +88,8 @@ func (wx *Wechat) UnifiedOrder(
 	totalFee int, tradeType WxTradeType,
 	clientIp string, notifyURL string) (prepayId string, err error) {
 	req := &UnifiedOrderRequest{
-		AppId: appId,// wx.config.GetString("wechat.payment.appId"),
-		MchId: mchId,// wx.config.GetString("wechat.payment.mchId"),
+		AppId: appId, // wx.config.GetString("wechat.payment.appId"),
+		MchId: mchId, // wx.config.GetString("wechat.payment.mchId"),
 	}
 
 	req.Body = productName

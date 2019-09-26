@@ -2,9 +2,11 @@ package util
 
 import (
 	"errors"
+
+	"github.com/labstack/echo/v4"
+
 	httpUtil "github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/json"
-	"github.com/labstack/echo/v4"
 )
 
 func ParseJSON(ctx echo.Context, v interface{}) error {

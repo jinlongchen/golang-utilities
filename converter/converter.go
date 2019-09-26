@@ -266,8 +266,18 @@ func AsBool(v interface{}, defaultValue bool) bool {
 		switch v.(type) {
 		case bool:
 			return v.(bool)
+		case string:
+			ret, err := strconv.ParseBool(v.(string))
+			if err != nil {
+				return defaultValue
+			}
+			return ret
 		default:
-			return defaultValue
+			ret, err := strconv.ParseBool(fmt.Sprintf("%v", v))
+			if err != nil {
+				return defaultValue
+			}
+			return ret
 		}
 	}
 	return defaultValue
