@@ -65,7 +65,6 @@ func NewSmsHelper(cfg *config.Config) *SmsHelper {
 func (ss *SmsHelper) getSmsReq() *SmsReq {
 	timeStamp := time.Now().In(time.UTC).Format("2006-01-02T15:04:05Z")
 
-	log.Infof("alidayu access key id:%s", ss.cfg.GetString("alidayu.accessKeyID"))
 	return &SmsReq{
 		AccessKeyId:      ss.cfg.GetString("alidayu.accessKeyID"),
 		Action:           "SendSms",
