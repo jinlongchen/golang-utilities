@@ -24,3 +24,7 @@ func WriteJSON(ctx echo.Context, code int, v interface{}) error {
 	}
 	return ctx.Blob(code, echo.MIMEApplicationJSONCharsetUTF8, data)
 }
+
+func WriteData(ctx echo.Context, code int, contentType string, data []byte) error {
+	return ctx.Blob(code, echo.MIMEApplicationJSONCharsetUTF8, data)
+}
