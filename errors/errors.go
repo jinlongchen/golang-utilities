@@ -102,3 +102,10 @@ func Code(err error) string {
 	}
 	return withCode.Code()
 }
+func AsWithCode(err error) *WithCodeError {
+	withCode, ok := err.(*WithCodeError)
+	if !ok {
+		return nil
+	}
+	return withCode
+}
