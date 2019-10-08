@@ -32,12 +32,13 @@ import (
 */
 func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
 	directionURL := fmt.Sprintf(
-		"http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
+		//"http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
+		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
 		long1, lat1,
 		long2, lat2,
-		strategy,
-		0, //0：使用渡轮(默认) 1：不使用渡轮
-		1, //0：steps字段内容正常返回；1：steps字段内容为空；
+		//strategy,
+		//0, //0：使用渡轮(默认) 1：不使用渡轮
+		//1, //0：steps字段内容正常返回；1：steps字段内容为空；
 		key,
 	)
 
