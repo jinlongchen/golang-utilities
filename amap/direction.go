@@ -84,6 +84,7 @@ func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string)
 	return shortestDistance, time.Duration(routeDuration), amapTollsFee, nil
 }
 
+// 计算距离
 func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
 	directionURL := fmt.Sprintf(
 		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
