@@ -41,8 +41,6 @@ func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string)
 		key,
 	)
 
-	log.Infof("get distance: %s", directionURL)
-
 	directionResp := &DirectionResponse{}
 
 	//amapApiStart := time.Now()
@@ -92,8 +90,6 @@ func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, d
 		long2, lat2,
 		key,
 	)
-
-	log.Infof("get distance: %s", directionURL)
 
 	distResp := &DistanceResponse{}
 
