@@ -32,13 +32,12 @@ import (
 */
 func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
 	directionURL := fmt.Sprintf(
-		//"http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
-		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
+		"http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
 		long1, lat1,
 		long2, lat2,
-		//strategy,
-		//0, //0：使用渡轮(默认) 1：不使用渡轮
-		//1, //0：steps字段内容正常返回；1：steps字段内容为空；
+		strategy,
+		0, //0：使用渡轮(默认) 1：不使用渡轮
+		1, //0：steps字段内容正常返回；1：steps字段内容为空；
 		key,
 	)
 
@@ -83,4 +82,40 @@ func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string)
 	}
 
 	return shortestDistance, time.Duration(routeDuration), amapTollsFee, nil
+}
+
+func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
+	directionURL := fmt.Sprintf(
+		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
+		long1, lat1,
+		long2, lat2,
+		key,
+	)
+
+	log.Infof("get distance: %s", directionURL)
+
+	distResp := &DistanceResponse{}
+
+	//amapApiStart := time.Now()
+
+	err = httpUtil.GetJSON(directionURL, distResp)
+
+	//callAmapElapsed := time.Since(amapApiStart)
+
+	if err != nil {
+		return -1, time.Duration(0), 0, err
+	}
+
+	if distResp.Status != "1" {
+		return -1, time.Duration(0), 0, errors.New(distResp.Status)
+	}
+
+	if len(distResp.Results) < 1 {
+		return -1, time.Duration(0), 0, errors.New(distResp.Info)
+	}
+
+	return converter.AsFloat64(distResp.Results[0].Distance, -1),
+		converter.AsDuration(distResp.Results[0].Duration, 0),
+		0,
+		nil
 }
