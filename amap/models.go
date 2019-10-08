@@ -38,3 +38,17 @@ type DirectionResponse struct {
 		} `json:"paths" xml:"paths"`
 	} `json:"route" xml:"route"`
 }
+
+type DistanceResponse struct {
+	Status string `json:"status" xml:"status"`
+	Info string `json:"info" xml:"info"`
+	Infocode string `json:"infocode" xml:"infocode"`
+	Results []struct {
+		Distance string `json:"distance" xml:"distance"`
+		Duration string `json:"duration" xml:"duration"`
+		Info string `json:"info" xml:"info"`
+		Code string `json:"code" xml:"code"`
+		OriginID string `json:"origin_id" xml:"origin_id"`
+		DestID string `json:"dest_id" xml:"dest_id"`
+	} `json:"results" xml:"results"`
+}
