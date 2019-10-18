@@ -1,7 +1,6 @@
 package svc
 
 import (
-	"flag"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -36,11 +35,11 @@ func (e *Executor) Init(env go_svc.Environment) error {
 	}
 	remoteConfigURL := os.Getenv("REMOTE_CONFIG_URL")
 	localConfigURL := os.Getenv("LOCAL_CONFIG_URL")
-	if localConfigURL == "" {
-		cfgName := flag.String("conf", "conf-file.toml", "")
-		flag.Parse()
-		localConfigURL = *cfgName
-	}
+	//if localConfigURL == "" {
+	//	cfgName := flag.String("conf", "conf-file.toml", "")
+	//	flag.Parse()
+	//	localConfigURL = *cfgName
+	//}
 
 	if remoteConfigURL != "" {
 		uRL, err := url.Parse(remoteConfigURL)
