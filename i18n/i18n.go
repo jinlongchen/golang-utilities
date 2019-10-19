@@ -56,3 +56,18 @@ func GetI18nString(lang string, messageID string, template map[string]interface{
 	}
 	return str
 }
+
+func GetSimpleI18nString(lang string, messageID string) string {
+	if lang == "" {
+		lang = defaultLang
+	}
+	str, err := i18n.NewLocalizer(i18nBundle, lang).Localize(&i18n.LocalizeConfig{
+		MessageID:    messageID,
+		TemplateData: nil,
+		PluralCount:  0,
+	})
+	if err != nil {
+		return str
+	}
+	return str
+}
