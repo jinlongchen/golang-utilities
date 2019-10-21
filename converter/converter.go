@@ -320,34 +320,39 @@ func AsDuration(v interface{}, defaultValue time.Duration) time.Duration {
 	if v != nil {
 		switch v.(type) {
 		case int:
-			return time.Duration(int64(v.(int)) * 10e9)
+			return time.Duration(int64(v.(int)) * 1e9)
 		case int8:
-			return time.Duration(int64(v.(int8)) * 10e9)
+			return time.Duration(int64(v.(int8)) * 1e9)
 		case int16:
-			return time.Duration(int64(v.(int16)) * 10e9)
+			return time.Duration(int64(v.(int16)) * 1e9)
 		case int32:
-			return time.Duration(int64(v.(int32)) * 10e9)
+			return time.Duration(int64(v.(int32)) * 1e9)
 		case int64:
-			return time.Duration(v.(int64) * 10e9)
+			return time.Duration(v.(int64) * 1e9)
 		case time.Duration:
 			return v.(time.Duration)
 
 		case uint:
-			return time.Duration(int64(v.(uint)) * 10e9)
+			return time.Duration(int64(v.(uint)) * 1e9)
 		case uint8:
-			return time.Duration(int64(v.(uint8)) * 10e9)
+			return time.Duration(int64(v.(uint8)) * 1e9)
 		case uint16:
-			return time.Duration(int64(v.(uint16)) * 10e9)
+			return time.Duration(int64(v.(uint16)) * 1e9)
 		case uint32:
-			return time.Duration(int64(v.(uint32)) * 10e9)
+			return time.Duration(int64(v.(uint32)) * 1e9)
 		case uint64:
-			return time.Duration(int64(v.(uint64)) * 10e9)
+			return time.Duration(int64(v.(uint64)) * 1e9)
 
 		case float32:
-			return time.Duration(int64(v.(float32)) * 10e9)
+			return time.Duration(int64(v.(float32)) * 1e9)
 		case float64:
-			return time.Duration(int64(v.(float64)) * 10e9)
-
+			return time.Duration(int64(v.(float64)) * 1e9)
+		case string:
+			ret, err := strconv.ParseFloat(strings.Trim(v.(string), " \r\n"), 64)
+			if err != nil {
+				return defaultValue
+			}
+			return time.Duration(int64(ret) * 1e9)
 		default:
 			return defaultValue
 		}

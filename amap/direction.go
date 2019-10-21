@@ -6,6 +6,7 @@ package amap
 
 import (
 	"fmt"
+	"github.com/jinlongchen/golang-utilities/json"
 	"math"
 	"time"
 
@@ -93,16 +94,12 @@ func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, d
 
 	distResp := &DistanceResponse{}
 
-	//amapApiStart := time.Now()
-
 	err = httpUtil.GetJSON(directionURL, distResp)
-
-	//callAmapElapsed := time.Since(amapApiStart)
-
 	if err != nil {
 		return -1, time.Duration(0), err
 	}
 
+	println(string(json.ShouldMarshal(distResp)))
 	if distResp.Status != "1" {
 		return -1, time.Duration(0), errors.New(distResp.Status)
 	}
