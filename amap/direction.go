@@ -82,7 +82,8 @@ func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string)
 }
 
 // 计算距离
-func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
+// 返回中，distance单位是米
+func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, duration time.Duration, err error) {
 	directionURL := fmt.Sprintf(
 		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
 		long1, lat1,
@@ -99,19 +100,18 @@ func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, d
 	//callAmapElapsed := time.Since(amapApiStart)
 
 	if err != nil {
-		return -1, time.Duration(0), 0, err
+		return -1, time.Duration(0), err
 	}
 
 	if distResp.Status != "1" {
-		return -1, time.Duration(0), 0, errors.New(distResp.Status)
+		return -1, time.Duration(0), errors.New(distResp.Status)
 	}
 
 	if len(distResp.Results) < 1 {
-		return -1, time.Duration(0), 0, errors.New(distResp.Info)
+		return -1, time.Duration(0), errors.New(distResp.Info)
 	}
 
 	return converter.AsFloat64(distResp.Results[0].Distance, -1),
 		converter.AsDuration(distResp.Results[0].Duration, 0),
-		0,
 		nil
 }
