@@ -315,37 +315,38 @@ func AsMapSlice(v interface{}) []map[string]interface{} {
 	}
 	return nil
 }
+// 单位为秒
 func AsDuration(v interface{}, defaultValue time.Duration) time.Duration {
 	if v != nil {
 		switch v.(type) {
 		case int:
-			return time.Duration(v.(int))
+			return time.Duration(int64(v.(int)) * 10e9)
 		case int8:
-			return time.Duration(v.(int8))
+			return time.Duration(int64(v.(int8)) * 10e9)
 		case int16:
-			return time.Duration(v.(int16))
+			return time.Duration(int64(v.(int16)) * 10e9)
 		case int32:
-			return time.Duration(v.(int32))
+			return time.Duration(int64(v.(int32)) * 10e9)
 		case int64:
-			return time.Duration(v.(int64))
+			return time.Duration(v.(int64) * 10e9)
 		case time.Duration:
 			return v.(time.Duration)
 
 		case uint:
-			return time.Duration(v.(uint))
+			return time.Duration(int64(v.(uint)) * 10e9)
 		case uint8:
-			return time.Duration(v.(uint8))
+			return time.Duration(int64(v.(uint8)) * 10e9)
 		case uint16:
-			return time.Duration(v.(uint16))
+			return time.Duration(int64(v.(uint16)) * 10e9)
 		case uint32:
-			return time.Duration(v.(uint32))
+			return time.Duration(int64(v.(uint32)) * 10e9)
 		case uint64:
-			return time.Duration(v.(uint64))
+			return time.Duration(int64(v.(uint64)) * 10e9)
 
 		case float32:
-			return time.Duration(v.(float32))
+			return time.Duration(int64(v.(float32)) * 10e9)
 		case float64:
-			return time.Duration(v.(float64))
+			return time.Duration(int64(v.(float64)) * 10e9)
 
 		default:
 			return defaultValue
