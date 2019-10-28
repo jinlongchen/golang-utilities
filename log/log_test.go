@@ -3,13 +3,6 @@ package log
 import "testing"
 
 func TestDumpKeyValue(t *testing.T) {
-	type X struct {
-		A string `json:"a"`
-		B string `json:"b"`
-	}
-
-	DumpKeyValue(&X{
-		A: "aaaa",
-		B: "bbb",
-	})
+	Config("", LevelDebug, true, "", 0, 0, 0)
+	Infof("err: %s", "ok")
 }
