@@ -198,20 +198,24 @@ func write(zapLogger *zap.Logger, level Level, format string, args ...interface{
 		return
 	}
 
+	fields := make([]zap.Field, 0)
+	if globalAppName != "" {
+		fields = append(fields, zap.String("app", globalAppName))
+	}
 	if level == LevelPanic {
-		zapLogger.Panic(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Panic(fmt.Sprintf(format, args...), fields...)
 		os.Exit(1)
 	} else if level == LevelFatal {
-		zapLogger.Fatal(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Fatal(fmt.Sprintf(format, args...), fields...)
 		os.Exit(1)
 	} else if level == LevelError {
-		zapLogger.Error(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Error(fmt.Sprintf(format, args...), fields...)
 	} else if level == LevelWarn {
-		zapLogger.Warn(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Warn(fmt.Sprintf(format, args...), fields...)
 	} else if level == LevelInfo {
-		zapLogger.Info(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Info(fmt.Sprintf(format, args...), fields...)
 	} else if level == LevelDebug {
-		zapLogger.Debug(fmt.Sprintf(format, args...), zap.String("app", globalAppName))
+		zapLogger.Debug(fmt.Sprintf(format, args...), fields...)
 	}
 }
 
