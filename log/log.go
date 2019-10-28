@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
+	"time"
 )
 
 type Level string
@@ -67,7 +68,22 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 
 	if console {
 		consoleDebugging := zapcore.Lock(os.Stdout)
-		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		consoleEncoder := zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
+			// Keys can be anything except the empty string.
+			TimeKey:        "T",
+			LevelKey:       "L",
+			NameKey:        "N",
+			CallerKey:      "C",
+			MessageKey:     "M",
+			StacktraceKey:  "S",
+			LineEnding:     zapcore.DefaultLineEnding,
+			EncodeLevel:    zapcore.CapitalLevelEncoder,
+			EncodeTime:     func(t time.Time, enc zapcore.PrimitiveArrayEncoder){
+				enc.AppendString(t.Local().Format("2006-01-02 15:04:05"))
+			},
+			EncodeDuration: zapcore.StringDurationEncoder,
+			EncodeCaller:   zapcore.ShortCallerEncoder,
+		})
 		consoleCore := zapcore.NewCore(consoleEncoder, consoleDebugging, levelFunc)
 
 		cores = append(cores, consoleCore)
