@@ -85,7 +85,6 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 			EncodeCaller:   zapcore.ShortCallerEncoder,
 		})
 		consoleCore := zapcore.NewCore(consoleEncoder, consoleDebugging, levelFunc)
-
 		cores = append(cores, consoleCore)
 	}
 	if filename != "" {
