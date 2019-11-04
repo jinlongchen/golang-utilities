@@ -70,14 +70,17 @@ func NewRemoteConfig(provider, addr, path, configType string) *Config {
 	err := ret.v.AddRemoteProvider(provider, addr, path)
 	if err != nil {
 		log.Errorf("read log file err:%s", err.Error())
+		return nil
 	}
 	err = ret.v.ReadRemoteConfig()
 	if err != nil {
 		log.Errorf("read log file err:%s", err.Error())
+		return nil
 	}
 	err = ret.v.WatchRemoteConfigOnChannel()
 	if err != nil {
 		log.Infof("WatchRemoteConfigOnChannel err: %s", err.Error())
+		return nil
 	}
 	ret.v.OnConfigChange(func(e fsnotify.Event) {
 		log.Infof("reload config: %s", string(json.ShouldMarshal(ret.v.AllSettings())))
