@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	go_svc "github.com/judwhite/go-svc/svc"
+	goSvc "github.com/judwhite/go-svc/svc"
 
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/log"
@@ -21,12 +21,12 @@ type Executor struct {
 func Execute(s Service) {
 	e := &Executor{}
 	e.s = s
-	if err := go_svc.Run(e, syscall.SIGINT, syscall.SIGTERM); err != nil {
+	if err := goSvc.Run(e, syscall.SIGINT, syscall.SIGTERM); err != nil {
 		panic(err)
 	}
 }
 
-func (e *Executor) Init(env go_svc.Environment) error {
+func (e *Executor) Init(env goSvc.Environment) error {
 	if env.IsWindowsService() {
 		dir := filepath.Dir(os.Args[0])
 		err := os.Chdir(dir)
