@@ -42,8 +42,18 @@ func (e *Executor) Init(env goSvc.Environment) error {
 		if err == nil {
 			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path, "toml")
 			if e.cfg == nil {
-				time.Sleep(time.Minute * 10)
-				log.Fatalf("cannot load config")
+				retry := 600
+				for i := 0; i < retry; i++ {
+					log.Infof("wait load config")
+					time.Sleep(time.Second)
+					e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path, "toml")
+					if e.cfg != nil {
+						break
+					}
+					if i+1 == retry {
+						log.Fatalf("cannot load config")
+					}
+				}
 			}
 			if localConfigURL != "" {
 				_ = e.cfg.Save(localConfigURL)
