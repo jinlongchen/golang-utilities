@@ -1,7 +1,6 @@
 package svc
 
 import (
-	"github.com/jinlongchen/golang-utilities/errors"
 	"net/url"
 	"os"
 	"path/filepath"
