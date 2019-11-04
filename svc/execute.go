@@ -1,10 +1,12 @@
 package svc
 
 import (
+	"github.com/jinlongchen/golang-utilities/errors"
 	"net/url"
 	"os"
 	"path/filepath"
 	"syscall"
+	"time"
 
 	go_svc "github.com/judwhite/go-svc/svc"
 
@@ -35,16 +37,15 @@ func (e *Executor) Init(env go_svc.Environment) error {
 	}
 	remoteConfigURL := os.Getenv("REMOTE_CONFIG_URL")
 	localConfigURL := os.Getenv("LOCAL_CONFIG_URL")
-	//if localConfigURL == "" {
-	//	cfgName := flag.String("conf", "conf-file.toml", "")
-	//	flag.Parse()
-	//	localConfigURL = *cfgName
-	//}
 
 	if remoteConfigURL != "" {
 		uRL, err := url.Parse(remoteConfigURL)
 		if err == nil {
 			e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path, "toml")
+			if e.cfg == nil {
+				time.Sleep(time.Minute * 10)
+				log.Fatalf("cannot load config")
+			}
 			if localConfigURL != "" {
 				_ = e.cfg.Save(localConfigURL)
 			}

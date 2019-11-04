@@ -18,7 +18,7 @@ func TestGetNormalTimestampRandString(t *testing.T) {
 }
 func TestParseShortTimestampRandString(t *testing.T) {
 	//2m2hs502kyv66909
-	epochTime, _, _ := ParseShortTimestampRandString("2r961n02kypbt104s17")
+	epochTime, _, _ := ParseShortTimestampRandString("31wwxy02kyqil404")
 	println(epochTime)
 	println(time.Unix(epochTime, 0).String())
 }
