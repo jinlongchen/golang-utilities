@@ -91,7 +91,7 @@ func RSASign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
 	var err error
 
 	h := sha1.New()
-	h.Write([]byte(data))
+	h.Write(data)
 	digest := h.Sum(nil)
 
 	bb, err = rsa.SignPKCS1v15(nil, privateKey, crypto.SHA1, digest)
@@ -105,7 +105,7 @@ func RSA256Sign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
 	var err error
 
 	h := sha256.New()
-	h.Write([]byte(data))
+	h.Write(data)
 	digest := h.Sum(nil)
 
 	bb, err = rsa.SignPKCS1v15(nil, privateKey, crypto.SHA256, digest)
