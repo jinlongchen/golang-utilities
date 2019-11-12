@@ -105,6 +105,7 @@ func (ss *SmsHelper) req2Query(req *SmsReq) url.Values {
 	query.Set("Version", req.Version)
 	return query
 }
+
 func (ss *SmsHelper) sign(req *SmsReq) string {
 	query := ss.req2Query(req)
 	query.Del("Signature")
