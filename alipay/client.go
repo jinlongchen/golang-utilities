@@ -8,6 +8,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/labstack/echo"
 	"io/ioutil"
 	"net/url"
 	"strconv"
@@ -16,12 +17,12 @@ import (
 
 type Client struct {
 	AppID        string
-	SellerID     string
+	PartnerID    string
 	PrivateKey   *rsa.PrivateKey
 	AliPublicKey *rsa.PublicKey
 }
 
-func NewClient(appID, sellerID, priKeyPath, aliPublicKeyPath string) (*Client, error) {
+func NewClient(appID, partnerID, priKeyPath, aliPublicKeyPath string) (*Client, error) {
 	priKey, err := loadPrivateKey(priKeyPath)
 	if err != nil {
 		log.Fatalf("LoadPrivateKey err:%s", err.Error())
@@ -35,7 +36,7 @@ func NewClient(appID, sellerID, priKeyPath, aliPublicKeyPath string) (*Client, e
 
 	return &Client{
 		AppID:        appID,
-		SellerID:     sellerID,
+		PartnerID:    partnerID,
 		PrivateKey:   priKey,
 		AliPublicKey: aliPublicKey,
 	}, nil
@@ -43,24 +44,38 @@ func NewClient(appID, sellerID, priKeyPath, aliPublicKeyPath string) (*Client, e
 
 // alipay.trade.app.pay(app支付接口2.0)
 func (client *Client) CreateTradeAppPay(orderID string, fee int, subject string, desc string, notifyUrl, returnUrl string) (string, error) {
-	reqUrl, err := client.getOpenApiBizRequestUrl(
-		"alipay.trade.app.pay",
-		returnUrl,
-		notifyUrl,
-		json.ShouldMarshal(&TradeAppPay{
+	var query = Params{
+		"app_id":      client.AppID,
+		"biz_content": string(json.ShouldMarshal(&TradeAppPay{
 			OutTradeNo:  orderID,
 			Subject:     subject,
 			Body:        desc,
 			TotalAmount: strconv.FormatFloat(float64(fee)/100, 'f', 2, 32),
 			ProductCode: "QUICK_MSECURITY_PAY",
-		}),
-	)
-
-	if err != nil {
-		log.Errorf("err:%s", err.Error())
+		})),
+		"charset":     "utf-8",
+		"format":      "JSON",
+		"method":      "alipay.trade.app.pay",
+		"notify_url":  notifyUrl,
+		"return_url":  returnUrl,
+		"sign_type":   "RSA2",
+		"timestamp":   time.Now().Format("2006-01-02 15:04:05"),
+		"version":     "1.0",
+	}
+	if returnUrl != "" {
+		query["return_url"] = returnUrl
+	}
+	if notifyUrl != "" {
+		query["notify_url"] = notifyUrl
 	}
 
-	return reqUrl, err
+	var err error
+	query["sign"], err = crypto.RSA256Sign(client.PrivateKey, []byte(query.Encode(false)))
+	if err != nil {
+		return "", err
+	}
+
+	return map2Values(query).Encode(), err
 }
 
 //退款
