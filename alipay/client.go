@@ -8,7 +8,6 @@ import (
 	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/jinlongchen/golang-utilities/log"
-	"github.com/labstack/echo"
 	"io/ioutil"
 	"net/url"
 	"strconv"
