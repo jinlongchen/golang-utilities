@@ -44,22 +44,21 @@ func NewClient(appID, partnerID, priKeyPath, aliPublicKeyPath string) (*Client, 
 // alipay.trade.app.pay(app支付接口2.0)
 func (client *Client) CreateTradeAppPay(orderID string, fee int, subject string, desc string, notifyUrl, returnUrl string) (string, error) {
 	var query = Params{
-		"app_id":      client.AppID,
+		"app_id": client.AppID,
 		"biz_content": string(json.ShouldMarshal(&TradeAppPay{
-			OutTradeNo:  orderID,
-			Subject:     subject,
-			Body:        desc,
-			TotalAmount: strconv.FormatFloat(float64(fee)/100, 'f', 2, 32),
-			ProductCode: "QUICK_MSECURITY_PAY",
+			TimeoutExpress: "30m",
+			OutTradeNo:     orderID,
+			Subject:        subject,
+			Body:           desc,
+			TotalAmount:    strconv.FormatFloat(float64(fee)/100, 'f', 2, 32),
+			ProductCode:    "QUICK_MSECURITY_PAY",
 		})),
-		"charset":     "utf-8",
-		"format":      "JSON",
-		"method":      "alipay.trade.app.pay",
-		"notify_url":  notifyUrl,
-		"return_url":  returnUrl,
-		"sign_type":   "RSA2",
-		"timestamp":   time.Now().Format("2006-01-02 15:04:05"),
-		"version":     "1.0",
+		"charset":   "utf-8",
+		"format":    "JSON",
+		"method":    "alipay.trade.app.pay",
+		"sign_type": "RSA2",
+		"timestamp": time.Now().Format("2006-01-02 15:04:05"),
+		"version":   "1.0",
 	}
 	if returnUrl != "" {
 		query["return_url"] = returnUrl
@@ -74,7 +73,7 @@ func (client *Client) CreateTradeAppPay(orderID string, fee int, subject string,
 		return "", err
 	}
 
-	return map2Values(query).Encode(), err
+	return query.Encode(false), err
 }
 
 //退款
