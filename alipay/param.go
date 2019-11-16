@@ -52,7 +52,28 @@ func parseParams(m Params, query string) (err error) {
 	}
 	return err
 }
+func (v Params) AlipayAppEncode() string {
+	if v == nil {
+		return ""
+	}
+	var buf bytes.Buffer
+	keys := make([]string, 0, len(v))
+	for k := range v {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		vs := v[k]
+		if buf.Len() > 0 {
+			buf.WriteByte('&')
+		}
 
+		buf.WriteString(k)
+		buf.WriteByte('=')
+		buf.WriteString(aliEscape(vs))
+	}
+	return buf.String()
+}
 func (v Params) Encode(escape bool) string {
 	if v == nil {
 		return ""
