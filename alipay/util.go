@@ -5,28 +5,55 @@
 package alipay
 
 import (
-	"strings"
+	"bytes"
 )
 
-func aliEscape(data string) string {
-	data = strings.ReplaceAll(data, `!`, `%21`)
-	data = strings.ReplaceAll(data, `*`, `%2A`)
-	data = strings.ReplaceAll(data, `'`, `%27`)
-	data = strings.ReplaceAll(data, `(`, `%28`)
-	data = strings.ReplaceAll(data, `)`, `%29`)
-	data = strings.ReplaceAll(data, `;`, `%3B`)
-	data = strings.ReplaceAll(data, `:`, `%3A`)
-	data = strings.ReplaceAll(data, `@`, `%40`)
-	data = strings.ReplaceAll(data, `&`, `%26`)
-	data = strings.ReplaceAll(data, `=`, `%3D`)
-	data = strings.ReplaceAll(data, `+`, `%2B`)
-	data = strings.ReplaceAll(data, `$`, `%24`)
-	data = strings.ReplaceAll(data, `,`, `%2C`)
-	data = strings.ReplaceAll(data, `/`, `%2F`)
-	data = strings.ReplaceAll(data, `?`, `%3F`)
-	data = strings.ReplaceAll(data, `%`, `%25`)
-	data = strings.ReplaceAll(data, `#`, `%23`)
-	data = strings.ReplaceAll(data, `[`, `%5B`)
-	data = strings.ReplaceAll(data, `]`, `%5D`)
-	return data
+func aliEscape(str string) string {
+	data := []byte(str)
+	var buf bytes.Buffer
+	for _, c := range data {
+		switch c {
+		case '!':
+			buf.Write([]byte(`%21`))
+		case '*':
+			buf.Write([]byte(`%2A`))
+		case '\'':
+			buf.Write([]byte(`%27`))
+		case '(':
+			buf.Write([]byte(`%28`))
+		case ')':
+			buf.Write([]byte(`%29`))
+		case ';':
+			buf.Write([]byte(`%3B`))
+		case ':':
+			buf.Write([]byte(`%3A`))
+		case '@':
+			buf.Write([]byte(`%40`))
+		case '&':
+			buf.Write([]byte(`%26`))
+		case '=':
+			buf.Write([]byte(`%3D`))
+		case '+':
+			buf.Write([]byte(`%2B`))
+		case '$':
+			buf.Write([]byte(`%24`))
+		case ',':
+			buf.Write([]byte(`%2C`))
+		case '/':
+			buf.Write([]byte(`%2F`))
+		case '?':
+			buf.Write([]byte(`%3F`))
+		case '%':
+			buf.Write([]byte(`%25`))
+		case '#':
+			buf.Write([]byte(`%23`))
+		case '[':
+			buf.Write([]byte(`%5B`))
+		case ']':
+			buf.Write([]byte(`%5D`))
+		default:
+			buf.WriteByte(c)
+		}
+	}
+	return buf.String()
 }
