@@ -53,14 +53,14 @@ func (client *Client) CreateTradeAppPay(orderID string, fee int, subject string,
 	})
 
 	var query = Params{
-		"app_id": client.AppID,
+		"app_id":      client.AppID,
 		"biz_content": string(bizContent),
-		"charset":   "utf-8",
-		"format":    "JSON",
-		"method":    "alipay.trade.app.pay",
-		"sign_type": "RSA2",
-		"timestamp": time.Now().Format("2006-01-02 15:04:05"),
-		"version":   "1.0",
+		"charset":     "utf-8",
+		"format":      "JSON",
+		"method":      "alipay.trade.app.pay",
+		"sign_type":   "RSA2",
+		"timestamp":   time.Now().Format("2006-01-02 15:04:05"),
+		"version":     "1.0",
 	}
 	if returnUrl != "" {
 		query["return_url"] = returnUrl
@@ -76,6 +76,23 @@ func (client *Client) CreateTradeAppPay(orderID string, fee int, subject string,
 	}
 
 	return query.AlipayAppEncode(), err
+}
+
+func (client *Client) VerifyTradeAppPayNotify(paramsStr string) error {
+	params, err := ParseParams(paramsStr)
+	if err != nil {
+		return err
+	}
+	sign := params["sign"]
+	signType := params["sign_type"]
+	delete(params, "sign")
+	delete(params, "sign_type")
+	if signType == "RSA2" {
+		return crypto.RSA256Verify(client.AliPublicKey, []byte(params.Encode(false)), sign)
+	} else if signType == "RSA" {
+		return crypto.RSAVerify(client.AliPublicKey, []byte(params.Encode(false)), sign)
+	}
+	return errors.New("not supported")
 }
 
 //退款
