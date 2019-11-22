@@ -185,7 +185,7 @@ func PutDataWithHeaders(reqURL string, reqHeader goHttp.Header, bodyType string,
 }
 
 func PostData(reqURL string, bodyType string, data []byte) ([]byte, error) {
-	timeout := time.Duration(15 * time.Second)
+	timeout := 15 * time.Second
 	client := &goHttp.Client{
 		Timeout: timeout,
 	}

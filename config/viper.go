@@ -50,6 +50,18 @@ func NewConfig(path string) *Config {
 	return ret
 }
 
+func NewConfigWithString(configStr string) *Config {
+	ret := &Config{
+		v: viper.New(),
+	}
+	ret.v.SetConfigType("toml")
+	err := ret.v.ReadConfig(strings.NewReader(configStr))
+	if err != nil {
+		log.Errorf("read config file err:%s", err.Error())
+	}
+	return ret
+}
+
 func ParseConfig(configStr string, configType string) *Config {
 	ret := &Config{
 		v: viper.New(),
