@@ -3,6 +3,7 @@ package crypto
 import (
 	"bytes"
 	"crypto"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
@@ -115,6 +116,15 @@ func RSA256Sign(privateKey *rsa.PrivateKey, data []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(bb), nil
 }
 
+func HmacSha1(source, secret string) string {
+	key := []byte(secret)
+	hasher := hmac.New(sha1.New, key)
+	hasher.Write([]byte(source))
+	signedBytes := hasher.Sum(nil)
+	signedString := base64.StdEncoding.EncodeToString(signedBytes)
+	return signedString
+}
+
 func RSAVerify(pubKey *rsa.PublicKey, data []byte, sign string) error {
 	bs, err := base64.StdEncoding.DecodeString(sign)
 	if err != nil {
@@ -216,23 +226,3 @@ func ParseRSAPublicKey(key []byte) (*rsa.PublicKey, error) {
 
 	return pkey, nil
 }
-
-//
-//func RsaPrivateKey2Pem(key *rsa.PrivateKey) []byte {
-//	der := x509.MarshalPKCS1PrivateKey(key)
-//	block := &pem.Block{
-//		Type:  "RSA PRIVATE KEY",
-//		Bytes: der,
-//	}
-//	return pem.EncodeToMemory(block)
-//}
-//
-//func RsaPublicKey2Pem(key *rsa.PublicKey) []byte {
-//	der := x509.MarshalPKCS1PublicKey(key)
-//	block := &pem.Block{
-//		Type:  "RSA PUBLIC KEY",
-//		Bytes: der,
-//	}
-//	return pem.EncodeToMemory(block)
-//}
-//
