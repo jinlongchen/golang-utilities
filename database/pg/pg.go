@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"reflect"
 )
 
 type JsonbMap map[string]interface{}
@@ -35,9 +36,19 @@ func (p *JsonbMap) From(src interface{}) error {
 		return nil
 	}
 
-	source, err := json.Marshal(src)
-	if err != nil {
-		return errors.New("type assertion .([]byte) failed")
+	var source []byte
+	var err error
+
+	switch tSrc := src.(type) {
+	case []byte:
+		source = tSrc
+	case *[]byte:
+		source = *tSrc
+	default:
+		source, err = json.Marshal(src)
+		if err != nil {
+			return errors.New("type assertion .([]byte) failed")
+		}
 	}
 
 	var i JsonbMap
@@ -57,8 +68,14 @@ func (p *JsonbMap) To(src interface{}) error {
 	if err != nil {
 		return errors.New("type assertion .([]byte) failed")
 	}
+	switch tSrc := src.(type) {
+	case *[]byte:
+		*tSrc = source
+		return nil
+	default:
+		return json.Unmarshal(source, src)
+	}
 	//log.Debugf("marshal source:%s,%v", string(source), p)
-	return json.Unmarshal(source, src)
 }
 
 type JsonbMapArray []map[string]interface{}
