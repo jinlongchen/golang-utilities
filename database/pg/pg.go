@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"reflect"
 )
 
 type JsonbMap map[string]interface{}
