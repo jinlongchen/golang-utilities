@@ -3,6 +3,7 @@ package svc
 import (
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"syscall"
 	"time"
@@ -56,6 +57,11 @@ func (e *Executor) Init(env goSvc.Environment) error {
 				}
 			}
 			if localConfigURL != "" {
+				dir := path.Dir(localConfigURL)
+				_, err := os.Stat(dir)
+				if os.IsNotExist(err) {
+					_ = os.MkdirAll(dir, 0777)
+				}
 				_ = e.cfg.Save(localConfigURL)
 			}
 		}
