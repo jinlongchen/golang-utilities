@@ -29,6 +29,9 @@ func SetValue(m map[string]interface{}, path string, val interface{}) {
 	}
 }
 func GetValue(m map[string]interface{}, path string) interface{} {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return nil
+	}
 	if path == "" {
 		return m
 	}
@@ -46,6 +49,9 @@ func GetValue(m map[string]interface{}, path string) interface{} {
 }
 
 func Exists(m map[string]interface{}, path string) bool {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return false
+	}
 	if path == "" {
 		return false
 	}
@@ -65,6 +71,9 @@ func Exists(m map[string]interface{}, path string) bool {
 }
 
 func GetValueAsInt(m map[string]interface{}, path string, defaultValue int) int {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return converter.AsInt(m, defaultValue)
 	}
@@ -80,6 +89,9 @@ func GetValueAsInt(m map[string]interface{}, path string, defaultValue int) int 
 	}
 }
 func GetValueAsInt32(m map[string]interface{}, path string, defaultValue int32) int32 {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return converter.AsInt32(m, defaultValue)
 	}
@@ -96,6 +108,9 @@ func GetValueAsInt32(m map[string]interface{}, path string, defaultValue int32) 
 	}
 }
 func GetValueAsInt64(m map[string]interface{}, path string, defaultValue int64) int64 {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return converter.AsInt64(m, defaultValue)
 	}
@@ -150,6 +165,9 @@ func GetValueAsStringSlice(m map[string]interface{}, path string, defaultValue [
 	}
 }
 func GetValueAsBool(m map[string]interface{}, path string, defaultValue bool) bool {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return converter.AsBool(m, defaultValue)
 	}
@@ -166,6 +184,9 @@ func GetValueAsBool(m map[string]interface{}, path string, defaultValue bool) bo
 	}
 }
 func GetValueAsFloat64(m map[string]interface{}, path string, defaultValue float64) float64 {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return converter.AsFloat64(m, defaultValue)
 	}
@@ -182,6 +203,9 @@ func GetValueAsFloat64(m map[string]interface{}, path string, defaultValue float
 	}
 }
 func GetValueAsMap(m map[string]interface{}, path string, defaultValue map[string]interface{}) map[string]interface{} {
+	if m == nil || reflect.ValueOf(m).IsNil() {
+		return defaultValue
+	}
 	if path == "" {
 		return m
 	}
