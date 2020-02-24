@@ -35,8 +35,8 @@ const (
 )
 
 func init() {
-	Config("update location",
-		Level("debug"),
+	Config("golang-util",
+		LevelDebug,
 		true,
 		"",
 		0,

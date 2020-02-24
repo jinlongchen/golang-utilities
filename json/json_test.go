@@ -22,3 +22,8 @@ func TestShouldMarshal(t *testing.T) {
 		Data: ShouldMarshal("456"),
 	})))
 }
+
+func TestShouldMarshal2(t *testing.T) {
+	fmt.Println(string(ShouldMarshal(&map[string]interface{}{
+	})))
+}
