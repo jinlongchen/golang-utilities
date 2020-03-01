@@ -80,7 +80,8 @@ func drawImg(dst draw.Image, i, j int, err error) error {
 		_ = zipReader.Close()
 	}()
 
-	data, err = compress.DecompressGzip(data)
+	//data, err = compress.DecompressGzip(data)
+	data, err = compress.Gunzip(data)
 	if err != nil {
 		return err
 	}
