@@ -103,12 +103,15 @@ func GetRandFloat64() float64 {
 func GetRandFloat32() float32 {
 	return r.Float32()
 }
+//[min,max)
 func GetRandInt64(min int64, max int64) int64 {
 	return min + r.Int63n(max-min)
 }
+//[min,max)
 func GetRandInt32(min int32, max int32) int32 {
 	return min + r.Int31n(max-min)
 }
+//[min,max)
 func GetRandInt(min int, max int) int {
 	return min + r.Intn(max-min)
 }
