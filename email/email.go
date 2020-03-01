@@ -37,12 +37,12 @@ func New(smtpServer, password string, mailAddress *mail.Address) *Mail {
 	}
 }
 
-func (self *Mail) Send(title, body string, toEmail []*mail.Address) error {
+func (m *Mail) Send(title, body string, toEmail []*mail.Address) error {
 	auth := smtp.PlainAuth(
 		"",
-		self.fromMail.Address,
-		self.password,
-		self.smtpServer,
+		m.fromMail.Address,
+		m.password,
+		m.smtpServer,
 	)
 
 	to := ""
@@ -57,7 +57,7 @@ func (self *Mail) Send(title, body string, toEmail []*mail.Address) error {
 
 	buf := bytes.NewBuffer(nil)
 
-	buf.WriteString(fmt.Sprintf("From: %s\r\n", self.fromMail.String()))
+	buf.WriteString(fmt.Sprintf("From: %s\r\n", m.fromMail.String()))
 	buf.WriteString(fmt.Sprintf("To: %s\r\n", to))
 	buf.WriteString(fmt.Sprintf("Subject: %s\r\n", strings.Trim(mime.QEncoding.Encode("utf-8", title), "\"")))
 	buf.WriteString("MIME-Version: 1.0\r\n")
@@ -71,9 +71,9 @@ func (self *Mail) Send(title, body string, toEmail []*mail.Address) error {
 	//fmt.Println(buf.String())
 
 	err := smtp.SendMail(
-		self.smtpServer,
+		m.smtpServer,
 		auth,
-		self.fromMail.Address,
+		m.fromMail.Address,
 		toEmails,
 		buf.Bytes(),
 	)
@@ -84,12 +84,12 @@ func (self *Mail) Send(title, body string, toEmail []*mail.Address) error {
 // the email format see
 // https://support.microsoft.com/zh-cn/kb/969854
 // https://tools.ietf.org/html/rfc1341
-func (self *Mail) SendWithAttachment(title, body string, toEmail []*mail.Address, attachment []*Attachment) error {
+func (m *Mail) SendWithAttachment(title, body string, toEmail []*mail.Address, attachment []*Attachment) error {
 	auth := smtp.PlainAuth(
 		"",
-		self.fromMail.Address,
-		self.password,
-		self.smtpServer,
+		m.fromMail.Address,
+		m.password,
+		m.smtpServer,
 	)
 
 	to := ""
@@ -104,7 +104,7 @@ func (self *Mail) SendWithAttachment(title, body string, toEmail []*mail.Address
 
 	buf := bytes.NewBuffer(nil)
 
-	buf.WriteString(fmt.Sprintf("From: %s\r\n", self.fromMail.String()))
+	buf.WriteString(fmt.Sprintf("From: %s\r\n", m.fromMail.String()))
 	buf.WriteString(fmt.Sprintf("To: %s\r\n", to))
 	buf.WriteString(fmt.Sprintf("Subject: %s\r\n", strings.Trim(mime.QEncoding.Encode("utf-8", title), "\"")))
 	buf.WriteString("MIME-Version: 1.0\r\n")
@@ -158,9 +158,9 @@ func (self *Mail) SendWithAttachment(title, body string, toEmail []*mail.Address
 	//fmt.Println(buf.String())
 
 	err := smtp.SendMail(
-		self.smtpServer,
+		m.smtpServer,
 		auth,
-		self.fromMail.Address,
+		m.fromMail.Address,
 		toEmails,
 		buf.Bytes(),
 	)
