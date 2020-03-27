@@ -42,18 +42,34 @@ func TestNewManager(t *testing.T) {
 }
 
 func TestNewManager2(t *testing.T) {
-	jobID := "1219176816170766336"
+	jobID := "1235997636973043712"
 
 	qiniuManager := getManager()
 
 	response, err := qiniuManager.QueryMessage(QueryMessageRequest{
 		JobID: jobID,
-		Mobile: "13183801710",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	fmt.Printf("messages: %v\n", response)
+
+}
+func TestNewManager3(t *testing.T) {
+	qiniuManager := getManager()
+	smsTemplate, err := qiniuManager.QueryTemplateByID("1217103952571539456")
+	if err != nil {
+		return
+	}
+	fmt.Printf("%v", smsTemplate)
+	//var paramRegex = regexp.MustCompile(`\$\{([^\}]+)\}`)
+	//templateContent := smsTemplate.Template
+	//matches := paramRegex.FindAllStringSubmatch(templateContent, -1)
+	//for _, group := range matches {
+	//	templateContent = strings.ReplaceAll(templateContent, group[0], helper.GetValueAsString(params, group[1], ""))
+	//}
+	//smsContent := fmt.Sprintf("【%s】%s", signName, templateContent)
+	//return smsContent, int(math.Ceil(float64(utf8.RuneCountInString(smsContent)) / 70.0))
 
 }
