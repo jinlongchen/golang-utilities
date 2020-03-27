@@ -3,6 +3,7 @@ package rand
 import (
 	"bytes"
 	"encoding/binary"
+	"math"
 	mrand "math/rand"
 	"net"
 	"strings"
@@ -16,9 +17,9 @@ import (
 var (
 	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	//r       = mrand.New(mrand.NewSource(time.Now().UnixNano()))
-	r 		= mrand.New(&lockedSource{src: mrand.NewSource(time.Now().UnixNano()).(mrand.Source64)})
+	r = mrand.New(&lockedSource{src: mrand.NewSource(time.Now().UnixNano()).(mrand.Source64)})
 
-seqNo   uint64
+	seqNo   uint64
 	Address uint64
 )
 
@@ -33,6 +34,21 @@ func GetNonceString(n int) string {
 		b[i] = letters[r.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func GetShortTimestampSequenceNo() uint64 {
+	timeStamp := uint64(time.Now().Unix() - 1466035200)
+
+	sn := atomic.AddUint64(&seqNo, 1)
+
+	a := sn
+	i := 0
+	for a > 0 {
+		a /= 10
+		i++
+	}
+
+	return  timeStamp * uint64(math.Pow10(i)) + sn
 }
 
 func GetShortTimestampRandString() string {
@@ -103,14 +119,17 @@ func GetRandFloat64() float64 {
 func GetRandFloat32() float32 {
 	return r.Float32()
 }
+
 //[min,max)
 func GetRandInt64(min int64, max int64) int64 {
 	return min + r.Int63n(max-min)
 }
+
 //[min,max)
 func GetRandInt32(min int32, max int32) int32 {
 	return min + r.Int31n(max-min)
 }
+
 //[min,max)
 func GetRandInt(min int, max int) int {
 	return min + r.Intn(max-min)
@@ -250,7 +269,6 @@ func getIpAddr() (addr uint64) {
 	}
 	return
 }
-
 
 type lockedSource struct {
 	lk  sync.Mutex
