@@ -13,6 +13,13 @@ func TestGetRandInt(t *testing.T) {
 		println(GetRandInt(0, 2))
 	}
 }
+func TestGetShortTimestampSequenceNo2(t *testing.T) {
+	println(GetShortTimestampSequenceNo())
+	println(GetShortTimestampSequenceNo())
+	println(GetShortTimestampSequenceNo())
+	println(GetShortTimestampSequenceNo())
+	println(GetShortTimestampSequenceNo())
+}
 func TestGetNormalTimestampRandString(t *testing.T) {
 	t.Log(GetNormalTimestampRandString())
 }
