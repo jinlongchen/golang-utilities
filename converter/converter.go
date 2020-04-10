@@ -196,7 +196,7 @@ func AsFloat64(v interface{}, defaultValue float64) float64 {
 			return float64(v.(float32))
 
 		case string:
-			ret, err := strconv.ParseFloat(strings.Trim(v.(string), " \r\n"), 64)
+			ret, err := strconv.ParseFloat(strings.Trim(v.(string), " \"\r\n"), 64)
 			if err != nil {
 				return defaultValue
 			}
@@ -315,6 +315,7 @@ func AsMapSlice(v interface{}) []map[string]interface{} {
 	}
 	return nil
 }
+
 // 单位为秒
 func AsDuration(v interface{}, defaultValue time.Duration) time.Duration {
 	if v != nil {
