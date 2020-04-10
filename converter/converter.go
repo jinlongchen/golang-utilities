@@ -40,7 +40,7 @@ func AsInt(v interface{}, defaultValue int) int {
 			return int(v.(float32))
 
 		case string:
-			p, err := strconv.ParseInt(v.(string), 10, 32)
+			p, err := strconv.ParseInt(strings.Trim(v.(string), " \"\r\n"), 10, 32)
 			if err != nil {
 				return defaultValue
 			}
@@ -154,7 +154,7 @@ func AsInt64(v interface{}, defaultValue int64) int64 {
 			return int64(v.(float64))
 
 		case string:
-			ret, err := strconv.ParseInt(v.(string), 10, 64)
+			ret, err := strconv.ParseInt(strings.Trim(v.(string), " \"\r\n"), 10, 64)
 			if err != nil {
 				return defaultValue
 			}
@@ -267,7 +267,7 @@ func AsBool(v interface{}, defaultValue bool) bool {
 		case bool:
 			return v.(bool)
 		case string:
-			ret, err := strconv.ParseBool(v.(string))
+			ret, err := strconv.ParseBool(strings.Trim(v.(string), " \"\r\n"))
 			if err != nil {
 				return defaultValue
 			}
