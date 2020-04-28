@@ -68,7 +68,9 @@ func (e *Executor) Init(env goSvc.Environment) error {
 	}
 	if e.cfg == nil {
 		if localConfigURL == "" {
-			localConfigURL = "conf-file.toml"
+			if _, err := os.Stat("conf-file.toml"); err == nil {
+				localConfigURL = "conf-file.toml"
+			}
 		}
 		if localConfigURL != "" {
 			e.cfg = config.NewConfig(localConfigURL)
