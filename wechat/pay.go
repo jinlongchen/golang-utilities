@@ -3,6 +3,8 @@ package wechat
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/jinlongchen/golang-utilities/crypto"
+	"strings"
 	"time"
 
 	"github.com/jinlongchen/golang-utilities/http"
@@ -143,4 +145,28 @@ func (wx *Wechat) UnifiedOrder(
 	}
 
 	return response.PrepayId.Value, nil
+}
+
+// 针对小程序的统一下单
+func (wx *Wechat) MinipUnifiedOrder(appId, mchId, apiKey,
+	productId, productName, orderId string,
+	expire int64, openId string,
+	totalFee int, tradeType WxTradeType, clientIp, notifyURL string) (prepayId string, nonce string, timestamp int64, signStr string, err error) {
+	prepayId, err = wx.UnifiedOrder(appId, mchId, apiKey, productId, productName, orderId, expire, openId, totalFee, tradeType, clientIp, notifyURL)
+	if err != nil {
+		return prepayId, "", 0, "", err
+	}
+	nonce = rand.GetNonceString(32)
+	timestamp = time.Now().Unix()
+	// paySign = MD5(appId=wxd678efh567hg6787&nonceStr=5K8264ILTKCH16CQ2502SI8ZNMTM67VS&package=prepay_id=wx2017033010242291fcfe0db70013231072&signType=MD5&timeStamp=1490840662&key=qazwsxedcrfvtgbyhnujmikolp111111) = 22D9B4E54AB1950F51E0649E8810ACD6
+	toSign := fmt.Sprintf(
+		`appId=%s&nonceStr=%s&package=prepay_id=%s&signType=MD5&timeStamp=%s&key=%s`,
+		appId,
+		nonce,
+		prepayId,
+		timestamp,
+		apiKey,
+	)
+	signStr = strings.ToUpper(crypto.String(toSign).GetMd5String())
+	return
 }
