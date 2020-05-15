@@ -129,7 +129,7 @@ func (wx *Wechat) UnifiedOrder(
 
 	response := &UnifiedOrderResponse{}
 
-	log.Debugf("Req Xml: %s", string(reqData))
+	log.Infof("Req Xml: %s", string(reqData))
 
 	respData, err := http.PostData(WxUnifiedOrderUrl, "application/x-www-form-urlencoded", reqData)
 
@@ -137,7 +137,7 @@ func (wx *Wechat) UnifiedOrder(
 		return "", err
 	}
 
-	log.Debugf("Resp Xml: %s", string(respData))
+	log.Infof("Resp Xml: %s", string(respData))
 
 	err = xml.Unmarshal(respData, response)
 	if err != nil {
