@@ -154,13 +154,14 @@ func (wx *Wechat) MinipUnifiedOrder(appId, mchId, apiKey,
 	totalFee int, tradeType WxTradeType, clientIp, notifyURL string) (prepayId string, nonce string, timestamp int64, signStr string, err error) {
 	prepayId, err = wx.UnifiedOrder(appId, mchId, apiKey, productId, productName, orderId, expire, openId, totalFee, tradeType, clientIp, notifyURL)
 	if err != nil {
+		log.Errorf("UnifiedOrder err: %v", err)
 		return prepayId, "", 0, "", err
 	}
 	nonce = rand.GetNonceString(32)
 	timestamp = time.Now().Unix()
 	// paySign = MD5(appId=wxd678efh567hg6787&nonceStr=5K8264ILTKCH16CQ2502SI8ZNMTM67VS&package=prepay_id=wx2017033010242291fcfe0db70013231072&signType=MD5&timeStamp=1490840662&key=qazwsxedcrfvtgbyhnujmikolp111111) = 22D9B4E54AB1950F51E0649E8810ACD6
 	toSign := fmt.Sprintf(
-		`appId=%s&nonceStr=%s&package=prepay_id=%s&signType=MD5&timeStamp=%s&key=%s`,
+		`appId=%s&nonceStr=%s&package=prepay_id=%s&signType=MD5&timeStamp=%d&key=%s`,
 		appId,
 		nonce,
 		prepayId,
