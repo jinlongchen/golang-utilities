@@ -1,0 +1,50 @@
+[crypto]
+#下面这个是ss用的
+aeskey = "qc5aTG7VK4Yx/YVfYUV4oA=="
+
+#下面这个是三合用的
+#aesKey="s5aTG7VK4Hx/YVfYUV4oA=="
+
+#aeskey = "T+sMcutkRNfxp4xANfHf1g=="
+#aeskey = "yijiu_c1D5a"
+
+[file.minio]
+accessid = "aes:v3dmM99sdqJM3hDqrffIzt1QtzY9M7tIAitrbuTUk/M="
+accesssecret = "aes:dIYVWBTT4s2muYk5maMF6uvDE519ZliKcIG6xdRmS81Qtwceo2ky4pblY3ArcM0j"
+bucket = "baofoo"
+endpoint = "minio-0.yijiu-tech.com"
+
+#accessid = "aes:9C/SgJkJOTZ7ORXuvKBXJ74CbPhTf72ApxBDvpxqRGB0xmBsKVbbQ/1929J8EpRr"
+#accesssecret = "aes:puAwTwYja7qo3mOaiglDqR8CA251uBNwVRexFR8bZkWg3xElwzbmBZrAfW42TZ0ngUZnPj4zOpLKsAOgQCtMpefvEptjdfto9UooTLB4m6Y="
+
+[test]
+key2 = ["red", "yellow", "green"]
+key3 = true
+key4 = 12
+key5 = 1559105361
+key6 = "aes://NSy4KhrO6YSLNACo32ky2phgxsWAhhX2PRITosGcuv23peHx5ZRxBXNWrnNKO1CufLzywebu5pgSPdGEQAMJtvRQkF6F/hXp+nwM2I5qops="
+
+[cache.redis.addresses]
+server1 = "127.0.0.1:6379"
+server2 = "192.168.0.1:6379"
+
+[http.header]
+origins = ["https://192.168.0.1:6379", "*"]
+
+
+[corpp]
+corpid="wx1b4df56f4aa3b32e"
+corpsecret="LPCSenCyO_LEOeO4LMjUEi2aed9opmCpJHxLzcFaTeA"
+contactsecret="cZoevLCdD6SVkOkJUFlZ7xR1GPB9ir87AYtFJ8ebWRo"
+
+[[corpps]]
+  corpname="新希望"
+  corpid="wx1b4df56f4aa3b32e"
+  corpsecret="LPCSenCyO_LEOeO4LMjUEi2aed9opmCpJHxLzcFaTeA"
+  contactsecret="cZoevLCdD6SVkOkJUFlZ7xR1GPB9ir87AYtFJ8ebWRo"
+
+[[corpps]]
+  corpname="新网"
+  corpid="ww017678f721f2f2f2"
+  corpsecret="64wdHlXXRXLQjwSEYf2hPjhekQXH_JuEPowzkaCaGo8"
+  contactsecret="wRRC3XoKwSxawFeUybzxK_maH9cZfKG7_pTMkycgeNw"
