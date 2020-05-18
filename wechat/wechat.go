@@ -8,9 +8,14 @@ import (
 type Wechat struct {
 	cache  cache.Cache
 	config *config.Config
+	quit   chan struct{}
 }
 
 func NewWechat(cah cache.Cache, config *config.Config) *Wechat {
-	ret := &Wechat{cache: cah, config: config}
+	ret := &Wechat{
+		cache: cah,
+		config: config,
+		quit: make(chan struct{}),
+	}
 	return ret
 }

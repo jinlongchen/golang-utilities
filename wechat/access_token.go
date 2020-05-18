@@ -49,7 +49,19 @@ func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	cacheKey := wx.config.GetString("application.name") + ".wx_access_token." + appId
 	err := wx.cache.Get(cacheKey, ret)
 	if err == nil && ret != nil {
+		log.Infof("access token from cache: %v", ret)
 		return ret, nil
+	}
+	return wx.getAccessTokenByClient(appId, appSecret)
+}
+
+func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenResult, error) {
+	ret := &AccessTokenResult{}
+
+	cacheKey := wx.config.GetString("application.name") + ".wx_access_token." + appId
+	err := wx.cache.Get(cacheKey, ret)
+	if err == nil && ret != nil {
+		log.Infof("old token: %v", ret)
 	}
 	if err != nil {
 		log.Errorf("%s GetAccessTokenByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
@@ -58,7 +70,7 @@ func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	getTokenURL, _ := url.Parse("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential")
 	parameters := getTokenURL.Query()
 
-	log.Debugf("%s GetAccessTokenByClient appid:%s", wx.config.GetString("application.name"), wx.config.GetString("wechat.appId"))
+	log.Infof("%s getAccessTokenByClient appid:%s", wx.config.GetString("application.name"), wx.config.GetString("wechat.appId"))
 
 	parameters.Set("appid", appId)
 	parameters.Set("secret", appSecret)
@@ -72,9 +84,13 @@ func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if ret.Errcode != 0 {
 		return nil, errors.New(ret.Errmsg)
 	}
-	if ret.ExpiresIn > 30 {
-		ret.ExpiresIn = ret.ExpiresIn - 30
-	}
+	log.Infof("new token: %v", ret)
+	go func() {
+		// 提前两分钟重新取
+		time.Sleep(time.Second * time.Duration(ret.ExpiresIn-120))
+		_, _ = wx.getAccessTokenByClient(appId, appSecret)
+	}()
 	_ = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
 	return ret, nil
 }
+
