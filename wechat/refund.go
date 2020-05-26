@@ -96,6 +96,7 @@ func (wx *Wechat) Refund(orderId string, openId string, totalFee int) error {
 
 	response := RefundReponse{}
 
+	log.Infof("cert str: %v", wx.config.GetString("wechat.payment.certStr"))
 	data, err := http.PostDataSsl(WxRefundURL, reqData, []byte(wx.config.GetString("wechat.payment.certStr")), []byte(wx.config.GetString("wechat.payment.keyStr")))
 
 	log.Debugf("refund resp:%s", string(data))
