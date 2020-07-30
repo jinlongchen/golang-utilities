@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/jinlongchen/golang-utilities/http"
 	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/map/helper"
 	"net/url"
 	"time"
 )
@@ -46,36 +47,34 @@ func (wx *Wechat) GetAccessTokenByCode(code string) (*AccessTokenResult, error) 
 
 func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenResult, error) {
 	ret := &AccessTokenResult{}
-	cacheKey := wx.config.GetString("application.name") + ".wx_access_token." + appId
+	cacheKey := "wx:access_token:" + wx.config.GetString("application.name") + ":" + appId
 	err := wx.cache.Get(cacheKey, ret)
-	if err == nil && ret != nil {
+	if err == nil {
 		log.Infof("access token from cache: %v", ret)
 		return ret, nil
 	}
-	return wx.getAccessTokenByClient(appId, appSecret)
+	return ret, err
 }
 
 func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenResult, error) {
 	ret := &AccessTokenResult{}
-
-	cacheKey := wx.config.GetString("application.name") + ".wx_access_token." + appId
+	cacheKey := "wx:access_token:" + wx.config.GetString("application.name") + ":" + appId
 	err := wx.cache.Get(cacheKey, ret)
-	if err == nil && ret != nil {
-		log.Infof("old token: %v", ret)
-	}
 	if err != nil {
 		log.Errorf("%s GetAccessTokenByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
+	} else {
+		log.Infof("%s GetAccessTokenByClient old token: %v", wx.config.GetString("application.name"), ret.AccessToken)
 	}
 
 	getTokenURL, _ := url.Parse("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential")
 	parameters := getTokenURL.Query()
 
-	log.Infof("%s getAccessTokenByClient appid:%s", wx.config.GetString("application.name"), wx.config.GetString("wechat.appId"))
-
 	parameters.Set("appid", appId)
 	parameters.Set("secret", appSecret)
 
 	getTokenURL.RawQuery = parameters.Encode()
+
+	log.Infof("%s getAccessTokenByClient:%s", wx.config.GetString("application.name"), getTokenURL.String())
 
 	err = http.GetJSON(getTokenURL.String(), ret)
 	if err != nil {
@@ -84,13 +83,47 @@ func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if ret.Errcode != 0 {
 		return nil, errors.New(ret.Errmsg)
 	}
-	log.Infof("new token: %v", ret)
-	go func() {
-		// 提前两分钟重新取
-		time.Sleep(time.Second * time.Duration(ret.ExpiresIn-120))
-		_, _ = wx.getAccessTokenByClient(appId, appSecret)
-	}()
+	log.Infof("%s getAccessTokenByClient new token: %v", wx.config.GetString("application.name"), ret)
 	_ = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
 	return ret, nil
 }
 
+func (wx *Wechat) fetchAccessTokensLoop() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("fetchAccessTokensLoop err: %v", r)
+		}
+	}()
+	t := time.NewTimer(time.Second)
+	for {
+		select {
+		case <-t.C:
+			miniPrograms := wx.config.GetMapSlice("wx.miniPrograms")
+			if miniPrograms == nil {
+				return
+			}
+			minExpiresIn := 99999999
+			for _, miniP := range miniPrograms {
+				appId := helper.GetValueAsString(miniP, "appid", "")
+				appSecret := helper.GetValueAsString(miniP, "appsecret", "")
+				token, err := wx.getAccessTokenByClient(appId, appSecret)
+				if err != nil {
+					log.Errorf("fetch access token err: %v", err)
+				}
+				if token != nil {
+					if token.ExpiresIn < minExpiresIn {
+						minExpiresIn = token.ExpiresIn
+					}
+				}
+			}
+			if minExpiresIn < 120 {
+				minExpiresIn = 120
+			} else {
+				minExpiresIn -= 60
+			}
+			t.Reset(time.Second * time.Duration(minExpiresIn))
+		case <-wx.quit:
+			return
+		}
+	}
+}
