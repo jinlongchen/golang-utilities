@@ -307,7 +307,9 @@ func PostDataSsl(reqURL string, dataToSend, certPEMBlock, keyPEMBlock []byte) (r
 	}
 	defer func() {
 		err = ret.Body.Close()
-		log.Errorf(err.Error())
+		if err != nil {
+			log.Errorf(err.Error())
+		}
 	}()
 
 	data, err := ioutil.ReadAll(ret.Body)
