@@ -17,5 +17,8 @@ func NewWechat(cah cache.Cache, config *config.Config) *Wechat {
 		config: config,
 		quit: make(chan struct{}),
 	}
+	go func() {
+		ret.fetchAccessTokensLoop()
+	}()
 	return ret
 }
