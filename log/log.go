@@ -39,13 +39,21 @@ func init() {
 		LevelDebug,
 		true,
 		"",
+		LogFormatJSON,
 		0,
 		0,
 		0,
 	)
 }
 
-func Config(appName string, level Level, console bool, filename string, maxSize int, maxBackups int, maxAge int) {
+func Config(appName string,
+	level Level,
+	console bool,
+	filename string,
+	format LogFormat,
+	maxSize int,
+	maxBackups int,
+	maxAge int) {
 	globalAppName = appName
 	globalLevel = level
 
@@ -70,15 +78,15 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 		consoleDebugging := zapcore.Lock(os.Stdout)
 		consoleEncoder := zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
 			// Keys can be anything except the empty string.
-			TimeKey:        "T",
-			LevelKey:       "L",
-			NameKey:        "N",
-			CallerKey:      "C",
-			MessageKey:     "M",
-			StacktraceKey:  "S",
-			LineEnding:     zapcore.DefaultLineEnding,
-			EncodeLevel:    zapcore.CapitalLevelEncoder,
-			EncodeTime:     func(t time.Time, enc zapcore.PrimitiveArrayEncoder){
+			TimeKey:       "T",
+			LevelKey:      "L",
+			NameKey:       "N",
+			CallerKey:     "C",
+			MessageKey:    "M",
+			StacktraceKey: "S",
+			LineEnding:    zapcore.DefaultLineEnding,
+			EncodeLevel:   zapcore.CapitalLevelEncoder,
+			EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 				enc.AppendString(t.Local().Format("2006-01-02 15:04:05"))
 			},
 			EncodeDuration: zapcore.StringDurationEncoder,
@@ -97,7 +105,13 @@ func Config(appName string, level Level, console bool, filename string, maxSize 
 		}
 
 		fileWriter := zapcore.AddSync(&hook)
-		fileEncoder := zapcore.NewJSONEncoder(newProductionEncoderConfig())
+
+		var fileEncoder zapcore.Encoder
+		if format == LogFormatJSON {
+			fileEncoder = zapcore.NewJSONEncoder(newProductionEncoderConfig())
+		} else if format == LogFormatText {
+			fileEncoder = zapcore.NewConsoleEncoder(newConsoleEncoderConfig())
+		}
 		fileCore := zapcore.NewCore(fileEncoder, fileWriter, levelFunc)
 
 		cores = append(cores, fileCore)
@@ -246,6 +260,24 @@ func newProductionEncoderConfig() zapcore.EncoderConfig {
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
+	}
+}
+func newConsoleEncoderConfig() zapcore.EncoderConfig {
+	return zapcore.EncoderConfig{
+		// Keys can be anything except the empty string.
+		TimeKey:       "T",
+		LevelKey:      "L",
+		NameKey:       "N",
+		CallerKey:     "C",
+		MessageKey:    "M",
+		StacktraceKey: "S",
+		LineEnding:    zapcore.DefaultLineEnding,
+		EncodeLevel:   zapcore.CapitalLevelEncoder,
+		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+			enc.AppendString(t.Local().Format("2006-01-02 15:04:05"))
+		},
+		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
 }
