@@ -96,10 +96,11 @@ func (wx *Wechat) Refund(orderId string, openId string, totalFee int) error {
 
 	response := RefundReponse{}
 
-	log.Infof("cert str: %v", wx.config.GetString("wechat.payment.certStr"))
+	log.Infof("refund req:%v", WxRefundURL)
+
 	data, err := http.PostDataSsl(WxRefundURL, reqData, []byte(wx.config.GetString("wechat.payment.certStr")), []byte(wx.config.GetString("wechat.payment.keyStr")))
 
-	log.Debugf("refund resp:%s", string(data))
+	log.Infof("refund resp:%v", string(data))
 
 	err = xml.Unmarshal(data, &response)
 
