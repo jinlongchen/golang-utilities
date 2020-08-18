@@ -1,18 +1,22 @@
-package wechat
+/*
+ * Copyright (c) 2020. Jinlong Chen.
+ */
+
+package baidu
 
 import (
 	"github.com/jinlongchen/golang-utilities/cache"
 	"github.com/jinlongchen/golang-utilities/config"
 )
 
-type Wechat struct {
+type Baidu struct {
 	cache  cache.Cache
 	config *config.Config
 	quit   chan struct{}
 }
 
-func NewWechat(cah cache.Cache, config *config.Config) *Wechat {
-	ret := &Wechat{
+func NewBaidu(cah cache.Cache, config *config.Config) *Baidu {
+	ret := &Baidu{
 		cache:  cah,
 		config: config,
 		quit:   make(chan struct{}),
@@ -23,7 +27,7 @@ func NewWechat(cah cache.Cache, config *config.Config) *Wechat {
 	return ret
 }
 
-func (wx *Wechat) Exit() error {
-	close(wx.quit)
+func (bd *Baidu) Exit() error {
+	close(bd.quit)
 	return nil
 }

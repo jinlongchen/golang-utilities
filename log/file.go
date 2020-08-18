@@ -10,11 +10,18 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+type LogFormat string
+
+const (
+	LogFormatJSON LogFormat = "json"
+	LogFormatText LogFormat = "text"
+)
+
 type FileLogger struct {
 	zapLogger *zap.Logger
 }
 
-func NewFileLogger(filePath string, maxSize int, maxBackups int, maxAge int) *FileLogger {
+func NewFileLogger(filePath string, format LogFormat, maxSize int, maxBackups int, maxAge int) *FileLogger {
 	hook := lumberjack.Logger{
 		Filename:   filePath,
 		MaxSize:    maxSize, // megabytes
@@ -28,7 +35,13 @@ func NewFileLogger(filePath string, maxSize int, maxBackups int, maxAge int) *Fi
 	})
 
 	fileWriter := zapcore.AddSync(&hook)
-	fileEncoder := zapcore.NewJSONEncoder(newProductionEncoderConfig())
+
+	var fileEncoder zapcore.Encoder
+	if format == LogFormatJSON {
+		fileEncoder = zapcore.NewJSONEncoder(newProductionEncoderConfig())
+	} else if format == LogFormatText {
+		fileEncoder = zapcore.NewConsoleEncoder(newConsoleEncoderConfig())
+	}
 	fileCore := zapcore.NewCore(fileEncoder, fileWriter, levelFunc)
 
 	core := zapcore.NewTee(
