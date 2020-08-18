@@ -14,7 +14,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gobuffalo/packr v1.30.1
 	github.com/google/uuid v1.1.1 // indirect
-	github.com/jinlongchen/viper v0.0.0-20200818155039-2317223bcd69
+	github.com/jinlongchen/viper v0.0.0-20200818165633-753fef530141 // indirect
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.7
 	github.com/judwhite/go-svc v1.1.2
@@ -37,13 +37,9 @@ require (
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	go.uber.org/zap v1.15.0
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
+	golang.org/x/sys v0.0.0-20200817155316-9781c653f443 // indirect
 	golang.org/x/text v0.3.3
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
-)
-
-replace (
-	github.com/jinlongchen/viper v0.0.0-20200818155039-2317223bcd69 => ../viper
-	google.golang.org/grpc v1.31.0 => google.golang.org/grpc v1.26.0
 )
