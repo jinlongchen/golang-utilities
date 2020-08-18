@@ -23,4 +23,4 @@ conf-file1.toml
 conf-file.toml
 qiniu_key.txt
 qiniu_secret.txt
-/config/viper_test.txt
+viper_test.go
