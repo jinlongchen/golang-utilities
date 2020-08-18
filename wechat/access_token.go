@@ -52,6 +52,8 @@ func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if err == nil {
 		log.Infof("access token from cache: %v", ret)
 		return ret, nil
+	} else {
+		log.Errorf("cannot get token %v", cacheKey)
 	}
 	return ret, err
 }
@@ -83,8 +85,11 @@ func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if ret.Errcode != 0 {
 		return nil, errors.New(ret.Errmsg)
 	}
-	log.Infof("%s getAccessTokenByClient new token: %v", wx.config.GetString("application.name"), ret)
-	_ = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
+	log.Infof("%s getAccessTokenByClient new token: %v %v", cacheKey, wx.config.GetString("application.name"), ret)
+	err = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
+	if err != nil {
+		log.Errorf("set cache err: %v", err)
+	}
 	return ret, nil
 }
 

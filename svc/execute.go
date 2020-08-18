@@ -81,6 +81,13 @@ func (e *Executor) Init(env goSvc.Environment) error {
 		log.Level(e.cfg.GetString("log.level")),
 		e.cfg.GetBool("log.console"),
 		e.cfg.GetString("log.filename"),
+		func() log.LogFormat {
+			if e.cfg.GetString("log.format") == "text" {
+				return log.LogFormatText
+			} else {
+				return log.LogFormatJSON
+			}
+		}(),
 		e.cfg.GetInt("log.maxSize"),
 		e.cfg.GetInt("log.maxBackups"),
 		e.cfg.GetInt("log.maxAge"),
