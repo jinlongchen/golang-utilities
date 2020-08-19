@@ -35,8 +35,8 @@ require (
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	go.etcd.io/etcd v3.3.22+incompatible // indirect
 	go.uber.org/zap v1.10.0
-	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
-	golang.org/x/text v0.3.2
+	golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586
+	golang.org/x/text v0.3.3
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
