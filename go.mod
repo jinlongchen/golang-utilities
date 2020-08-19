@@ -44,3 +44,5 @@ require (
 )
 
 replace github.com/jinlongchen/viper => ../viper
+replace github.com/jinlongchen/bbolt => ../bbolt
+replace github.com/jinlongchen/etcd => ../etcd
