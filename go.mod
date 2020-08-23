@@ -21,7 +21,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.8
 	github.com/labstack/gommon v0.2.9
 	github.com/lib/pq v1.2.0
-	github.com/mattn/go-colorable v0.1.2
+	github.com/mattn/go-colorable v0.1.6
 	github.com/naoina/go-stringutil v0.1.0 // indirect
 	github.com/naoina/toml v0.1.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
@@ -35,7 +35,7 @@ require (
 	github.com/sony/gobreaker v0.4.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc
+	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
 	golang.org/x/text v0.3.3
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
@@ -44,5 +44,7 @@ require (
 )
 
 replace github.com/jinlongchen/viper => ../viper
+
 replace github.com/jinlongchen/bbolt => ../bbolt
+
 replace github.com/jinlongchen/etcd => ../etcd
