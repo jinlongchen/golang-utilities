@@ -12,6 +12,7 @@ require (
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gobuffalo/packr v1.30.1
+	github.com/jinlongchen/crypt v0.0.0-20200819105408-d3686556ac68 // indirect
 	github.com/jinlongchen/etcd v0.0.0-20200819100523-ae18edf38bd2 // indirect
 	github.com/jinlongchen/viper v0.0.0-20190914030427-255263e19911
 	github.com/jmoiron/sqlx v1.2.0
@@ -35,7 +36,7 @@ require (
 	github.com/sony/gobreaker v0.4.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc
+	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
 	golang.org/x/text v0.3.3
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
@@ -44,5 +45,7 @@ require (
 )
 
 replace github.com/jinlongchen/viper => ../viper
+
 replace github.com/jinlongchen/bbolt => ../bbolt
+
 replace github.com/jinlongchen/etcd => ../etcd

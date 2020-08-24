@@ -16,10 +16,7 @@ type Format string
 
 var (
 	globalZapLogger *zap.Logger
-	//globalLogrusLogger = logrus.New()
 	globalAppName string
-	globalLevel   Level
-	globalFormat  Format
 )
 
 const (
@@ -55,7 +52,6 @@ func Config(appName string,
 	maxBackups int,
 	maxAge int) {
 	globalAppName = appName
-	globalLevel = level
 
 	levels := map[Level]zapcore.Level{
 		LevelDebug: zap.DebugLevel,
@@ -129,50 +125,6 @@ func Config(appName string,
 	globalZapLogger = logger
 }
 
-//func Config(appName string, level Level, format Format) {
-//	globalAppName = appName
-//	globalLevel = level
-//	globalFormat = format
-//
-//	switch level {
-//	case LevelNone:
-//		globalLogrusLogger = nil
-//	case LevelDebug:
-//		globalLogrusLogger.SetLevel(logrus.DebugLevel)
-//	case LevelInfo:
-//		globalLogrusLogger.SetLevel(logrus.InfoLevel)
-//	case LevelWarn:
-//		globalLogrusLogger.SetLevel(logrus.WarnLevel)
-//	case LevelError:
-//		globalLogrusLogger.SetLevel(logrus.ErrorLevel)
-//	case LevelFatal:
-//		globalLogrusLogger.SetLevel(logrus.FatalLevel)
-//	case LevelPanic:
-//		globalLogrusLogger.SetLevel(logrus.PanicLevel)
-//	default:
-//		globalLogrusLogger.SetLevel(logrus.InfoLevel)
-//	}
-//
-//	if format == FormatJSON {
-//		if globalLogrusLogger != nil {
-//			globalLogrusLogger.Formatter = new(logrus.JSONFormatter)
-//		}
-//	} else {
-//		if globalLogrusLogger != nil {
-//			globalLogrusLogger.Formatter = &logrus.TextFormatter{FullTimestamp: true, DisableColors: true}
-//		}
-//	}
-//}
-
-//func SetOutput(out io.Writer) {
-//	if out == nil {
-//		return
-//	}
-//	globalLogrusLogger.SetOutput(out)
-//}
-//func AddHook(hook logrus.Hook) {
-//	globalLogrusLogger.AddHook(hook)
-//}
 func Panicf(fmt string, args ...interface{}) {
 	write(globalZapLogger, LevelPanic, fmt, args...)
 }
@@ -191,6 +143,7 @@ func Debugf(fmt string, args ...interface{}) {
 func Warnf(fmt string, args ...interface{}) {
 	write(globalZapLogger, LevelWarn, fmt, args...)
 }
+
 func Messagef(level Level, fmt string, args ...interface{}) {
 	write(globalZapLogger, level, fmt, args...)
 }
