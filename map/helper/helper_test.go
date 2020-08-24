@@ -31,7 +31,7 @@ func TestGetValueAsStringSlice(t *testing.T) {
 		"roles":[]MemberRole{MemberRoleB2bAgent},
 	}
 	roles := GetValueAsStringSlice(f, "roles", nil)
-	log.Infof("%v", roles)
+	log.Infof(nil, "%v", roles)
 }
 
 func TestGetValueAsString(t *testing.T) {
