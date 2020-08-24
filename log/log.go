@@ -1,9 +1,9 @@
 package log
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/jinlongchen/golang-utilities/converter"
+	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -125,27 +125,27 @@ func Config(appName string,
 	globalZapLogger = logger
 }
 
-func Panicf(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelPanic, fmt, args...)
+func Panicf(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelPanic, fields, fmt, args...)
 }
-func Fatalf(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelFatal, fmt, args...)
+func Fatalf(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelFatal, fields, fmt, args...)
 }
-func Errorf(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelError, fmt, args...)
+func Errorf(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelError, fields, fmt, args...)
 }
-func Infof(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelInfo, fmt, args...)
+func Infof(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelInfo, fields, fmt, args...)
 }
-func Debugf(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelDebug, fmt, args...)
+func Debugf(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelDebug, fields, fmt, args...)
 }
-func Warnf(fmt string, args ...interface{}) {
-	write(globalZapLogger, LevelWarn, fmt, args...)
+func Warnf(fields Fields, fmt string, args ...interface{}) {
+	write(globalZapLogger, LevelWarn, fields, fmt, args...)
 }
 
-func Messagef(level Level, fmt string, args ...interface{}) {
-	write(globalZapLogger, level, fmt, args...)
+func Messagef(fields Fields, level Level, fmt string, args ...interface{}) {
+	write(globalZapLogger, level, fields, fmt, args...)
 }
 func Flush() {
 	if globalZapLogger != nil {
@@ -153,11 +153,11 @@ func Flush() {
 	}
 }
 func Json(j interface{}) {
-	jd, err := json.Marshal(j)
-	if err != nil {
+	jd := json.ShouldMarshal(j)
+	if jd == nil {
 		return
 	}
-	write(globalZapLogger, LevelInfo, "%s", string(jd))
+	write(globalZapLogger, LevelInfo, nil,"%s", string(jd))
 }
 func DumpFormattedJson(j interface{}) {
 	jd, err := json.MarshalIndent(j, "", " ")
@@ -172,7 +172,7 @@ func DumpKeyValue(j interface{}) {
 		fmt.Printf("%s:%v\n", key, value)
 	}
 }
-func write(zapLogger *zap.Logger, level Level, format string, args ...interface{}) {
+func write(zapLogger *zap.Logger, level Level, fields Fields, format string, args ...interface{}) {
 	if zapLogger == nil {
 		zapLogger = globalZapLogger
 	}
@@ -180,24 +180,35 @@ func write(zapLogger *zap.Logger, level Level, format string, args ...interface{
 		return
 	}
 
-	fields := make([]zap.Field, 0)
+	zapFields := make([]zap.Field, 0)
+	if fields != nil {
+		for k, v := range fields {
+			switch v.(type) {
+			case map[string]interface{}, []interface{}, []map[string]interface{}:
+				zapFields = append(zapFields, zap.String(k, string(json.ShouldMarshal(v))))
+			default:
+				zapFields = append(zapFields, zap.Any(k, v))
+			}
+
+		}
+	}
 	if globalAppName != "" {
-		fields = append(fields, zap.String("app", globalAppName))
+		zapFields = append(zapFields, zap.String("app", globalAppName))
 	}
 	if level == LevelPanic {
-		zapLogger.Panic(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Panic(fmt.Sprintf(format, args...), zapFields...)
 		os.Exit(1)
 	} else if level == LevelFatal {
-		zapLogger.Fatal(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Fatal(fmt.Sprintf(format, args...), zapFields...)
 		os.Exit(1)
 	} else if level == LevelError {
-		zapLogger.Error(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Error(fmt.Sprintf(format, args...), zapFields...)
 	} else if level == LevelWarn {
-		zapLogger.Warn(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Warn(fmt.Sprintf(format, args...), zapFields...)
 	} else if level == LevelInfo {
-		zapLogger.Info(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Info(fmt.Sprintf(format, args...), zapFields...)
 	} else if level == LevelDebug {
-		zapLogger.Debug(fmt.Sprintf(format, args...), fields...)
+		zapLogger.Debug(fmt.Sprintf(format, args...), zapFields...)
 	}
 }
 
