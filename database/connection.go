@@ -63,7 +63,7 @@ func (c *SQLConnection) getDatabase() (*sqlx.DB, error) {
 		return nil, errors.Wrap(err, "could not register driver")
 	}
 
-	log.Infof("Connecting with %s", c.URL.Scheme+"://*:*@"+c.URL.Host+c.URL.Path+"?"+clean.RawQuery)
+	log.Infof(nil, "Connecting with %s", c.URL.Scheme+"://*:*@"+c.URL.Host+c.URL.Path+"?"+clean.RawQuery)
 	u := connectionString(clean)
 
 	db, err := sql.Open(registeredDriver, u)
@@ -76,13 +76,13 @@ func (c *SQLConnection) getDatabase() (*sqlx.DB, error) {
 		return nil, errors.Wrapf(err, "could not ping SQL connection")
 	}
 
-	log.Infof("Connected to SQL!")
+	log.Infof(nil, "Connected to SQL!")
 
 	maxConns := maxParallelism() * 2
 	if v := c.URL.Query().Get("max_conns"); v != "" {
 		s, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			log.Warnf("max_conns value %s could not be parsed to int: %s", v, err)
+			log.Warnf(nil, "max_conns value %s could not be parsed to int: %s", v, err)
 		} else {
 			maxConns = int(s)
 		}
@@ -92,7 +92,7 @@ func (c *SQLConnection) getDatabase() (*sqlx.DB, error) {
 	if v := c.URL.Query().Get("max_idle_conns"); v != "" {
 		s, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			log.Warnf("max_idle_conns value %s could not be parsed to int: %s", v, err)
+			log.Warnf(nil, "max_idle_conns value %s could not be parsed to int: %s", v, err)
 		} else {
 			maxIdleConns = int(s)
 		}
@@ -102,7 +102,7 @@ func (c *SQLConnection) getDatabase() (*sqlx.DB, error) {
 	if v := c.URL.Query().Get("max_conn_lifetime"); v != "" {
 		s, err := time.ParseDuration(v)
 		if err != nil {
-			log.Warnf("max_conn_lifetime value %s could not be parsed to int: %s", v, err)
+			log.Warnf(nil, "max_conn_lifetime value %s could not be parsed to int: %s", v, err)
 		} else {
 			maxConnLifetime = s
 		}
