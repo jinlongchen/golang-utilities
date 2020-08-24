@@ -22,7 +22,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.8
 	github.com/labstack/gommon v0.2.9
 	github.com/lib/pq v1.2.0
-	github.com/mattn/go-colorable v0.1.2
+	github.com/mattn/go-colorable v0.1.6
 	github.com/naoina/go-stringutil v0.1.0 // indirect
 	github.com/naoina/toml v0.1.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
