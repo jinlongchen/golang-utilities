@@ -53,26 +53,26 @@ func NewFileLogger(filePath string, format LogFormat, maxSize int, maxBackups in
 	}
 }
 
-func (fileLogger *FileLogger) Panicf(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelPanic, fmt, args...)
+func (fileLogger *FileLogger) Panicf(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelPanic, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Fatalf(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelFatal, fmt, args...)
+func (fileLogger *FileLogger) Fatalf(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelFatal, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Errorf(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelError, fmt, args...)
+func (fileLogger *FileLogger) Errorf(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelError, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Infof(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelInfo, fmt, args...)
+func (fileLogger *FileLogger) Infof(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelInfo, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Debugf(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelDebug, fmt, args...)
+func (fileLogger *FileLogger) Debugf(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelDebug, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Warnf(fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, LevelWarn, fmt, args...)
+func (fileLogger *FileLogger) Warnf(fields Fields, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, LevelWarn, fields, fmt, args...)
 }
-func (fileLogger *FileLogger) Messagef(level Level, fmt string, args ...interface{}) {
-	write(fileLogger.zapLogger, level, fmt, args...)
+func (fileLogger *FileLogger) Messagef(fields Fields, level Level, fmt string, args ...interface{}) {
+	write(fileLogger.zapLogger, level, fields, fmt, args...)
 }
 func (fileLogger *FileLogger) Flush() {
 	if fileLogger.zapLogger != nil {
