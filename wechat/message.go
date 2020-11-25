@@ -37,8 +37,8 @@ func (wx *Wechat) SendSubscribeMessage(
 	data SubscribeMessageData,
 ) (*SubscribeMessageResponse, error) {
 	accessToken,err := wx.GetAccessTokenByClient(
-		appID, //wx.config.GetString("wechat.appId"),
-		appSecret, //wx.config.GetString("wechat.appSecret"),
+		appID,
+		appSecret,
 	)
 	if err != nil {
 		return nil ,err
@@ -55,10 +55,10 @@ func (wx *Wechat) SendSubscribeMessage(
 		Data:       data,
 	}
 
-	log.Infof(nil, "send subscribe msg: %s", sendMsgUrl)
-	log.Infof(nil, "send subscribe msg: %s", string(json.ShouldMarshal(sendM)))
+	log.Infof( "send subscribe msg: %s", sendMsgUrl)
+	log.Infof( "send subscribe msg: %s", string(json.ShouldMarshal(sendM)))
 	httpData, err := http.PostData(sendMsgUrl, "application/json", json.ShouldMarshal(sendM))
-	log.Infof(nil, "send subscribe msg: %v", string(httpData))
+	log.Infof( "send subscribe msg: %v", string(httpData))
 	if err != nil {
 		return nil, err
 	}

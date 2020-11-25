@@ -61,7 +61,7 @@ func (wx *Wechat) SendRedPack(extId, actName, remark, wishing, openId string, am
 		TotalAmount:  fmt.Sprintf("%d", amount),
 		TotalNum:     "1",
 		Wishing:      wishing, //"感谢您参加充值活动，祝您开心！",
-		Wxappid:      wx.config.GetString("wechat.appId"),
+		Wxappid:      wx.config.GetString("wechat.offiaccount.appId"),
 	}
 
 	signMd5, _ := SignXmlMd5(*req, wx.config.GetString("wechat.payment.appKey"))
@@ -78,7 +78,7 @@ func (wx *Wechat) SendRedPack(extId, actName, remark, wishing, openId string, am
 	data, err := http.PostDataSsl(requestURL, output, []byte(wx.config.GetString("wechat.payment.certStr")), []byte(wx.config.GetString("wechat.payment.keyStr")))
 
 	if err != nil {
-		log.Errorf(nil, "[SendRedPack]PostDataSsl err:%s", err.Error())
+		log.Errorf( "[SendRedPack]PostDataSsl err:%s", err.Error())
 		return nil, err
 	}
 	log.Debugf(string(data))
