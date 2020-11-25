@@ -113,13 +113,13 @@ func (client *Client) Refund(orderID string, fee int, reason string, operator st
 	)
 
 	if err != nil {
-		log.Errorf(nil, "getOpenApiBizRequestUrl err:%s", err.Error())
+		log.Errorf( "getOpenApiBizRequestUrl err:%s", err.Error())
 		return err
 	}
 
 	data, err := http.GetData(reqUrl)
 	if err != nil {
-		log.Errorf(nil, "GetDataSkipTls err:%s", err.Error())
+		log.Errorf( "GetDataSkipTls err:%s", err.Error())
 		return err
 	}
 
@@ -147,13 +147,13 @@ func (client *Client) QueryOrder(orderID string) (queryOrderResponse *QueryOrder
 	)
 
 	if err != nil {
-		log.Errorf(nil, "getOpenApiBizRequestUrl err:%s", err.Error())
+		log.Errorf( "getOpenApiBizRequestUrl err:%s", err.Error())
 		return nil, err
 	}
 
 	data, err := http.GetData(reqUrl)
 	if err != nil {
-		log.Errorf(nil, "GetDataSkipTls err:%s", err.Error())
+		log.Errorf( "GetDataSkipTls err:%s", err.Error())
 		return nil, err
 	}
 
