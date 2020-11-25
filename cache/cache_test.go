@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+
 func TestRedisCache_Get(t *testing.T) {
 	var c Cache
 	c = NewRedisCache(
@@ -15,7 +16,7 @@ func TestRedisCache_Get(t *testing.T) {
 		"",
 	)
 	defer c.Close()
-	var g string
+	var g []byte
 	err := c.Get("test_cache", &g)
 	if err != nil {
 		log.Fatalln("get err:", err.Error())
@@ -31,7 +32,7 @@ func TestRedisCache_Set(t *testing.T) {
 		"",
 	)
 	defer c.Close()
-	err := c.Set("test_cache", time.Now().String(), time.Hour)
+	err := c.Set("test_cache", []byte(time.Now().String()), time.Hour)
 	if err != nil {
 		log.Fatalln("set err:", err.Error())
 	}
