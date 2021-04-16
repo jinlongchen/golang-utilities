@@ -67,7 +67,7 @@ func stack(skip int) []byte {
 		//}
 		//line--
 		//fmt.Fprintf(buf, "%s:%s:%d\n", function(pc), file, line)
-		//file = strings.Replace(file, "/home/chenjinlong/work/go/", "", -1)
+		//file = strings.Replace(file, "$HOME/work/go/", "", -1)
 		fmt.Fprintf(buf, "%s : %d ", file, line)
 	}
 	return buf.Bytes()

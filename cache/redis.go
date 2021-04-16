@@ -2,10 +2,10 @@ package cache
 
 import (
 	"encoding/hex"
-	redisCache "github.com/go-redis/cache"
-	"github.com/go-redis/redis"
 	"github.com/jinlongchen/golang-utilities/json"
 	"github.com/jinlongchen/golang-utilities/log"
+	redisCache "github.com/go-redis/cache"
+	"github.com/go-redis/redis"
 	"time"
 )
 
@@ -19,6 +19,7 @@ func NewRedisCache(addrs map[string]string, pwd string) Cache {
 		Addrs:    addrs,
 		Password: pwd,
 	})
+
 	codec := &redisCache.Codec{
 		Redis: ring,
 		Marshal: func(v interface{}) ([]byte, error) {
