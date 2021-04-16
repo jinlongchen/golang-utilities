@@ -499,7 +499,7 @@ func drawAvatar(avatar *image.RGBA, svgData string, size int) error {
 	}
 	tmpImg, err := svg.Render(strings.NewReader(svgData), image.Pt(size, size))
 	if err != nil {
-		log.Errorf( "err:%s", err.Error())
+		log.Errorf("err:%s", err.Error())
 		return err
 	}
 	draw.Draw(avatar, avatar.Bounds(), tmpImg, image.Point{X: 0, Y: 0}, draw.Over)
