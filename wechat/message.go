@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Jinlong Chen.
+ * Copyright (c) 2018. Jinlong Chen.
  */
 
 package wechat
@@ -36,15 +36,15 @@ func (wx *Wechat) SendSubscribeMessage(
 	page string,
 	data SubscribeMessageData,
 ) (*SubscribeMessageResponse, error) {
-	accessToken,err := wx.GetAccessTokenByClient(
-		appID, //wx.config.GetString("wechat.appId"),
-		appSecret, //wx.config.GetString("wechat.appSecret"),
+	accessToken, err := wx.GetAccessTokenByClient(
+		appID,     //wx.config.GetString("wechat.offiaccount.appId"),
+		appSecret, //wx.config.GetString("wechat.offiaccount.appSecret"),
 	)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 	if accessToken == nil || accessToken.AccessToken == "" {
-		return nil, errors.New("GetAccessTokenByClient error")
+		return nil, errors.New("GetAccessTokenBceByClient error")
 	}
 	sendMsgUrl := fmt.Sprintf(`https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s`, accessToken.AccessToken)
 
