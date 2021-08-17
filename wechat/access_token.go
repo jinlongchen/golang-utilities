@@ -25,8 +25,8 @@ func (wx *Wechat) GetAccessTokenByCode(code string) (*AccessTokenResult, error) 
 	requestURL, _ := url.Parse("https://api.weixin.qq.com/sns/oauth2/access_token")
 	parameters := requestURL.Query()
 
-	parameters.Set("appid", wx.config.GetString("wechat.appId"))
-	parameters.Set("secret", wx.config.GetString("wechat.appSecret"))
+	parameters.Set("appid", wx.config.GetString("wechat.offiaccount.appId"))
+	parameters.Set("secret", wx.config.GetString("wechat.offiaccount.appSecret"))
 	parameters.Set("code", code)
 	parameters.Set("grant_type", "authorization_code")
 
@@ -52,6 +52,8 @@ func (wx *Wechat) GetAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if err == nil {
 		log.Infof("access token from cache: %v", ret)
 		return ret, nil
+	} else {
+		log.Errorf("cannot get token %v", cacheKey)
 	}
 	return ret, err
 }
@@ -61,9 +63,9 @@ func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	cacheKey := "wx:access_token:" + wx.config.GetString("application.name") + ":" + appId
 	err := wx.cache.Get(cacheKey, ret)
 	if err != nil {
-		log.Errorf("%s GetAccessTokenByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
+		log.Errorf("%s GetAccessTokenBceByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
 	} else {
-		log.Infof("%s GetAccessTokenByClient old token: %v", wx.config.GetString("application.name"), ret.AccessToken)
+		log.Infof("%s GetAccessTokenBceByClient old token: %v", wx.config.GetString("application.name"), ret.AccessToken)
 	}
 
 	getTokenURL, _ := url.Parse("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential")
@@ -83,8 +85,11 @@ func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	if ret.Errcode != 0 {
 		return nil, errors.New(ret.Errmsg)
 	}
-	log.Infof("%s getAccessTokenByClient new token: %v", wx.config.GetString("application.name"), ret)
-	_ = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
+	log.Infof("%s getAccessTokenByClient new token: %v %v", cacheKey, wx.config.GetString("application.name"), ret)
+	err = wx.cache.Set(cacheKey, ret, time.Second*time.Duration(ret.ExpiresIn))
+	if err != nil {
+		log.Errorf("set cache err: %v", err)
+	}
 	return ret, nil
 }
 
