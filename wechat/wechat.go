@@ -13,12 +13,17 @@ type Wechat struct {
 
 func NewWechat(cah cache.Cache, config *config.Config) *Wechat {
 	ret := &Wechat{
-		cache: cah,
+		cache:  cah,
 		config: config,
-		quit: make(chan struct{}),
+		quit:   make(chan struct{}),
 	}
 	go func() {
 		ret.fetchAccessTokensLoop()
 	}()
 	return ret
+}
+
+func (wx *Wechat) Exit() error {
+	close(wx.quit)
+	return nil
 }
