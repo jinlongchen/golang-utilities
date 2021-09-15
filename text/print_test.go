@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2020. Jinlong Chen.
+ */
+
 package text
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestPrintf(t *testing.T) {
-	Printf("{{ id:{0:d} }},123\n", 1)
+func TestSprintf(t *testing.T) {
+	println(Sprintf(`{1:s} {1:s}`, "0", "1"))
 }
