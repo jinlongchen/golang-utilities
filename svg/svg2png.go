@@ -4,8 +4,8 @@ package svg
 #cgo pkg-config: librsvg-2.0
 #include <librsvg/rsvg.h>
 
-//#include "/Users/chenjinlong/work/cpp/librsvg/librsvg/rsvg.h"
-//#cgo LDFLAGS: /Users/chenjinlong/work/cpp/librsvg/.libs/librsvg-2.a
+//#include "$HOME/work/cpp/librsvg/librsvg/rsvg.h"
+//#cgo LDFLAGS: $HOME/work/cpp/librsvg/.libs/librsvg-2.a
 
 static void
 sizeCallback(int *width, int *height, gpointer data) {
