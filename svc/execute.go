@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	goSvc "github.com/judwhite/go-svc/svc"
+	goSvc "github.com/judwhite/go-svc"
 
 	"github.com/jinlongchen/golang-utilities/config"
 	"github.com/jinlongchen/golang-utilities/log"
@@ -45,14 +45,14 @@ func (e *Executor) Init(env goSvc.Environment) error {
 			if e.cfg == nil {
 				retry := 600
 				for i := 0; i < retry; i++ {
-					log.Infof("wait load config")
+					log.Infof( "wait load config")
 					time.Sleep(time.Second)
 					e.cfg = config.NewRemoteConfig(uRL.Scheme, uRL.Host, uRL.Path, "toml")
 					if e.cfg != nil {
 						break
 					}
 					if i+1 == retry {
-						log.Fatalf("cannot load config")
+						log.Fatalf( "cannot load config")
 					}
 				}
 			}
@@ -81,12 +81,19 @@ func (e *Executor) Init(env goSvc.Environment) error {
 		log.Level(e.cfg.GetString("log.level")),
 		e.cfg.GetBool("log.console"),
 		e.cfg.GetString("log.filename"),
+		func() log.LogFormat {
+			if e.cfg.GetString("log.format") == "text" {
+				return log.LogFormatText
+			} else {
+				return log.LogFormatJSON
+			}
+		}(),
 		e.cfg.GetInt("log.maxSize"),
 		e.cfg.GetInt("log.maxBackups"),
 		e.cfg.GetInt("log.maxAge"),
 	)
 
-	log.Infof("log level:%s", e.cfg.GetString("log.level"))
+	log.Infof( "log level:%s", e.cfg.GetString("log.level"))
 	return nil
 }
 
