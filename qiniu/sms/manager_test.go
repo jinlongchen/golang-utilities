@@ -6,6 +6,9 @@ package sms
 
 import (
 	"fmt"
+	"io/ioutil"
+	"path"
+	"runtime"
 	"testing"
 )
 import "github.com/qiniu/api.v7/v7/auth"
@@ -20,13 +23,16 @@ func getManager() *Manager {
 }
 
 func TestNewManager(t *testing.T) {
+	_, filename, _, _ := runtime.Caller(0)
+	phoneData, _ := ioutil.ReadFile(path.Join(path.Dir(filename), "test.txt"))
+
 	tID1 := "1217103952852553728"
 
 	qiniuManager := getManager()
 
 	response, err := qiniuManager.SendMessage(MessagesRequest{
 		TemplateID: tID1,
-		Mobiles:    []string{"13183801710"},
+		Mobiles:    []string{string(phoneData)},
 		Parameters: map[string]interface{}{
 			"module": "邮件",
 			"reason": "被退信",
