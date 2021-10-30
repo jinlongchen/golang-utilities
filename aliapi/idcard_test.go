@@ -15,7 +15,7 @@ func TestOCRIDCard(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	config.AesKeyKey = getAesKeyKey(t)
+	config.AesKeySalt = getAesKeySalt(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 	helper := NewAliApiHelper(cfg)
 
@@ -33,7 +33,7 @@ func TestOCRIDCard2(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	config.AesKeyKey = getAesKeyKey(t)
+	config.AesKeySalt = getAesKeySalt(t)
 	cfg := config.NewConfig(path.Join(path.Dir(filename), "conf-file.toml"))
 	helper := NewAliApiHelper(cfg)
 
@@ -44,9 +44,9 @@ func TestOCRIDCard2(t *testing.T) {
 	t.Logf("识别结果：%v", ret)
 }
 
-func getAesKeyKey(t *testing.T) string {
+func getAesKeySalt(t *testing.T) string {
 	_, filename, _, _ := runtime.Caller(0)
-	data, err := ioutil.ReadFile(path.Join(path.Dir(filename), "aeskeykey.txt"))
+	data, err := ioutil.ReadFile(path.Join(path.Dir(filename), "aeskeysalt.txt"))
 	if err != nil {
 		t.Fatal(err)
 	}
