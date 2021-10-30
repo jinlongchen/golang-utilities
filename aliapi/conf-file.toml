@@ -1,8 +1,0 @@
-[aliapi.ocr.idcard]
-appCode = "aes:obINcG1kQraSmCGt0WryX1vge8EVp2j3SICGNtoeFW3d/nJ8olF1UT6aS1yzSHGO"
-
-[crypto]
-aeskey = "yijiu_c1D5a"
-
-[log]
-level = "debug"
