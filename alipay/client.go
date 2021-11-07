@@ -95,6 +95,29 @@ func (client *Client) VerifyTradeAppPayNotify(paramsStr string) error {
 	return errors.New("not supported")
 }
 
+//新版本的手机端支付
+func (client *Client) CreateTradeWapPay(orderNo string, fee int, subject string, desc string, returnUrl, notifyUrl string) (string, error) {
+	reqMap := map[string]string{
+		"body":         desc,
+		"subject":      subject,
+		"out_trade_no": orderNo,
+		"total_amount": strconv.FormatFloat(float64(fee)/100, 'f', 2, 32),
+		"product_code": "QUICK_WAP_PAY",
+	}
+	reqUrl, err := client.getOpenApiBizRequestUrl(
+		"alipay.trade.wap.pay",
+		notifyUrl,
+		returnUrl,
+		json.ShouldMarshal(reqMap),
+	)
+
+	if err != nil {
+		log.Errorf("err:%s", err.Error())
+	}
+
+	return reqUrl, err
+}
+
 //退款
 func (client *Client) Refund(orderID string, fee int, reason string, operator string, notifyUrl, returnUrl string) error {
 	reqMap := map[string]string{
