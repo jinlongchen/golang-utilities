@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Qing Cheng Technology Co., Ltd.
+ * Copyright (c) 2019. Jinlong Chen.
  */
 
 package alipay
