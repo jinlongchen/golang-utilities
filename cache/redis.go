@@ -1,9 +1,11 @@
 package cache
 
 import (
+	"encoding/hex"
+	"github.com/jinlongchen/golang-utilities/json"
+	"github.com/jinlongchen/golang-utilities/log"
 	redisCache "github.com/go-redis/cache"
 	"github.com/go-redis/redis"
-	"github.com/vmihailenco/msgpack"
 	"time"
 )
 
@@ -17,13 +19,21 @@ func NewRedisCache(addrs map[string]string, pwd string) Cache {
 		Addrs:    addrs,
 		Password: pwd,
 	})
+
 	codec := &redisCache.Codec{
 		Redis: ring,
 		Marshal: func(v interface{}) ([]byte, error) {
-			return msgpack.Marshal(v)
+			return json.Marshal(v)
 		},
 		Unmarshal: func(b []byte, v interface{}) error {
-			return msgpack.Unmarshal(b, v)
+			err := json.Unmarshal(b, v)
+			if err != nil {
+				log.Errorf(
+					`cannot unmarshal data: %v, %v`,
+					err,
+					hex.EncodeToString(b))
+			}
+			return err
 		},
 	}
 	return &RedisCache{
