@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019. 陈金龙.
+ * Copyright (c) 2019. Brickman Source.
  */
 
 package i18n
 
 import (
 	"github.com/BurntSushi/toml"
-	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/brickman-source/golang-utilities/log"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 	"os"
@@ -31,13 +31,13 @@ func LoadI18Bundle(defaultLang string, dir string) {
 		if strings.Contains(path, ".toml") {
 			_, err = i18nBundle.LoadMessageFile(path)
 			if err != nil {
-				log.Errorf("load i18n file err:%s", err.Error())
+				log.Errorf( "load i18n file err:%s", err.Error())
 			}
 		}
 		return nil
 	})
 	if err != nil {
-		log.Errorf("load i18n bundle err: %s", err.Error())
+		log.Errorf( "load i18n bundle err: %s", err.Error())
 	}
 }
 
@@ -51,7 +51,7 @@ func GetI18nString(lang string, messageID string, template map[string]interface{
 		PluralCount:  pluralCount,
 	})
 	if err != nil {
-		log.Errorf("localize(%s) %v, pluralCount: %f err:%s", lang, template, pluralCount, err.Error())
+		log.Errorf( "localize(%s) %v, pluralCount: %f err:%s", lang, template, pluralCount, err.Error())
 		return str
 	}
 	return str

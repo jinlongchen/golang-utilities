@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2019. 陈金龙.
+ * Copyright (c) 2019. Brickman Source.
  */
 
 package amap
 
 import (
 	"fmt"
-	"github.com/jinlongchen/golang-utilities/json"
+	"github.com/brickman-source/golang-utilities/json"
 	"math"
 	"time"
 
-	"github.com/jinlongchen/golang-utilities/converter"
-	"github.com/jinlongchen/golang-utilities/errors"
-	httpUtil "github.com/jinlongchen/golang-utilities/http" //
+	"github.com/brickman-source/golang-utilities/converter"
+	"github.com/brickman-source/golang-utilities/errors"
+	httpUtil "github.com/brickman-source/golang-utilities/http" //
 )
 
 /*

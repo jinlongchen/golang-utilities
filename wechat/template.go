@@ -2,7 +2,7 @@ package wechat
 
 import (
 	"errors"
-	"github.com/jinlongchen/golang-utilities/http"
+	"github.com/brickman-source/golang-utilities/http"
 	"net/url"
 )
 
