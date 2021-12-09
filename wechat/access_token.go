@@ -2,9 +2,9 @@ package wechat
 
 import (
 	"errors"
-	"github.com/jinlongchen/golang-utilities/http"
-	"github.com/jinlongchen/golang-utilities/log"
-	"github.com/jinlongchen/golang-utilities/map/helper"
+	"github.com/brickman-source/golang-utilities/http"
+	"github.com/brickman-source/golang-utilities/log"
+	"github.com/brickman-source/golang-utilities/map/helper"
 	"net/url"
 	"time"
 )
@@ -63,9 +63,9 @@ func (wx *Wechat) getAccessTokenByClient(appId, appSecret string) (*AccessTokenR
 	cacheKey := "wx:access_token:" + wx.config.GetString("application.name") + ":" + appId
 	err := wx.cache.Get(cacheKey, ret)
 	if err != nil {
-		log.Errorf("%s GetAccessTokenByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
+		log.Errorf("%s GetAccessTokenBceByClient appid err:%s", wx.config.GetString("application.name"), err.Error())
 	} else {
-		log.Infof("%s GetAccessTokenByClient old token: %v", wx.config.GetString("application.name"), ret.AccessToken)
+		log.Infof("%s GetAccessTokenBceByClient old token: %v", wx.config.GetString("application.name"), ret.AccessToken)
 	}
 
 	getTokenURL, _ := url.Parse("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential")

@@ -86,9 +86,9 @@ func UpgradeResidentIdCard(idCardNo string) string {
 func GenResidentIdCard(areaCode string, birthDate time.Time, sex string) (number string) {
 	var sexStr string
 	if sex == "M" { // 男
-		sexStr = fmt.Sprintf("%d", rand.GetRandInt(1, 1000)*2%10)
-	} else {
 		sexStr = fmt.Sprintf("%d", (rand.GetRandInt(1, 1000)*2+1)%10)
+	} else {
+		sexStr = fmt.Sprintf("%d", rand.GetRandInt(1, 1000)*2%10)
 	}
 
 	birthDateStr := birthDate.Format("20060102")
