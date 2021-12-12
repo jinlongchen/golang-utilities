@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/brickman-source/golang-utilities/converter"
+	"github.com/jinlongchen/golang-utilities/converter"
 )
 
 func SetValue(m map[string]interface{}, path string, val interface{}) {

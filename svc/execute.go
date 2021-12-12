@@ -10,8 +10,8 @@ import (
 
 	goSvc "github.com/judwhite/go-svc"
 
-	"github.com/brickman-source/golang-utilities/config"
-	"github.com/brickman-source/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/config"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 
 type Executor struct {
