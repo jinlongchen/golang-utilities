@@ -6,10 +6,10 @@ package wechat
 
 import (
 	"fmt"
-	"github.com/brickman-source/golang-utilities/errors"
-	"github.com/brickman-source/golang-utilities/http"
-	"github.com/brickman-source/golang-utilities/json"
-	"github.com/brickman-source/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/http"
+	"github.com/jinlongchen/golang-utilities/json"
+	"github.com/jinlongchen/golang-utilities/log"
 )
 
 // SubscribeMessageData 订阅消息模板数据

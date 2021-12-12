@@ -2,9 +2,9 @@ package wechat
 
 import (
 	"errors"
-	"github.com/brickman-source/golang-utilities/http"
-	"github.com/brickman-source/golang-utilities/log"
-	"github.com/brickman-source/golang-utilities/map/helper"
+	"github.com/jinlongchen/golang-utilities/http"
+	"github.com/jinlongchen/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/map/helper"
 	"net/url"
 	"time"
 )

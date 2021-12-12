@@ -6,13 +6,13 @@ package amap
 
 import (
 	"fmt"
-	"github.com/brickman-source/golang-utilities/json"
+	"github.com/jinlongchen/golang-utilities/json"
 	"math"
 	"time"
 
-	"github.com/brickman-source/golang-utilities/converter"
-	"github.com/brickman-source/golang-utilities/errors"
-	httpUtil "github.com/brickman-source/golang-utilities/http" //
+	"github.com/jinlongchen/golang-utilities/converter"
+	"github.com/jinlongchen/golang-utilities/errors"
+	httpUtil "github.com/jinlongchen/golang-utilities/http" //
 )
 
 /*

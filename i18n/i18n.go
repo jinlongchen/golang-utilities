@@ -6,7 +6,7 @@ package i18n
 
 import (
 	"github.com/BurntSushi/toml"
-	"github.com/brickman-source/golang-utilities/log"
+	"github.com/jinlongchen/golang-utilities/log"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 	"os"
