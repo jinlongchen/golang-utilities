@@ -6,7 +6,7 @@ package baidu
 
 import (
 	"encoding/json"
-	"github.com/brickman-source/golang-utilities/http"
+	"github.com/jinlongchen/golang-utilities/http"
 	"net/url"
 )
 

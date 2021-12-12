@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/brickman-source/golang-utilities/errors"
+	"github.com/jinlongchen/golang-utilities/errors"
 	"io"
 	"io/ioutil"
 	"mime/multipart"

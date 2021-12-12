@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/brickman-source/golang-utilities/viper/crypt/backend"
+	"github.com/jinlongchen/golang-utilities/viper/crypt/backend"
 	"go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 )

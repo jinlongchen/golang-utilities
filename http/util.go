@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/brickman-source/golang-utilities/json"
+	"github.com/jinlongchen/golang-utilities/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
