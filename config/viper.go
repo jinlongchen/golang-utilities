@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jinlongchen/golang-utilities/viper"
 	"github.com/fsnotify/fsnotify"
-	"github.com/jinlongchen/viper"
 	"github.com/naoina/toml"
 
 	"github.com/jinlongchen/golang-utilities/converter"
@@ -20,7 +20,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/map/helper"
 	gusync "github.com/jinlongchen/golang-utilities/sync"
 
-	_ "github.com/jinlongchen/viper/remote"
+	_ "github.com/jinlongchen/golang-utilities/viper/remote"
 )
 
 var (
@@ -289,7 +289,7 @@ func (cfg *Config) EncryptString(str string) string {
 	dData := []byte(str)
 	eData, err := crypto.AESEncryptCBC(dData, cfg.AesKey, cfg.AesKey[:aes.BlockSize])
 	if err != nil {
-		log.Fatalf("config DecryptString(%s) err:%s", str, err.Error())
+		log.Fatalf("config DecryptString(%v) err:%v", str, err)
 	}
 
 	return base64.StdEncoding.EncodeToString(eData)
