@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinlongchen/golang-utilities/viper/crypt/backend"
-	"go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	"go.etcd.io/etcd/client/v3"
 )
 
 type Client struct {
