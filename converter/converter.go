@@ -40,7 +40,12 @@ func AsInt(v interface{}, defaultValue int) int {
 			return int(v.(float32))
 
 		case string:
-			p, err := strconv.ParseInt(strings.Trim(v.(string), " \"\r\n"), 10, 32)
+			vStr := strings.Trim(v.(string), " \"\r\n")
+			pIndex := strings.Index(vStr, ".")
+			if pIndex > -1 {
+				vStr = vStr[:pIndex]
+			}
+			p, err := strconv.ParseInt(vStr, 10, 32)
 			if err != nil {
 				return defaultValue
 			}
