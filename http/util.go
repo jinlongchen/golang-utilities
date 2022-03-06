@@ -178,3 +178,20 @@ func ContentTypeByUrl(httpUrl string) string {
 		return "application/octet-stream"
 	}
 }
+
+func GetRemoteIP(req *http.Request) string {
+	if req.Header.Get("X-Forwarded-For") != "" {
+		return req.Header.Get("X-Forwarded-For")
+	}
+	if req.Header.Get("X-Real-IP") != "" {
+		return req.Header.Get("X-Real-IP")
+	}
+	if req.Header.Get("Proxy-Client-IP") != "" {
+		return req.Header.Get("Proxy-Client-IP")
+	}
+	if req.Header.Get("WL-Proxy-Client-IP") != "" {
+		return req.Header.Get("WL-Proxy-Client-IP")
+	}
+
+	return req.RemoteAddr
+}
