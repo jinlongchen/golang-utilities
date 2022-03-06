@@ -1,12 +1,12 @@
 package crypto
 
 import (
-	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 )
 
-func GetSha1Hash(s string) string {
-	h := sha1.New()
+func GetSha256Hash(s string) string {
+	h := sha256.New()
 	h.Write([]byte(s))
 	return hex.EncodeToString(h.Sum(nil))
 }
