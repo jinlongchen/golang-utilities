@@ -2,6 +2,7 @@ package json
 
 import (
 	"bytes"
+	"encoding/json"
 	"github.com/json-iterator/go"
 )
 
@@ -17,6 +18,10 @@ func MarshalToBuffer(v interface{}) (*bytes.Buffer, error) {
 
 func UnmarshalFromString(str string, v interface{}) error {
 	return jsoniter.ConfigCompatibleWithStandardLibrary.UnmarshalFromString(str, v)
+}
+
+func UnmarshalFromStringV2[T any](str string) (T, error) {
+	return UnmarshalV2[T]([]byte(str))
 }
 
 func Marshal(v interface{}) ([]byte, error) {
@@ -37,4 +42,13 @@ func MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
 
 func Unmarshal(data []byte, v interface{}) error {
 	return jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(data, v)
+}
+
+func UnmarshalV2[T any](data []byte) (T, error) {
+	var t T
+	err := json.Unmarshal(data, &t)
+	if err != nil {
+		return t, err
+	}
+	return t, err
 }
