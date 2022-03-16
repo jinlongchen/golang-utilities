@@ -12,7 +12,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/hashicorp/hcl v1.0.0
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/json-iterator/go v1.1.11
+	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.1.2
 	github.com/labstack/echo/v4 v4.1.8
 	github.com/labstack/gommon v0.2.9
@@ -58,7 +58,7 @@ require (
 	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/naoina/go-stringutil v0.1.0 // indirect
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
