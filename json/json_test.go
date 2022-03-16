@@ -48,3 +48,6 @@ func TestUnmarshalV2(t *testing.T) {
 		fmt.Printf("unmarshal err: %v\n", err)
 	}
 }
+func TestShouldMarshal3(t *testing.T) {
+
+}
