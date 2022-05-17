@@ -2,26 +2,25 @@ package heap
 
 import "fmt"
 
-type Heap[T any] struct {
-	arr        []T
-	comparator func(i, j T) int
+type HeapV1 struct {
+	arr        []interface{}
+	comparator func(i, j interface{}) int
 }
 
-func NewHeap[T any](comparator func(i, j T) int) *Heap[T] {
-	return &Heap[T]{
+func NewHeapV1(comparator func(i, j interface{}) int) *HeapV1 {
+	return &HeapV1{
 		comparator: comparator,
 	}
 }
 
-func (h *Heap[T]) Peek() (T, bool) {
+func (h *HeapV1) Peek() (interface{}, bool) {
 	if len(h.arr) == 0 {
-		var result T
-		return result, false
+		return nil, false
 	}
 	return h.arr[0], true
 }
 
-func (h *Heap[T]) MustPeek() T {
+func (h *HeapV1) MustPeek() interface{} {
 	val, ok := h.Peek()
 	if !ok {
 		panic("Overflow")
@@ -29,14 +28,13 @@ func (h *Heap[T]) MustPeek() T {
 	return val
 }
 
-func (h *Heap[T]) Length() int {
+func (h *HeapV1) Length() int {
 	return len(h.arr)
 }
 
-func (h *Heap[T]) Pop() (T, bool) {
+func (h *HeapV1) Pop() (interface{}, bool) {
 	if len(h.arr) == 0 {
-		var result T
-		return result, false
+		return nil, false
 	}
 
 	v := h.arr[0]
@@ -46,7 +44,7 @@ func (h *Heap[T]) Pop() (T, bool) {
 	return v, true
 }
 
-func (h *Heap[T]) MustPop() T {
+func (h *HeapV1) MustPop() interface{} {
 	val, ok := h.Pop()
 	if !ok {
 		panic("Overflow")
@@ -54,7 +52,7 @@ func (h *Heap[T]) MustPop() T {
 	return val
 }
 
-func (h *Heap[T]) Push(k T) bool {
+func (h *HeapV1) Push(k interface{}) bool {
 	h.arr = append(h.arr, k)
 
 	i := len(h.arr) - 1
@@ -65,7 +63,7 @@ func (h *Heap[T]) Push(k T) bool {
 	return true
 }
 
-func (h *Heap[T]) Remove(k T) {
+func (h *HeapV1) Remove(k interface{}) {
 	for h.Length() > 0 && h.comparator(h.arr[h.Length()-1], k) == 0 {
 		h.arr = h.arr[:h.Length()-1]
 	}
@@ -78,7 +76,7 @@ func (h *Heap[T]) Remove(k T) {
 	}
 }
 
-func (h *Heap[T]) Print() {
+func (h *HeapV1) Print() {
 	for i := 0; i < 1; i++ {
 		fmt.Printf("%v", h.arr[i])
 	}
@@ -88,7 +86,7 @@ func (h *Heap[T]) Print() {
 	fmt.Println()
 }
 
-func (h *Heap[T]) down(i int) {
+func (h *HeapV1) down(i int) {
 	left, right := (2*i)+1, (2*i)+2
 
 	k := i
