@@ -7,30 +7,22 @@ import (
 	"time"
 )
 
-func TestNewHeap(t *testing.T) {
-	maxHeap := NewHeap[int](func(i, j int) int {
-		return j - i
+func TestNewHeapV1(t *testing.T) {
+	maxHeap := NewHeapV1(func(i, j interface{}) int {
+		return j.(int) - i.(int)
 	})
-	minHeap := NewHeap[int](func(i, j int) int {
-		return i - j
+	minHeap := NewHeap(func(i, j interface{}) int {
+		return i.(int) - j.(int)
 	})
 
 	rand.Seed(time.Now().UnixMilli())
 	for i := 0; i < 20; i++ {
 		next := rand.Intn(1000)
+		fmt.Printf("%v,", next)
 		maxHeap.Push(next)
 		minHeap.Push(next)
 	}
-
-	for maxHeap.Length() > 0 {
-		maxHeap.Pop()
-	}
-
-	for _, i := range []int{328, 517, 660, 823, 981, 963, 356, 990, 582, 490, 919, 252, 282, 735, 873, 324, 640, 768, 39, 262, 577, 577} {
-		maxHeap.Push(i)
-	}
-	maxHeap.Remove(577)
-	maxHeap.Print()
+	fmt.Println()
 
 	k := rand.Intn(1000)
 	maxHeap.Push(k)
@@ -42,6 +34,7 @@ func TestNewHeap(t *testing.T) {
 	minHeap.Print()
 
 	fmt.Printf("remove k(%v)\n", k)
+
 	maxHeap.Remove(k)
 	minHeap.Remove(k)
 
