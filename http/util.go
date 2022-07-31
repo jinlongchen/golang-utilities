@@ -13,14 +13,12 @@ func GetRequestBody(r *http.Request) []byte {
 	if r.Method == "POST" || r.Method == "PUT" {
 		data, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			println("ioutil.ReadAll(r.Body) err:", err.Error())
 			return nil
 		}
 		return data
 	} else {
-		println("method:", r.Method)
+		return nil
 	}
-	return nil
 }
 
 func GetRequestBodyAsMap(r *http.Request) map[string]interface{} {
@@ -37,14 +35,14 @@ func GetRequestBodyAsMap(r *http.Request) map[string]interface{} {
 }
 
 func GetRequestObject[T any](r *http.Request) (T, error) {
+	var t T
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return t, err
 	}
-	var t T
 	err = json.Unmarshal(data, &t)
 	if err != nil {
-		return nil, err
+		return t, err
 	}
 	return t, nil
 }
