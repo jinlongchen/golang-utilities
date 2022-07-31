@@ -36,6 +36,19 @@ func GetRequestBodyAsMap(r *http.Request) map[string]interface{} {
 	return ret
 }
 
+func GetRequestObject[T any](r *http.Request) (T, error) {
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, err
+	}
+	var t T
+	err = json.Unmarshal(data, &t)
+	if err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
 func AddURLQuery(reqURL string, key, value string) string {
 	x, err := url.Parse(reqURL)
 	if err != nil {

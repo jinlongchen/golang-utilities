@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	IDCardCert_API_URL = "https://idcardcert.market.alicloudapi.com/idCardCert"
+	IdcardCertApiURL = "https://idcardcert.market.alicloudapi.com/idCardCert"
 )
 
 func (api *AliApiHelper) CheckIdCardNameMatch(idCardNo, name string) (ret []byte, err error) {
-	reqURL, _ := url.Parse(IDCardCert_API_URL)
+	reqURL, _ := url.Parse(IdcardCertApiURL)
 	q := reqURL.Query()
 	q.Set("idCard", idCardNo)
 	q.Set("name", name)
