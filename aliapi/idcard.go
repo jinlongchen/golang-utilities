@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"github.com/jinlongchen/golang-utilities/http"
-	gohttp "net/http"
+	netHttp "net/http"
 	"time"
 )
 
@@ -55,7 +55,7 @@ func (api *AliApiHelper) ocrIDCard(data []byte, side string) (ret []byte, err er
 	println(string(jsonBody))
 	_, respData, err := http.PostDataWithHeaders(
 		OCR_IDCARD_API_URL,
-		gohttp.Header{
+		netHttp.Header{
 			"Authorization": []string{"APPCODE " + api.cfg.GetString("aliapi.ocr.idcard.appcode")},
 		},
 		"application/json",
