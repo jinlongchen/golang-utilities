@@ -1,6 +1,10 @@
 package http
 
-import "testing"
+import (
+	"fmt"
+	"net/http"
+	"testing"
+)
 
 func TestGetJSON(t *testing.T) {
 	info := &UserInfoResult{}
@@ -10,6 +14,17 @@ func TestGetJSON(t *testing.T) {
 	}
 	println(info.Nickname)
 	println(info.HeadImgURL)
+}
+
+func TestGetDataWithHeaders(t *testing.T) {
+	_, resp, err := GetDataWithHeaders(`https://stackoverflow.com`, http.Header{
+		"Accept-Encoding": []string{"gzip"},
+	})
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	} else {
+		fmt.Printf("%v\n", string(resp))
+	}
 }
 
 type UserInfoResult struct {

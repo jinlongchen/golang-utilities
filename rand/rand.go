@@ -48,14 +48,15 @@ func GetShortTimestampSequenceNo() uint64 {
 		i++
 	}
 
-	return  timeStamp * uint64(math.Pow10(i)) + sn
+	return timeStamp*uint64(math.Pow10(i)) + sn
 }
 
 func GetShortTimestampRandString() string {
 	return GetRandStringWithTimestamp(time.Now().Unix())
 }
 
-// 返回：timeStamp(unix epoch),ip address, random number
+// timeStamp(unix epoch),ip address, random number
+
 func ParseShortTimestampRandString(str string) (int64, uint64, int64) {
 	parts := strings.Split(str, "0")
 	if len(parts) == 3 {
