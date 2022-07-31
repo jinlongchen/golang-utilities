@@ -8,7 +8,7 @@ import (
 
 func TestGetJSON(t *testing.T) {
 	info := &UserInfoResult{}
-	err := GetJSON(`https://api.weixin.qq.com/sns/userinfo?access_token=16_Xtgu18-uW4r1zadDM_SCsGPEFprqijskkT1wjm8rNFIeg6De6xDsKrf8awGNANGbHzDQ0xtT0KkL6EImiPpwaw&lang=zh_CN&openid=okq2F0m-iDoEEeZJApDKW4Xu6vpU`, info)
+	err := GetJSON(`https://api.weixin.qq.com/sns/userinfo?access_token=16_Xtgu18-uW4r1zadDM_SCsGPEFprqijskkT1wjm8rNFIeg6De6xDsKrf8awGNANGbHzDQ0xtT0KkL6EImiPpwaw&lang=zh_CN&openid=akq2F0m-iDoEEeZJApDKW4Xu6vpU`, info)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17,7 +17,7 @@ func TestGetJSON(t *testing.T) {
 }
 
 func TestGetDataWithHeaders(t *testing.T) {
-	_, resp, err := GetDataWithHeaders(`https://stackoverflow.com`, http.Header{
+	_, resp, err := GetDataWithHeaders(`https://api.weixin.qq.com/sns/userinfo?access_token=16_Xtgu18-uW4r1zadDM_SCsGPEFprqijskkT1wjm8rNFIeg6De6xDsKrf8awGNANGbHzDQ0xtT0KkL6EImiPpwaw&lang=zh_CN&openid=akq2F0m-iDoEEeZJApDKW4Xu6vpU`, http.Header{
 		"Accept-Encoding": []string{"gzip"},
 	})
 	if err != nil {
