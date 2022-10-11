@@ -14,7 +14,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.1.2
-	github.com/labstack/echo/v4 v4.1.8
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.2.9
 	github.com/lib/pq v1.2.0
 	github.com/luna-duclos/instrumentedsql v1.1.3

@@ -20,10 +20,10 @@ cmd-dev
 cmd-prod
 .DS_Store
 viper_test.go
-aeskeysalt.txt
-aeskeysalt_yijiu.txt
+aeskey*
 conf-file1.toml
 conf-file.toml
 qiniu_key.txt
 qiniu_secret.txt
 test.txt
+*1_test.go
