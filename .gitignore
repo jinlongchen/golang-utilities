@@ -15,7 +15,6 @@
 *.pem
 *.log
 
-cmd
 cmd-dev
 cmd-prod
 .DS_Store
