@@ -2,11 +2,13 @@ package wechat
 
 import (
     "errors"
-    "github.com/jinlongchen/golang-utilities/http"
-    "github.com/jinlongchen/golang-utilities/log"
-    "github.com/jinlongchen/golang-utilities/map/helper"
     "net/url"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/map/helper"
+
+    "github.com/jinlongchen/golang-utilities/http"
+    "github.com/jinlongchen/golang-utilities/log"
 )
 
 type AccessTokenResult struct {

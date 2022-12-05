@@ -1,10 +1,12 @@
 package datetime
 
 import (
-    "github.com/araddon/dateparse"
-    "github.com/jinlongchen/golang-utilities/json"
     "strings"
     "time"
+
+    "github.com/araddon/dateparse"
+
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 type UTCTime time.Time

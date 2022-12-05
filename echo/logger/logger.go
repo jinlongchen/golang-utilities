@@ -3,11 +3,13 @@ package logger
 import (
     "encoding/json"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/log"
-    gecholog "github.com/labstack/gommon/log"
-    "github.com/mattn/go-colorable"
     "io"
     "os"
+
+    gecholog "github.com/labstack/gommon/log"
+    "github.com/mattn/go-colorable"
+
+    "github.com/jinlongchen/golang-utilities/log"
 )
 
 type (

@@ -2,13 +2,15 @@ package log
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/converter"
-    "github.com/jinlongchen/golang-utilities/json"
+    "os"
+    "time"
+
     "github.com/natefinch/lumberjack"
     "go.uber.org/zap"
     "go.uber.org/zap/zapcore"
-    "os"
-    "time"
+
+    "github.com/jinlongchen/golang-utilities/converter"
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 type Level string

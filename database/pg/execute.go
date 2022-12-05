@@ -2,9 +2,11 @@ package pg
 
 import (
     "database/sql"
+
+    "github.com/jmoiron/sqlx"
+
     "github.com/jinlongchen/golang-utilities/errors"
     "github.com/jinlongchen/golang-utilities/log"
-    "github.com/jmoiron/sqlx"
 )
 
 func GetItems(items []interface{}, countSqlClause, dataSqlClause string, params []interface{}, pageSize, pageIndex int, tx *sqlx.Tx) (totalCount int, err error) {

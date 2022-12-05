@@ -6,9 +6,11 @@ package log
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/json"
-    "go.uber.org/zap"
     "os"
+
+    "go.uber.org/zap"
+
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 type logger interface {

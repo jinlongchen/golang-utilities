@@ -6,10 +6,11 @@ package baidu
 
 import (
     "fmt"
+    "sync"
+
     "github.com/jinlongchen/golang-utilities/cache"
     "github.com/jinlongchen/golang-utilities/config"
     "github.com/jinlongchen/golang-utilities/log"
-    "sync"
 )
 
 type Baidu struct {

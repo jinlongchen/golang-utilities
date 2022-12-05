@@ -6,8 +6,9 @@ package json
 
 import (
     "fmt"
-    jsoniter "github.com/json-iterator/go"
     "testing"
+
+    jsoniter "github.com/json-iterator/go"
 )
 
 type message struct {

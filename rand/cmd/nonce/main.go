@@ -2,9 +2,10 @@ package main
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/rand"
     "os"
     "strconv"
+
+    "github.com/jinlongchen/golang-utilities/rand"
 )
 
 func main() {

@@ -2,12 +2,13 @@ package geojson
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/map/helper"
-    "github.com/paulmach/go.geojson"
     "io/ioutil"
     "math"
     "path"
     "sync"
+
+    "github.com/jinlongchen/golang-utilities/map/helper"
+    "github.com/paulmach/go.geojson"
 )
 
 const (

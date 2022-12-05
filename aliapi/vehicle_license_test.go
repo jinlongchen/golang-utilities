@@ -1,11 +1,12 @@
 package aliapi
 
 import (
-    "github.com/jinlongchen/golang-utilities/config"
     "io/ioutil"
     "path"
     "runtime"
     "testing"
+
+    "github.com/jinlongchen/golang-utilities/config"
 )
 
 func TestAliApiHelper_OCRVehicleLicenseFace(t *testing.T) {

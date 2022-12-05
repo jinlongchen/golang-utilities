@@ -1,9 +1,10 @@
 package baidu
 
 import (
+    "net/url"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/json"
-    "net/url"
 )
 
 //

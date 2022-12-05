@@ -6,9 +6,10 @@ package sms
 
 import (
     "fmt"
-    "github.com/qiniu/api.v7/v7/sms"
     "net/http"
     "net/url"
+
+    "github.com/qiniu/api.v7/v7/sms"
 
     "github.com/qiniu/api.v7/v7/auth"
     "github.com/qiniu/api.v7/v7/sms/client"

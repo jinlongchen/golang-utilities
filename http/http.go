@@ -7,7 +7,6 @@ import (
     "encoding/json"
     "encoding/xml"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/errors"
     "io"
     "io/ioutil"
     "mime/multipart"
@@ -18,6 +17,8 @@ import (
     "path/filepath"
     "strings"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/errors"
 )
 
 func GetData(reqURL string) ([]byte, error) {

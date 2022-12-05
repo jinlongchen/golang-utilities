@@ -3,9 +3,6 @@ package main
 import (
     "bytes"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/log"
-    "github.com/jinlongchen/golang-utilities/svg"
-    "github.com/jinlongchen/golang-utilities/text"
     "image"
     "image/draw"
     "image/png"
@@ -13,6 +10,10 @@ import (
     "math/rand"
     "os"
     "strings"
+
+    "github.com/jinlongchen/golang-utilities/log"
+    "github.com/jinlongchen/golang-utilities/svg"
+    "github.com/jinlongchen/golang-utilities/text"
 )
 
 var (

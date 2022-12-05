@@ -1,8 +1,9 @@
 package datetime
 
 import (
-    "github.com/jinlongchen/golang-utilities/log"
     "testing"
+
+    "github.com/jinlongchen/golang-utilities/log"
 )
 
 func TestParseWithTimeZone(t *testing.T) {

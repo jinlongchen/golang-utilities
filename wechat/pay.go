@@ -3,9 +3,10 @@ package wechat
 import (
     "encoding/xml"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/crypto"
     "strings"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/crypto"
 
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"

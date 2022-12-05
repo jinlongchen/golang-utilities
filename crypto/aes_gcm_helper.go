@@ -4,8 +4,9 @@ import (
     "crypto/aes"
     "crypto/cipher"
     "crypto/rand"
-    "golang.org/x/crypto/scrypt"
     "log"
+
+    "golang.org/x/crypto/scrypt"
 )
 
 func AESEncryptGCM(data []byte, key [32]byte) ([]byte, error) {

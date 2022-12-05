@@ -1,10 +1,12 @@
 package middlewares
 
 import (
-    "github.com/jinlongchen/golang-utilities/log"
-    "github.com/labstack/echo/v4"
     "net"
     "net/http"
+
+    "github.com/labstack/echo/v4"
+
+    "github.com/jinlongchen/golang-utilities/log"
 )
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////

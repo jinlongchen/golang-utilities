@@ -6,6 +6,7 @@ package wechat
 
 import (
     "fmt"
+
     "github.com/jinlongchen/golang-utilities/errors"
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/json"

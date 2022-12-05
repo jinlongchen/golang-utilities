@@ -2,10 +2,11 @@ package baidu
 
 import (
     "encoding/base64"
-    "github.com/jinlongchen/golang-utilities/http"
-    "github.com/jinlongchen/golang-utilities/json"
     "net/url"
     "strings"
+
+    "github.com/jinlongchen/golang-utilities/http"
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 type FaceMultiSearchRequest struct {

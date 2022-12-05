@@ -4,8 +4,9 @@ import (
     "encoding/json"
     "errors"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/http"
     "net/url"
+
+    "github.com/jinlongchen/golang-utilities/http"
 )
 
 func (wx *Wechat) GetShortURL(longURL string) (string, error) {

@@ -3,6 +3,7 @@ package wechat
 import (
     "encoding/xml"
     "fmt"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"
     "github.com/jinlongchen/golang-utilities/rand"

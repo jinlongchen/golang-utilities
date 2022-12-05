@@ -1,8 +1,9 @@
 package datetime
 
 import (
-    "github.com/araddon/dateparse"
     "time"
+
+    "github.com/araddon/dateparse"
 )
 
 type TimeZone string
