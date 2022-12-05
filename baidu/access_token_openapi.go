@@ -6,9 +6,10 @@ package baidu
 
 import (
     "errors"
-    "github.com/jinlongchen/golang-utilities/http"
     "net/url"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/http"
 )
 
 func (bd *Baidu) GetAccessTokenOpenApiByClient(apiKey, secretKey string) (token *BaiduToken, err error) {

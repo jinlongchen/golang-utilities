@@ -5,9 +5,10 @@
 package wechat
 
 import (
+    "time"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"
-    "time"
 )
 
 type TicketInfo struct {

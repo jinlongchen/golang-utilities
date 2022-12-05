@@ -38,10 +38,11 @@ import (
     "crypto/x509"
     "encoding/pem"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/errors"
     "hash"
     "io"
     "math/big"
+
+    "github.com/jinlongchen/golang-utilities/errors"
 )
 
 var (

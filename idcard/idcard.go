@@ -2,10 +2,11 @@ package idcard
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/log"
-    "github.com/jinlongchen/golang-utilities/rand"
     "strings"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/log"
+    "github.com/jinlongchen/golang-utilities/rand"
 )
 
 func IsResidentIdCard(number string) (valid bool, birthDate time.Time, sex string) {

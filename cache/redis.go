@@ -2,11 +2,13 @@ package cache
 
 import (
     "encoding/hex"
-    "github.com/jinlongchen/golang-utilities/json"
-    "github.com/jinlongchen/golang-utilities/log"
+    "time"
+
     redisCache "github.com/go-redis/cache"
     "github.com/go-redis/redis"
-    "time"
+
+    "github.com/jinlongchen/golang-utilities/json"
+    "github.com/jinlongchen/golang-utilities/log"
 )
 
 type RedisCache struct {

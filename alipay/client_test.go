@@ -6,10 +6,11 @@ package alipay
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/config"
     "path"
     "runtime"
     "testing"
+
+    "github.com/jinlongchen/golang-utilities/config"
 )
 
 func TestClient_CreateTradeAppPay(t *testing.T) {

@@ -2,9 +2,10 @@ package wechat
 
 import (
     "encoding/json"
+    "net/url"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"
-    "net/url"
 )
 
 func (wx *Wechat) GetWxAcodeUnlimit(scene, page string, appId, appSecret string) ([]byte, error) {

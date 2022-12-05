@@ -3,12 +3,13 @@ package main
 import (
     "encoding/hex"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/compress"
     "io/ioutil"
     "log"
     "os"
     "path/filepath"
     "strings"
+
+    "github.com/jinlongchen/golang-utilities/compress"
 )
 
 func main() {

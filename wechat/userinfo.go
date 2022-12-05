@@ -2,8 +2,9 @@ package wechat
 
 import (
     "errors"
-    "github.com/jinlongchen/golang-utilities/http"
     "net/url"
+
+    "github.com/jinlongchen/golang-utilities/http"
 )
 
 type UserInfoResult struct {

@@ -3,20 +3,22 @@ package database
 import (
     "database/sql"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/errors"
-    "github.com/jinlongchen/golang-utilities/log"
-    "github.com/jinlongchen/golang-utilities/retry"
-    "github.com/go-sql-driver/mysql"
-    "github.com/jmoiron/sqlx"
-    "github.com/lib/pq"
-    "github.com/luna-duclos/instrumentedsql"
-    "github.com/luna-duclos/instrumentedsql/opentracing"
     "net/url"
     "runtime"
     "sort"
     "strconv"
     "strings"
     "time"
+
+    "github.com/go-sql-driver/mysql"
+    "github.com/jmoiron/sqlx"
+    "github.com/lib/pq"
+    "github.com/luna-duclos/instrumentedsql"
+    "github.com/luna-duclos/instrumentedsql/opentracing"
+
+    "github.com/jinlongchen/golang-utilities/errors"
+    "github.com/jinlongchen/golang-utilities/log"
+    "github.com/jinlongchen/golang-utilities/retry"
 )
 
 type SQLConnection struct {

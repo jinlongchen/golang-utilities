@@ -1,12 +1,13 @@
 package http
 
 import (
-    "github.com/jinlongchen/golang-utilities/json"
     "io/ioutil"
     "net/http"
     "net/url"
     "path"
     "path/filepath"
+
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 func GetRequestBody(r *http.Request) []byte {

@@ -2,9 +2,10 @@ package baidu
 
 import (
     "encoding/base64"
+    "net/url"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/json"
-    "net/url"
 )
 
 type FaceSetUserAddRequest struct {

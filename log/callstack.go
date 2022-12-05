@@ -3,9 +3,10 @@ package log
 import (
     "bytes"
     "fmt"
+    "runtime"
+
     "github.com/sirupsen/logrus"
     "go.uber.org/zap/zapcore"
-    "runtime"
 )
 
 var (

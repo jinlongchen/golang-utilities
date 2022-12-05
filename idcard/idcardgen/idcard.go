@@ -2,9 +2,10 @@ package main
 
 import (
     "encoding/json"
+    "time"
+
     "github.com/jinlongchen/golang-utilities/idcard"
     "github.com/jinlongchen/golang-utilities/rand"
-    "time"
 )
 
 type Street struct {

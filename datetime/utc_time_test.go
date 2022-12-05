@@ -2,9 +2,10 @@ package datetime
 
 import (
     "fmt"
-    "github.com/jinlongchen/golang-utilities/json"
     "testing"
     "time"
+
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 func TestUTCTime_MarshalJSON(t *testing.T) {

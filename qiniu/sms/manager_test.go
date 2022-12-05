@@ -10,8 +10,9 @@ import (
     "path"
     "runtime"
     "testing"
+
+    "github.com/qiniu/api.v7/v7/auth"
 )
-import "github.com/qiniu/api.v7/v7/auth"
 
 func getManager() *Manager {
     ak := getBitsAppKey()

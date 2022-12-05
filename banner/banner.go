@@ -3,11 +3,12 @@ package banner
 import (
     "bytes"
     "fmt"
-    "github.com/jinlongchen/golang-utilities/banner/figure"
-    _ "github.com/jinlongchen/golang-utilities/banner/statik"
     "io"
     "math/rand"
     "os"
+
+    "github.com/jinlongchen/golang-utilities/banner/figure"
+    _ "github.com/jinlongchen/golang-utilities/banner/statik"
 
     "github.com/arsham/rainbow/rainbow"
     "github.com/pkg/errors"

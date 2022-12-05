@@ -3,11 +3,12 @@ package wechat
 import (
     "encoding/xml"
     "fmt"
+    "net/url"
+    "time"
+
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"
     "github.com/jinlongchen/golang-utilities/rand"
-    "net/url"
-    "time"
 )
 
 type Req struct {
