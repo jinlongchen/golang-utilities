@@ -1,277 +1,277 @@
 package logger
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/jinlongchen/golang-utilities/log"
-	gecholog "github.com/labstack/gommon/log"
-	"github.com/mattn/go-colorable"
-	"io"
-	"os"
+    "encoding/json"
+    "fmt"
+    "github.com/jinlongchen/golang-utilities/log"
+    gecholog "github.com/labstack/gommon/log"
+    "github.com/mattn/go-colorable"
+    "io"
+    "os"
 )
 
 type (
-	Logger struct {
-	}
+    Logger struct {
+    }
 )
 
 func New() (l *Logger) {
-	l = &Logger{}
-	return
+    l = &Logger{}
+    return
 }
 
 func (l *Logger) Prefix() string {
-	return ""
+    return ""
 }
 
 func (l *Logger) SetHeader(h string) {
-	//l.template = l.newTemplate(h)
+    // l.template = l.newTemplate(h)
 }
 
 func (l *Logger) SetPrefix(p string) {
-	//l.prefix = p
+    // l.prefix = p
 }
 
 func (l *Logger) Level() gecholog.Lvl {
-	return gecholog.DEBUG //l.level
+    return gecholog.DEBUG // l.level
 }
 
 func (l *Logger) SetLevel(v gecholog.Lvl) {
-	//l.level = v
+    // l.level = v
 }
 
 func (l *Logger) Output() io.Writer {
-	//return l.output
-	return colorable.NewColorableStdout()
+    // return l.output
+    return colorable.NewColorableStdout()
 }
 
 func (l *Logger) SetOutput(w io.Writer) {
-	//l.output = w
+    // l.output = w
 }
 
 func (l *Logger) Print(i ...interface{}) {
-	log.Infof("%v", i)
+    log.Infof("%v", i)
 }
 
 func (l *Logger) Printf(format string, args ...interface{}) {
-	log.Infof(format, args)
+    log.Infof(format, args)
 }
 
 func (l *Logger) Printj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Infof("%v", string(b))
-	}
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Infof("%v", string(b))
+    }
 }
 
 func (l *Logger) Debug(i ...interface{}) {
-	log.Debugf("%v", i)
+    log.Debugf("%v", i)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
-	log.Debugf(format, args)
+    log.Debugf(format, args)
 }
 
 func (l *Logger) Debugj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Debugf("%v", string(b))
-	}
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Debugf("%v", string(b))
+    }
 }
 
 func (l *Logger) Info(i ...interface{}) {
-	log.Infof("%v", i)
+    log.Infof("%v", i)
 }
 
 func (l *Logger) Infof(format string, args ...interface{}) {
-	log.Infof(format, args)
+    log.Infof(format, args)
 }
 
 func (l *Logger) Infoj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Infof("%v", string(b))
-	}
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Infof("%v", string(b))
+    }
 }
 
 func (l *Logger) Warn(i ...interface{}) {
-	log.Warnf("%v", i)
+    log.Warnf("%v", i)
 }
 
 func (l *Logger) Warnf(format string, args ...interface{}) {
-	log.Warnf(format, args)
+    log.Warnf(format, args)
 }
 
 func (l *Logger) Warnj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Warnf("%v", string(b))
-	}
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Warnf("%v", string(b))
+    }
 }
 
 func (l *Logger) Error(i ...interface{}) {
-	log.Errorf("%v", i)
+    log.Errorf("%v", i)
 }
 
 func (l *Logger) Errorf(format string, args ...interface{}) {
-	log.Errorf(format, args)
+    log.Errorf(format, args)
 }
 
 func (l *Logger) Errorj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Errorf("%v", string(b))
-	}
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Errorf("%v", string(b))
+    }
 }
 
 func (l *Logger) Fatal(i ...interface{}) {
-	log.Fatalf("%v", i)
+    log.Fatalf("%v", i)
 }
 
 func (l *Logger) Fatalf(format string, args ...interface{}) {
-	log.Fatalf(format, args)
+    log.Fatalf(format, args)
 }
 
 func (l *Logger) Fatalj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Fatalf("%v", string(b))
-	}
-	os.Exit(1)
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Fatalf("%v", string(b))
+    }
+    os.Exit(1)
 }
 
 func (l *Logger) Panic(i ...interface{}) {
-	log.Errorf("%v", i)
-	panic(fmt.Sprint(i...))
+    log.Errorf("%v", i)
+    panic(fmt.Sprint(i...))
 }
 
 func (l *Logger) Panicf(format string, args ...interface{}) {
-	log.Errorf(format, args)
-	panic(fmt.Sprintf(format, args))
+    log.Errorf(format, args)
+    panic(fmt.Sprintf(format, args))
 }
 
 func (l *Logger) Panicj(j gecholog.JSON) {
-	b, err := json.Marshal(j)
-	if err == nil {
-		log.Errorf("%v", string(b))
-	}
-	panic(j)
+    b, err := json.Marshal(j)
+    if err == nil {
+        log.Errorf("%v", string(b))
+    }
+    panic(j)
 }
 
 //
-//func Prefix() string {
+// func Prefix() string {
 //	return ""
-//}
+// }
 //
-//func SetPrefix(p string) {
+// func SetPrefix(p string) {
 //	""
-//}
+// }
 //
-//func Level() Lvl {
+// func Level() Lvl {
 //	return global.Level()
-//}
+// }
 //
-//func SetLevel(v Lvl) {
+// func SetLevel(v Lvl) {
 //	global.SetLevel(v)
-//}
+// }
 //
-//func Output() io.Writer {
+// func Output() io.Writer {
 //	return global.Output()
-//}
+// }
 //
-//func SetOutput(w io.Writer) {
+// func SetOutput(w io.Writer) {
 //	global.SetOutput(w)
-//}
+// }
 //
-//func SetHeader(h string) {
+// func SetHeader(h string) {
 //	global.SetHeader(h)
-//}
+// }
 //
-//func Print(i ...interface{}) {
+// func Print(i ...interface{}) {
 //	global.Print(i...)
-//}
+// }
 //
-//func Printf(format string, args ...interface{}) {
+// func Printf(format string, args ...interface{}) {
 //	global.Printf(format, args...)
-//}
+// }
 //
-//func Printj(j gecholog.JSON) {
+// func Printj(j gecholog.JSON) {
 //	global.Printj(j)
-//}
+// }
 //
-//func Debug(i ...interface{}) {
+// func Debug(i ...interface{}) {
 //	global.Debug(i...)
-//}
+// }
 //
-//func Debugf(format string, args ...interface{}) {
+// func Debugf(format string, args ...interface{}) {
 //	global.Debugf(format, args...)
-//}
+// }
 //
-//func Debugj(j gecholog.JSON) {
+// func Debugj(j gecholog.JSON) {
 //	global.Debugj(j)
-//}
+// }
 //
-//func Info(i ...interface{}) {
+// func Info(i ...interface{}) {
 //	global.Info(i...)
-//}
+// }
 //
-//func Infof(format string, args ...interface{}) {
+// func Infof(format string, args ...interface{}) {
 //	global.Infof(format, args...)
-//}
+// }
 //
-//func Infoj(j gecholog.JSON) {
+// func Infoj(j gecholog.JSON) {
 //	global.Infoj(j)
-//}
+// }
 //
-//func Warn(i ...interface{}) {
+// func Warn(i ...interface{}) {
 //	global.Warn(i...)
-//}
+// }
 //
-//func Warnf(format string, args ...interface{}) {
+// func Warnf(format string, args ...interface{}) {
 //	global.Warnf(format, args...)
-//}
+// }
 //
-//func Warnj(j gecholog.JSON) {
+// func Warnj(j gecholog.JSON) {
 //	global.Warnj(j)
-//}
+// }
 //
-//func Error(i ...interface{}) {
+// func Error(i ...interface{}) {
 //	global.Error(i...)
-//}
+// }
 //
-//func Errorf(format string, args ...interface{}) {
+// func Errorf(format string, args ...interface{}) {
 //	global.Errorf(format, args...)
-//}
+// }
 //
-//func Errorj(j gecholog.JSON) {
+// func Errorj(j gecholog.JSON) {
 //	global.Errorj(j)
-//}
+// }
 //
-//func Fatal(i ...interface{}) {
+// func Fatal(i ...interface{}) {
 //	global.Fatal(i...)
-//}
+// }
 //
-//func Fatalf(format string, args ...interface{}) {
+// func Fatalf(format string, args ...interface{}) {
 //	global.Fatalf(format, args...)
-//}
+// }
 //
-//func Fatalj(j gecholog.JSON) {
+// func Fatalj(j gecholog.JSON) {
 //	global.Fatalj(j)
-//}
+// }
 //
-//func Panic(i ...interface{}) {
+// func Panic(i ...interface{}) {
 //	global.Panic(i...)
-//}
+// }
 //
-//func Panicf(format string, args ...interface{}) {
+// func Panicf(format string, args ...interface{}) {
 //	global.Panicf(format, args...)
-//}
+// }
 //
-//func Panicj(j gecholog.JSON) {
+// func Panicj(j gecholog.JSON) {
 //	global.Panicj(j)
-//}
+// }
 //
-//func (l *Logger) log(v Lvl, format string, args ...interface{}) {
+// func (l *Logger) log(v Lvl, format string, args ...interface{}) {
 //	l.mutex.Lock()
 //	defer l.mutex.Unlock()
 //	buf := l.bufferPool.Get().(*bytes.Buffer)
@@ -336,4 +336,4 @@ func (l *Logger) Panicj(j gecholog.JSON) {
 //			l.output.Write(buf.Bytes())
 //		}
 //	}
-//}
+// }

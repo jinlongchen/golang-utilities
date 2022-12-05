@@ -1,17 +1,17 @@
 package sync
 
 import (
-	gosync "sync"
+    gosync "sync"
 )
 
 type WaitGroupWrapper struct {
-	gosync.WaitGroup
+    gosync.WaitGroup
 }
 
 func (w *WaitGroupWrapper) Wrap(cb func()) {
-	w.Add(1)
-	go func() {
-		cb()
-		w.Done()
-	}()
+    w.Add(1)
+    go func() {
+        cb()
+        w.Done()
+    }()
 }

@@ -1,7 +1,7 @@
 package avatar
 
 import (
-	"testing"
+    "testing"
 )
 
 func TestGetRandomAvatar(t *testing.T) {

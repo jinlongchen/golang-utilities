@@ -1,12 +1,12 @@
 package crypto
 
 import (
-	"crypto/cipher"
-	"crypto/des"
+    "crypto/cipher"
+    "crypto/des"
 )
 
 //
-//func main() {
+// func main() {
 //	originalText := "yolan"
 //	fmt.Println(originalText)
 //
@@ -16,40 +16,40 @@ import (
 //	cryptoText := encrypt(key, originalText)
 //	fmt.Println(cryptoText)
 //
-//}
+// }
 
 var (
-	EmptyDesIV = []byte{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+    EmptyDesIV = []byte{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 )
 
 // encrypt string to base64 crypto using des
 func DesEncrypt(data []byte, key []byte) ([]byte, error) {
-	block, err := des.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
+    block, err := des.NewCipher(key)
+    if err != nil {
+        return nil, err
+    }
 
-	blockSize := block.BlockSize()
-	origData := Pkcs5Padding(data, blockSize)
+    blockSize := block.BlockSize()
+    origData := Pkcs5Padding(data, blockSize)
 
-	blockMode := cipher.NewCBCEncrypter(block, EmptyDesIV)
-	cryted := make([]byte, len(origData))
-	blockMode.CryptBlocks(cryted, origData)
+    blockMode := cipher.NewCBCEncrypter(block, EmptyDesIV)
+    cryted := make([]byte, len(origData))
+    blockMode.CryptBlocks(cryted, origData)
 
-	return cryted, nil
+    return cryted, nil
 }
 
 func DesDecrypt(cipherText, key []byte) ([]byte, error) {
-	block, err := des.NewCipher(key)
+    block, err := des.NewCipher(key)
 
-	if err != nil {
-		return nil, err
-	}
+    if err != nil {
+        return nil, err
+    }
 
-	blockMode := cipher.NewCBCDecrypter(block, EmptyDesIV)
-	origData := make([]byte, len(cipherText))
-	blockMode.CryptBlocks(origData, cipherText)
-	origData = Pkcs5UnPadding(origData)
-	return origData, nil
+    blockMode := cipher.NewCBCDecrypter(block, EmptyDesIV)
+    origData := make([]byte, len(cipherText))
+    blockMode.CryptBlocks(origData, cipherText)
+    origData = Pkcs5UnPadding(origData)
+    return origData, nil
 
 }

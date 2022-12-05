@@ -1,14 +1,14 @@
 package version
 
 import (
-	"fmt"
+    "fmt"
 )
 
 var (
-	buildTime string
-	gitHash   string
+    buildTime string
+    gitHash   string
 )
 
 func String(app string, version string) string {
-	return fmt.Sprintf("%s v%s (hash %s build %s)", app, version, gitHash, buildTime)
+    return fmt.Sprintf("%s v%s (hash %s build %s)", app, version, gitHash, buildTime)
 }
