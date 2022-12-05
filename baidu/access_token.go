@@ -1,17 +1,18 @@
 /*
 * Copyright (c) 2020. Jinlong Chen.
-*/
+ */
 
 package baidu
+
 //
-//import (
+// import (
 //	"errors"
 //	"github.com/jinlongchen/golang-utilities/http"
 //	"net/url"
 //	"time"
-//)
+// )
 //
-//type BaiduToken struct {
+// type BaiduToken struct {
 //	Error            string `json:"error"`
 //	ErrorDescription string `json:"error_description"`
 //	RefreshToken     string `json:"refresh_token" xml:"refresh_token"`
@@ -21,9 +22,9 @@ package baidu
 //	AccessToken      string `json:"access_token" xml:"access_token"`
 //	Scope            string `json:"scope" xml:"scope"`
 //	SessionSecret    string `json:"session_secret" xml:"session_secret"`
-//}
+// }
 //
-//func (bd *Baidu) GetAccessTokenByClient(apiKey, secretKey string) (token *BaiduToken, err error) {
+// func (bd *Baidu) GetAccessTokenByClient(apiKey, secretKey string) (token *BaiduToken, err error) {
 //	token = bd.loadTokenFromCache(apiKey)
 //	if token == nil {
 //		bd.logf("GetAccessTokenByClient %v appId=%s appSecret=%s", bd, apiKey, secretKey)
@@ -33,9 +34,9 @@ package baidu
 //		}
 //	}
 //	return
-//}
+// }
 //
-//func (bd *Baidu) getAccessToken(apiKey, secretKey string) (*BaiduToken, error) {
+// func (bd *Baidu) getAccessToken(apiKey, secretKey string) (*BaiduToken, error) {
 //	ret := &BaiduToken{}
 //
 //	getTokenURL, _ := url.Parse("https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials")
@@ -63,9 +64,9 @@ package baidu
 //	bd.storeTokenToCache(apiKey, ret, time.Second*time.Duration(ret.ExpiresIn))
 //
 //	return ret, nil
-//}
+// }
 //
-//func (bd *Baidu) storeTokenToCache(apiKey string, cacheVal *BaiduToken, expiresIn time.Duration) {
+// func (bd *Baidu) storeTokenToCache(apiKey string, cacheVal *BaiduToken, expiresIn time.Duration) {
 //	if bd.cache != nil {
 //		err := bd.cache.Set(
 //			"bd:access_token:"+bd.config.GetString("application.name")+":"+apiKey,
@@ -77,9 +78,9 @@ package baidu
 //		}
 //	}
 //	bd.memory.Store("bd:access_token:"+apiKey, cacheVal)
-//}
+// }
 //
-//func (bd *Baidu) loadTokenFromCache(apiKey string) *BaiduToken {
+// func (bd *Baidu) loadTokenFromCache(apiKey string) *BaiduToken {
 //	isValidFunc := func(t *BaiduToken) bool {
 //		if t.ExpiresAt <= time.Now().Unix()-1000 {
 //			bd.logf("token expired")
@@ -105,4 +106,4 @@ package baidu
 //	}
 //	bd.logf("didnt found token in cache or token is expired")
 //	return nil
-//}
+// }

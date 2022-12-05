@@ -3,49 +3,49 @@
 package xlsx
 
 import (
-	"fmt"
-	"regexp"
-	"text/template"
-	"time"
+    "fmt"
+    "regexp"
+    "text/template"
+    "time"
 )
 
 // Templates for the various XML content in XLST files
 var (
-	TemplateContentTypes          *template.Template
-	TemplateRelationships         *template.Template
-	TemplateWorkbook              *template.Template
-	TemplateWorkbookRelationships *template.Template
-	TemplateStyles                *template.Template
-	TemplateStringLookups         *template.Template
-	TemplateSheetStart            *template.Template
-	TemplateApp                   *template.Template
-	TemplateCore                  *template.Template
+    TemplateContentTypes          *template.Template
+    TemplateRelationships         *template.Template
+    TemplateWorkbook              *template.Template
+    TemplateWorkbookRelationships *template.Template
+    TemplateStyles                *template.Template
+    TemplateStringLookups         *template.Template
+    TemplateSheetStart            *template.Template
+    TemplateApp                   *template.Template
+    TemplateCore                  *template.Template
 )
 
 // Template function for integer addition. This is useful to convert between
 // zero-based and one-based array offsets within templates
 func plus(i int, n int) string {
-	return fmt.Sprintf("%d", i+n)
+    return fmt.Sprintf("%d", i+n)
 }
 
 // Template function for time formatting
 func timeFormat(t time.Time) string {
-	return t.Format(time.RFC3339)
+    return t.Format(time.RFC3339)
 }
 
 func init() {
-	re := regexp.MustCompile("\n[\t\n\f\r ]*")
-	funcMap := template.FuncMap{"plus": plus, "timeFormat": timeFormat}
+    re := regexp.MustCompile("\n[\t\n\f\r ]*")
+    funcMap := template.FuncMap{"plus": plus, "timeFormat": timeFormat}
 
-	TemplateContentTypes = template.Must(template.New("templateContentTypes").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateContentTypes, "")))
-	TemplateRelationships = template.Must(template.New("templateRelationships").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateRelationships, "")))
-	TemplateWorkbook = template.Must(template.New("templateWorkbook").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateWorkbook, "")))
-	TemplateWorkbookRelationships = template.Must(template.New("templateWorkbookRelationships").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateWorkbookRelationships, "")))
-	TemplateStyles = template.Must(template.New("templateStyles").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateStyles, "")))
-	TemplateStringLookups = template.Must(template.New("templateStringLookups").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateStringLookups, "")))
-	TemplateSheetStart = template.Must(template.New("templateSheetStart").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateSheetStart, "")))
-	TemplateApp = template.Must(template.New("templateApp").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateApp, "")))
-	TemplateCore = template.Must(template.New("templateCore").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateCore, "")))
+    TemplateContentTypes = template.Must(template.New("templateContentTypes").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateContentTypes, "")))
+    TemplateRelationships = template.Must(template.New("templateRelationships").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateRelationships, "")))
+    TemplateWorkbook = template.Must(template.New("templateWorkbook").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateWorkbook, "")))
+    TemplateWorkbookRelationships = template.Must(template.New("templateWorkbookRelationships").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateWorkbookRelationships, "")))
+    TemplateStyles = template.Must(template.New("templateStyles").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateStyles, "")))
+    TemplateStringLookups = template.Must(template.New("templateStringLookups").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateStringLookups, "")))
+    TemplateSheetStart = template.Must(template.New("templateSheetStart").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateSheetStart, "")))
+    TemplateApp = template.Must(template.New("templateApp").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateApp, "")))
+    TemplateCore = template.Must(template.New("templateCore").Funcs(funcMap).Parse(re.ReplaceAllLiteralString(templateCore, "")))
 }
 
 const templateContentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

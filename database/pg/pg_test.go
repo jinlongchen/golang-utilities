@@ -7,12 +7,12 @@ package pg
 import "testing"
 
 func TestJsonbMap_To(t *testing.T) {
-	p := &JsonbMap{
-		"a":"123",
-		"b":"456",
-	}
-	var b []byte
+    p := &JsonbMap{
+        "a": "123",
+        "b": "456",
+    }
+    var b []byte
 
-	p.To(&b)
-	println(string(b))
+    p.To(&b)
+    println(string(b))
 }

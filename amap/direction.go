@@ -5,14 +5,15 @@
 package amap
 
 import (
-	"fmt"
-	"github.com/jinlongchen/golang-utilities/json"
-	"math"
-	"time"
+    "fmt"
+    "math"
+    "time"
 
-	"github.com/jinlongchen/golang-utilities/converter"
-	"github.com/jinlongchen/golang-utilities/errors"
-	httpUtil "github.com/jinlongchen/golang-utilities/http" //
+    "github.com/jinlongchen/golang-utilities/json"
+
+    "github.com/jinlongchen/golang-utilities/converter"
+    "github.com/jinlongchen/golang-utilities/errors"
+    httpUtil "github.com/jinlongchen/golang-utilities/http" //
 )
 
 /*
@@ -31,84 +32,84 @@ import (
 9，躲避拥堵和收费，不走高速
 */
 func DrivingDistance(long1, lat1, long2, lat2 float64, strategy int, key string) (distance float64, duration time.Duration, tollsFee float64, err error) {
-	directionURL := fmt.Sprintf(
-		"http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
-		long1, lat1,
-		long2, lat2,
-		strategy,
-		0, //0：使用渡轮(默认) 1：不使用渡轮
-		1, //0：steps字段内容正常返回；1：steps字段内容为空；
-		key,
-	)
+    directionURL := fmt.Sprintf(
+        "http://restapi.amap.com/v3/direction/driving?origin=%0.6f,%0.6f&destination=%0.6f,%0.6f&extensions=base&strategy=%d&ferry=%d&nosteps=%d&key=%s",
+        long1, lat1,
+        long2, lat2,
+        strategy,
+        0, // 0：使用渡轮(默认) 1：不使用渡轮
+        1, // 0：steps字段内容正常返回；1：steps字段内容为空；
+        key,
+    )
 
-	directionResp := &DirectionResponse{}
+    directionResp := &DirectionResponse{}
 
-	//amapApiStart := time.Now()
+    // amapApiStart := time.Now()
 
-	err = httpUtil.GetJSON(directionURL, directionResp)
+    err = httpUtil.GetJSON(directionURL, directionResp)
 
-	//callAmapElapsed := time.Since(amapApiStart)
+    // callAmapElapsed := time.Since(amapApiStart)
 
-	if err != nil {
-		return -1, time.Duration(0), 0, err
-	}
+    if err != nil {
+        return -1, time.Duration(0), 0, err
+    }
 
-	if directionResp.Status != "1" {
-		return -1, time.Duration(0), 0, errors.New(directionResp.Status)
-	}
-	if len(directionResp.Route.Paths) < 1 {
-		return -1, time.Duration(0), 0, errors.New("no route")
-	}
+    if directionResp.Status != "1" {
+        return -1, time.Duration(0), 0, errors.New(directionResp.Status)
+    }
+    if len(directionResp.Route.Paths) < 1 {
+        return -1, time.Duration(0), 0, errors.New("no route")
+    }
 
-	shortestDistance := math.MaxFloat64
-	routeDuration := 0.0
-	amapRouteIsValid := false
-	amapTollsFee := 0.0
+    shortestDistance := math.MaxFloat64
+    routeDuration := 0.0
+    amapRouteIsValid := false
+    amapTollsFee := 0.0
 
-	for _, routePath := range directionResp.Route.Paths {
-		routePathDistance := converter.AsFloat64(routePath.Distance, 0)
-		if routePathDistance > 0 && routePathDistance < shortestDistance {
-			amapTollsFee = converter.AsFloat64(routePath.Tolls, 0)
-			routeDuration = converter.AsFloat64(routePath.Duration, 0)
-			shortestDistance = routePathDistance
-		}
-		amapRouteIsValid = true
-	}
+    for _, routePath := range directionResp.Route.Paths {
+        routePathDistance := converter.AsFloat64(routePath.Distance, 0)
+        if routePathDistance > 0 && routePathDistance < shortestDistance {
+            amapTollsFee = converter.AsFloat64(routePath.Tolls, 0)
+            routeDuration = converter.AsFloat64(routePath.Duration, 0)
+            shortestDistance = routePathDistance
+        }
+        amapRouteIsValid = true
+    }
 
-	if !amapRouteIsValid {
-		return -1, time.Duration(0), 0, errors.New("cannot calc fee")
-	}
+    if !amapRouteIsValid {
+        return -1, time.Duration(0), 0, errors.New("cannot calc fee")
+    }
 
-	return shortestDistance, time.Duration(routeDuration), amapTollsFee, nil
+    return shortestDistance, time.Duration(routeDuration), amapTollsFee, nil
 }
 
 // 计算距离
 // 返回中，distance单位是米
 func Distance(long1, lat1, long2, lat2 float64, key string) (distance float64, duration time.Duration, err error) {
-	directionURL := fmt.Sprintf(
-		`http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
-		long1, lat1,
-		long2, lat2,
-		key,
-	)
+    directionURL := fmt.Sprintf(
+        `http://restapi.amap.com/v3/distance?origins=%0.6f,%0.6f&destination=%0.6f,%0.6f&output=json&key=%s&type=1`,
+        long1, lat1,
+        long2, lat2,
+        key,
+    )
 
-	distResp := &DistanceResponse{}
+    distResp := &DistanceResponse{}
 
-	err = httpUtil.GetJSON(directionURL, distResp)
-	if err != nil {
-		return -1, time.Duration(0), err
-	}
+    err = httpUtil.GetJSON(directionURL, distResp)
+    if err != nil {
+        return -1, time.Duration(0), err
+    }
 
-	println(string(json.ShouldMarshal(distResp)))
-	if distResp.Status != "1" {
-		return -1, time.Duration(0), errors.New(distResp.Status)
-	}
+    println(string(json.ShouldMarshal(distResp)))
+    if distResp.Status != "1" {
+        return -1, time.Duration(0), errors.New(distResp.Status)
+    }
 
-	if len(distResp.Results) < 1 {
-		return -1, time.Duration(0), errors.New(distResp.Info)
-	}
+    if len(distResp.Results) < 1 {
+        return -1, time.Duration(0), errors.New(distResp.Info)
+    }
 
-	return converter.AsFloat64(distResp.Results[0].Distance, -1),
-		converter.AsDuration(distResp.Results[0].Duration, 0),
-		nil
+    return converter.AsFloat64(distResp.Results[0].Distance, -1),
+        converter.AsDuration(distResp.Results[0].Duration, 0),
+        nil
 }

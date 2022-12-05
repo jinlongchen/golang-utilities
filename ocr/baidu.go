@@ -1,16 +1,16 @@
 package ocr
 
 //
-//import (
+// import (
 //	"encoding/base64"
 //	"fmt"
 //	"io/ioutil"
 //	"net/http"
 //	"net/url"
 //	"os"
-//)
+// )
 //
-//func baiduRec(baseUrl, path string) ([]byte, error) {
+// func baiduRec(baseUrl, path string) ([]byte, error) {
 //	filebytes, _ := ioutil.ReadFile(path)
 //	sourcestring := base64.StdEncoding.EncodeToString(filebytes)
 //	token := getToken()
@@ -24,62 +24,62 @@ package ocr
 //	body, err := ioutil.ReadAll(res.Body)
 //	//fmt.Println(string(body))
 //	return body, err
-//}
+// }
 //
-//func GeneralBasic(path string) ([]byte, error) {
+// func GeneralBasic(path string) ([]byte, error) {
 //	//通用文字识别
 //	general_basic := "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic"
 //	return baiduRec(general_basic, path)
-//}
+// }
 //
-//func AccurateBasic(path string) ([]byte, error) {
+// func AccurateBasic(path string) ([]byte, error) {
 //	//通用文字识别（高精度版）
 //	accurate_basic := "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic"
 //	return baiduRec(accurate_basic, path)
-//}
+// }
 //
-//func General(path string) ([]byte, error) {
+// func General(path string) ([]byte, error) {
 //	//通用文字识别（含位置信息版）
 //	general := "https://aip.baidubce.com/rest/2.0/ocr/v1/general"
 //	return baiduRec(general, path)
-//}
+// }
 //
-//func Accurate(path string) ([]byte, error) {
+// func Accurate(path string) ([]byte, error) {
 //	//通用文字识别（含位置高精度版）
 //	accurate := "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate"
 //	return baiduRec(accurate, path)
-//}
+// }
 //
-//func GeneralEnhanced(path string) ([]byte, error) {
+// func GeneralEnhanced(path string) ([]byte, error) {
 //	//通用文字识别（含生僻字版）
 //	general_enhanced := "https://aip.baidubce.com/rest/2.0/ocr/v1/general_enhanced"
 //	return baiduRec(general_enhanced, path)
-//}
+// }
 //
-//func Webimage(path string) ([]byte, error) {
+// func Webimage(path string) ([]byte, error) {
 //	//网络图片文字识别
 //	webimage := "https://aip.baidubce.com/rest/2.0/ocr/v1/webimage"
 //	return baiduRec(webimage, path)
-//}
+// }
 //
-//////////////////
+// ////////////////
 //
 //
-//const TOKEN_URL_FORMAT = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s"
+// const TOKEN_URL_FORMAT = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s"
 //
-///**
+// /**
 // * 判断文件是否存在  存在返回 true 不存在返回false
 // */
-//func checkFileIsExist(filename string) bool {
+// func checkFileIsExist(filename string) bool {
 //	var exist = true
 //	if _, err := os.Stat(filename); os.IsNotExist(err) {
 //		exist = false
 //	}
 //	return exist
-//}
+// }
 //
-////获取配置信息
-//func getConfig(path string) (config map[string]string, err error) {
+// //获取配置信息
+// func getConfig(path string) (config map[string]string, err error) {
 //	if checkFileIsExist(path) {
 //		fmt.Println("已存在配置文件")
 //		//存在配置文件就读取
@@ -104,9 +104,9 @@ package ocr
 //		fmt.Println("不存在配置文件")
 //	}
 //	return
-//}
+// }
 //
-//func WriteMaptoFile(configs map[string]string, filePath string) error {
+// func WriteMaptoFile(configs map[string]string, filePath string) error {
 //	f, err := os.Create(filePath)
 //	if err != nil {
 //		fmt.Printf("create map file error: %v\n", err)
@@ -120,9 +120,9 @@ package ocr
 //		fmt.Fprintln(w, lineStr)
 //	}
 //	return w.Flush()
-//}
+// }
 //
-//func getToken() string {
+// func getToken() string {
 //	//检查配置文件中是否存在token
 //	configFile := "config.txt"
 //	configs, err := getConfig(configFile)
@@ -161,4 +161,4 @@ package ocr
 //		return token
 //	}
 //	return ""
-//}
+// }

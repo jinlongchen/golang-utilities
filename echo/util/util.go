@@ -1,30 +1,30 @@
 package util
 
 import (
-	"errors"
+    "errors"
 
-	"github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4"
 
-	httpUtil "github.com/jinlongchen/golang-utilities/http"
-	"github.com/jinlongchen/golang-utilities/json"
+    httpUtil "github.com/jinlongchen/golang-utilities/http"
+    "github.com/jinlongchen/golang-utilities/json"
 )
 
 func ParseJSON(ctx echo.Context, v interface{}) error {
-	data := httpUtil.GetRequestBody(ctx.Request())
-	if data == nil {
-		return errors.New("bad request")
-	}
-	return json.Unmarshal(data, v)
+    data := httpUtil.GetRequestBody(ctx.Request())
+    if data == nil {
+        return errors.New("bad request")
+    }
+    return json.Unmarshal(data, v)
 }
 
 func WriteJSON(ctx echo.Context, code int, v interface{}) error {
-	data, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-	return ctx.Blob(code, echo.MIMEApplicationJSONCharsetUTF8, data)
+    data, err := json.Marshal(v)
+    if err != nil {
+        return err
+    }
+    return ctx.Blob(code, echo.MIMEApplicationJSONCharsetUTF8, data)
 }
 
 func WriteData(ctx echo.Context, code int, contentType string, data []byte) error {
-	return ctx.Blob(code, contentType, data)
+    return ctx.Blob(code, contentType, data)
 }

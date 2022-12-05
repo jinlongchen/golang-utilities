@@ -5,9 +5,9 @@
 package text
 
 import (
-	"testing"
+    "testing"
 )
 
 func TestSprintf(t *testing.T) {
-	println(Sprintf(`{1:s} {1:s}`, "0", "1"))
+    println(Sprintf(`{1:s} {1:s}`, "0", "1"))
 }

@@ -13,7 +13,7 @@ Watch Kelsey explain `crypt` in this quick 5 minute video:
 
 ## Generating gpg keys and keyrings
 
-The crypt cli and config package require gpg keyrings. 
+The crypt cli and config package require gpg keyrings.
 
 ### Create a key and keyring from a batch file
 
@@ -41,6 +41,7 @@ Run the following command:
 gpg2 --batch --armor --gen-key app.batch
 ```
 
-You should now have two keyrings, `.pubring.gpg` which contains the public keys, and `.secring.gpg` which contains the private keys.
+You should now have two keyrings, `.pubring.gpg` which contains the public keys, and `.secring.gpg` which contains the
+private keys.
 
 > Note the private key is not protected by a passphrase.

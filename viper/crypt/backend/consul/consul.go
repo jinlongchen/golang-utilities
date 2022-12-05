@@ -1,20 +1,21 @@
 package consul
+
 //
-//import (
+// import (
 //	"fmt"
 //	"strings"
 //	"time"
 //
 //	"github.com/hashicorp/consul/api"
 //	"github.com/jinlongchen/golang-utilities/viper/crypt/backend"
-//)
+// )
 //
-//type Client struct {
+// type Client struct {
 //	client    *api.KV
 //	waitIndex uint64
-//}
+// }
 //
-//func New(machines []string) (*Client, error) {
+// func New(machines []string) (*Client, error) {
 //	conf := api.DefaultConfig()
 //	if len(machines) > 0 {
 //		conf.Address = machines[0]
@@ -24,9 +25,9 @@ package consul
 //		return nil, err
 //	}
 //	return &Client{client.KV(), 0}, nil
-//}
+// }
 //
-//func (c *Client) Get(key string) ([]byte, error) {
+// func (c *Client) Get(key string) ([]byte, error) {
 //	kv, _, err := c.client.Get(key, nil)
 //	if err != nil {
 //		return nil, err
@@ -35,9 +36,9 @@ package consul
 //		return nil, fmt.Errorf("Key ( %s ) was not found.", key)
 //	}
 //	return kv.Value, nil
-//}
+// }
 //
-//func (c *Client) List(key string) (backend.KVPairs, error) {
+// func (c *Client) List(key string) (backend.KVPairs, error) {
 //	pairs, _, err := c.client.List(key, nil)
 //	if err != nil {
 //		return nil, err
@@ -50,9 +51,9 @@ package consul
 //		ret[i] = &backend.KVPair{Key: kv.Key, Value: kv.Value}
 //	}
 //	return ret, nil
-//}
+// }
 //
-//func (c *Client) Set(key string, value []byte) error {
+// func (c *Client) Set(key string, value []byte) error {
 //	key = strings.TrimPrefix(key, "/")
 //	kv := &api.KVPair{
 //		Key:   key,
@@ -60,9 +61,9 @@ package consul
 //	}
 //	_, err := c.client.Put(kv, nil)
 //	return err
-//}
+// }
 //
-//func (c *Client) Watch(key string, stop chan bool) <-chan *backend.Response {
+// func (c *Client) Watch(key string, stop chan bool) <-chan *backend.Response {
 //	respChan := make(chan *backend.Response, 0)
 //	go func() {
 //		for {
@@ -83,4 +84,4 @@ package consul
 //		}
 //	}()
 //	return respChan
-//}
+// }

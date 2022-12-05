@@ -3,9 +3,9 @@ package aliapi
 import "github.com/jinlongchen/golang-utilities/config"
 
 type AliApiHelper struct {
-	cfg *config.Config
+    cfg *config.Config
 }
 
 func NewAliApiHelper(cfg *config.Config) *AliApiHelper {
-	return &AliApiHelper{cfg: cfg}
+    return &AliApiHelper{cfg: cfg}
 }

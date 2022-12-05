@@ -1,9 +1,9 @@
 [alipay]
-appid=2019110768980114
-partnerid=2088631274749102
-prikeypath="/Users/jinlongchen/OneDrive/Work/07.轻程/alipay/key/app_private_key.pem"
-alipublickeypath="/Users/jinlongchen/OneDrive/Work/07.轻程/alipay/key/ali_public_key.pem"
+appid = 2019110768980114
+partnerid = 2088631274749102
+prikeypath = "/Users/jinlongchen/OneDrive/Work/07.轻程/alipay/key/app_private_key.pem"
+alipublickeypath = "/Users/jinlongchen/OneDrive/Work/07.轻程/alipay/key/ali_public_key.pem"
 
 [alipay.app]
-notifyurl="https://taxi.qcse.com/topup/notify"
-returnurl="https://taxi.qcse.com/topup/return"
+notifyurl = "https://taxi.qcse.com/topup/notify"
+returnurl = "https://taxi.qcse.com/topup/return"
