@@ -7,8 +7,9 @@ import (
     "path"
     "sync"
 
-    "github.com/jinlongchen/golang-utilities/map/helper"
     "github.com/paulmach/go.geojson"
+
+    mapUtil "github.com/jinlongchen/golang-utilities/map-util"
 )
 
 const (
@@ -37,8 +38,8 @@ func Preload(jsonDir string) {
     gfs[100000] = fc1
 
     for _, feature := range fc1.Features {
-        childAdCode := helper.GetValueAsInt(feature.Properties, "adcode", 0)
-        level := helper.GetValueAsString(feature.Properties, "level", "")
+        childAdCode := mapUtil.GetValueAsInt(feature.Properties, "adcode", 0)
+        level := mapUtil.GetValueAsString(feature.Properties, "level", "")
 
         if childAdCode == 100000 || childAdCode == 0 || level == "" {
             continue
@@ -87,8 +88,8 @@ func FindGeoFeature(lng, lat float64, adCode int) *geojson.Feature {
     geoFeaturesLock.RUnlock()
 
     for _, feature := range fc1.Features {
-        childAdCode := helper.GetValueAsInt(feature.Properties, "adcode", 0)
-        level := helper.GetValueAsString(feature.Properties, "level", "")
+        childAdCode := mapUtil.GetValueAsInt(feature.Properties, "adcode", 0)
+        level := mapUtil.GetValueAsString(feature.Properties, "level", "")
 
         if childAdCode == 100000 || childAdCode == 0 || level == "" {
             continue
@@ -154,7 +155,7 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
 
     if fcProvinces, ok := geoFeatures[100000]; ok && fcProvinces != nil {
         for _, pf := range fcProvinces.Features {
-            adCodeT := helper.GetValueAsInt(pf.Properties, "adcode", 0)
+            adCodeT := mapUtil.GetValueAsInt(pf.Properties, "adcode", 0)
             if provinceAdCode == adCodeT {
                 provinceFeature = pf
                 break
@@ -172,7 +173,7 @@ func FindGeoFeatureByAddCode(adCode int) *geojson.Feature {
     cityAdCode := adCode / 100 * 100
     if fcCities, ok := geoFeatures[provinceAdCode]; ok && fcCities != nil {
         for _, cf := range fcCities.Features {
-            adCodeT := helper.GetValueAsInt(cf.Properties, "adcode", 0)
+            adCodeT := mapUtil.GetValueAsInt(cf.Properties, "adcode", 0)
             if cityAdCode == adCodeT {
                 cityFeature = cf
                 break
