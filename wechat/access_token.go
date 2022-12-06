@@ -5,7 +5,7 @@ import (
     "net/url"
     "time"
 
-    "github.com/jinlongchen/golang-utilities/map/helper"
+    mapUtil "github.com/jinlongchen/golang-utilities/map-util"
 
     "github.com/jinlongchen/golang-utilities/http"
     "github.com/jinlongchen/golang-utilities/log"
@@ -111,8 +111,8 @@ func (wx *Wechat) fetchAccessTokensLoop() {
             }
             minExpiresIn := 99999999
             for _, miniP := range miniPrograms {
-                appId := helper.GetValueAsString(miniP, "appid", "")
-                appSecret := helper.GetValueAsString(miniP, "appsecret", "")
+                appId := mapUtil.GetValueAsString(miniP, "appid", "")
+                appSecret := mapUtil.GetValueAsString(miniP, "appsecret", "")
                 token, err := wx.getAccessTokenByClient(appId, appSecret)
                 if err != nil {
                     log.Errorf("fetch access token err: %v", err)
