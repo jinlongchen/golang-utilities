@@ -4,9 +4,9 @@ import (
     "context"
     "time"
 
-    redisCache "github.com/go-redis/cache/v8"
+    // redisCache "github.com/go-redis/cache/v8"
     "github.com/go-redis/redis/v8"
-    // redisCache "github.com/jinlongchen/redis-cache-go"
+    redisCache "github.com/jinlongchen/redis-cache-go"
 )
 
 type RedisCache struct {
