@@ -1,76 +1,51 @@
 package cache
 
 import (
-    "context"
-    "time"
+	"context"
+	"time"
 
-    redisCache "github.com/go-redis/cache/v8"
-    "github.com/go-redis/redis/v8"
-    // redisCache "github.com/jinlongchen/redis-cache-go"
+	"github.com/rueian/rueidis"
+
+	"github.com/jinlongchen/golang-utilities/json"
 )
 
 type RedisCache struct {
-    rCache *redisCache.Cache
-    ring   *redis.Ring
+	rueidisCli rueidis.Client
 }
 
-func NewRedisCache(addrs map[string]string, pwd string) Cache {
-    ring := redis.NewRing(&redis.RingOptions{
-        Addrs:    addrs,
-        Password: pwd,
-    })
+func NewRedisCache(addrs []string, pwd string) Cache {
+	redisC, err := rueidis.NewClient(rueidis.ClientOption{
+		InitAddress: addrs,
+		Password:    pwd,
+	})
 
-    // codec := &redisCache.Codec{
-    //     Redis: ring,
-    //     Marshal: func(v interface{}) ([]byte, error) {
-    //         return json.Marshal(v)
-    //     },
-    //     Unmarshal: func(b []byte, v interface{}) error {
-    //         err := json.Unmarshal(b, v)
-    //         if err != nil {
-    //             log.Errorf(
-    //                 `cannot unmarshal data: %v, %v`,
-    //                 err,
-    //                 hex.EncodeToString(b))
-    //         }
-    //         return err
-    //     },
-    // }
-    // return &RedisCache{
-    //     codec: codec,
-    //     ring:  ring,
-    // }
+	if err != nil {
+		return nil
+	}
 
-    rCache := redisCache.New(&redisCache.Options{
-        Redis:      ring,
-        LocalCache: redisCache.NewTinyLFU(1000, time.Minute),
-    })
-
-    return &RedisCache{
-        rCache: rCache,
-        ring:   ring,
-    }
+	return &RedisCache{
+		rueidisCli: redisC,
+	}
 }
 
 func (c *RedisCache) Delete(key string) error {
-    return c.rCache.Delete(context.TODO(), key)
+	return c.rueidisCli.Do(context.Background(), c.rueidisCli.B().Del().Key(key).Build()).Error()
 }
 
 func (c *RedisCache) Get(key string, obj interface{}) error {
-    err := c.rCache.Get(context.TODO(), key, &obj)
-    if err == nil {
-        return nil
-    }
-    return err
+	return c.rueidisCli.Do(context.Background(), c.rueidisCli.B().Get().Key(key).Build()).DecodeJSON(obj)
 }
 
 func (c *RedisCache) Set(key string, obj interface{}, timeout time.Duration) error {
-    return c.rCache.Set(&redisCache.Item{
-        Key:   key,
-        Value: obj,
-        TTL:   timeout,
-    })
+	data := json.ShouldMarshal(obj)
+	v := c.rueidisCli.B().Set().Key(key).Value(string(data))
+	if timeout > time.Duration(0) {
+		return c.rueidisCli.Do(context.Background(), v.ExSeconds(int64(timeout.Seconds())).Build()).Error()
+	}
+	return c.rueidisCli.Do(context.Background(), v.Build()).Error()
 }
+
 func (c *RedisCache) Close() error {
-    return c.ring.Close()
+	c.rueidisCli.Close()
+	return nil
 }
