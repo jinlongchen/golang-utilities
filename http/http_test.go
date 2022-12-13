@@ -33,7 +33,7 @@ func TestGetDataProxy(t *testing.T) {
 		t.Fail()
 		return
 	}
-	data, err = GetDataProxy("https://www.google.com", "http://127.0.0.1:30190")
+	data, err = GetDataProxy("https://www.google.com", "http://127.0.0.1:9900")
 	if err != nil {
 		t.Fail()
 		return
