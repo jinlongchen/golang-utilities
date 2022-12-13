@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/rueian/rueidis"
@@ -38,6 +39,7 @@ func (c *RedisCache) Get(key string, obj interface{}) error {
 
 func (c *RedisCache) Set(key string, obj interface{}, timeout time.Duration) error {
 	data := json.ShouldMarshal(obj)
+	fmt.Printf("reds set: %s\n", string(data))
 	v := c.rueidisCli.B().Set().Key(key).Value(string(data))
 	if timeout > time.Duration(0) {
 		return c.rueidisCli.Do(context.Background(), v.ExSeconds(int64(timeout.Seconds())).Build()).Error()
