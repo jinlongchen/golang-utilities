@@ -6,6 +6,27 @@ import (
 	"testing"
 )
 
+func TestPostFiles(t *testing.T) {
+	res, err := PostFiles(
+		"https://api.iglooinsure.com/v1/admin/fileapi/common_file/upload",
+		map[string][]string{
+			"file": {
+				"/Users/jinlongchen/Downloads/MSIGV - INSMART - HC Claim Form - 2022.pdf",
+			},
+		},
+		map[string]string{
+			"biz_key":      "MSIGV - INSMART - HC Claim Form - 2022",
+			"is_public":    "true",
+			"with_content": "true",
+		},
+		nil,
+	)
+	if err != nil {
+		t.Fail()
+	} else {
+		t.Logf("%v", string(res))
+	}
+}
 func TestGetJSON(t *testing.T) {
 	info := &UserInfoResult{}
 	err := GetJSON(`https://api.weixin.qq.com/sns/userinfo?access_token=16_Xtgu18-uW4r1zadDM_SCsGPEFprqijskkT1wjm8rNFIeg6De6xDsKrf8awGNANGbHzDQ0xtT0KkL6EImiPpwaw&lang=zh_CN&openid=akq2F0m-iDoEEeZJApDKW4Xu6vpU`, info)
