@@ -3,22 +3,25 @@ package json
 import (
 	"bytes"
 	"encoding/json"
-
-	"github.com/json-iterator/go"
 )
 
 func MarshalToString(v interface{}) (string, error) {
-	return jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(v)
+	data, err := json.Marshal(v)
+	return string(data), err
 }
 
 func MarshalToBuffer(v interface{}) (*bytes.Buffer, error) {
 	buf := &bytes.Buffer{}
-	err := jsoniter.ConfigCompatibleWithStandardLibrary.NewEncoder(buf).Encode(v)
+	data, err := json.Marshal(v)
+	if err != nil {
+		return buf, err
+	}
+	_, err = buf.Write(data)
 	return buf, err
 }
 
 func UnmarshalFromString(str string, v interface{}) error {
-	return jsoniter.ConfigCompatibleWithStandardLibrary.UnmarshalFromString(str, v)
+	return json.Unmarshal([]byte(str), v)
 }
 
 func UnmarshalFromStringV2[T any](str string) (T, error) {
@@ -26,11 +29,11 @@ func UnmarshalFromStringV2[T any](str string) (T, error) {
 }
 
 func Marshal(v interface{}) ([]byte, error) {
-	return jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
+	return json.Marshal(v)
 }
 
 func ShouldMarshal(v interface{}) []byte {
-	ret, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
+	ret, err := json.Marshal(v)
 	if err != nil {
 		return nil
 	}
@@ -38,11 +41,11 @@ func ShouldMarshal(v interface{}) []byte {
 }
 
 func MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
-	return jsoniter.ConfigCompatibleWithStandardLibrary.MarshalIndent(v, prefix, indent)
+	return json.MarshalIndent(v, prefix, indent)
 }
 
 func Unmarshal(data []byte, v interface{}) error {
-	return jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(data, v)
+	return json.Unmarshal(data, v)
 }
 
 func UnmarshalV2[T any](data []byte) (T, error) {
