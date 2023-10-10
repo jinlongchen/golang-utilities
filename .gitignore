@@ -26,3 +26,4 @@ qiniu_key.txt
 qiniu_secret.txt
 test.txt
 *1_test.go
+/config/tool/aes_config/
