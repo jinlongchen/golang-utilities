@@ -3,6 +3,6 @@ package log
 import "testing"
 
 func TestDumpKeyValue(t *testing.T) {
-    Config("", LevelDebug, true, "", 0, 0, 0)
+    Config("", LevelDebug, true, "", LogFormatJSON, 0, 0, 1)
     Infof("err: %s", "ok")
 }
