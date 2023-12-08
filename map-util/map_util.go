@@ -7,6 +7,7 @@ import (
     "github.com/jinlongchen/golang-utilities/converter"
 )
 
+
 func SetValue(m map[string]interface{}, path string, val interface{}) {
     if path == "" {
         return
@@ -249,4 +250,22 @@ func GetValueAsMapSlice(m map[string]interface{}, path string) []map[string]inte
     } else {
         return converter.AsMapSlice(m[path])
     }
+}
+
+func MergeMaps(maps ...map[string]any) map[string]any {
+    res := make(map[string]any)
+    for _, m := range maps  {
+        for key, val := range m {
+            if existedVal, existed := res[key]; existed {
+                if existedMap, existedIsMap := existedVal.(map[string]interface{}); existedIsMap {
+                    if valMap, valIsMap := val.(map[string]interface{}); valIsMap {
+                        res[key] = MergeMaps(existedMap, valMap)
+                    }
+                }
+            } else {
+                res[key] = val
+            }
+        }
+    }
+    return res
 }
