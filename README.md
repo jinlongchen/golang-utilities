@@ -18,4 +18,6 @@ Some utilities for golang can improve development speed to some extent
    *Excel operations
 
 ## How to install:
+```bash
   go get github.com/jinlongchen/golang-utilities
+```
