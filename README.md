@@ -12,7 +12,7 @@ Some utilities for golang can improve development speed to some extent
    * Encryption library
    * File library
    * Network library
-   *JSON library
+   * JSON library
    * map library
    * Text operations
    *Excel operations

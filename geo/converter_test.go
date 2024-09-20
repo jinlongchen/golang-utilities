@@ -2,7 +2,7 @@
  * Copyright (c) 2020. Jinlong Chen.
  */
 
-package util
+package geo
 
 import (
     "fmt"
