@@ -7,7 +7,7 @@ import (
 	"path"
 	"sync"
 
-	"github.com/paulmach/go.geojson"
+	geojson "github.com/paulmach/go.geojson"
 
 	mapUtil "github.com/jinlongchen/golang-utilities/map-util"
 )
@@ -323,4 +323,28 @@ func transform(lon, lat float64) (x, y float64) {
 	x += -100.0 + 2.0*lon + 3.0*lat + 0.2*lat*lat + 0.1*lonlat + 0.2*absX
 	y += 300.0 + lon + 2.0*lat + 0.1*lon*lon + 0.1*lonlat + 0.1*absX
 	return
+}
+
+// Haversine formula to calculate the distance between two points in meters
+func Distance(lng1, lat1, lng2, lat2 float64) float64 {
+	const R = 6371000 // Radius of the Earth in meters
+	dLat := (lat2 - lat1) * math.Pi / 180.0
+	dLng := (lng2 - lng1) * math.Pi / 180.0
+	a := math.Sin(dLat/2)*math.Sin(dLat/2) + math.Cos(lat1*math.Pi/180.0)*math.Cos(lat2*math.Pi/180.0)*math.Sin(dLng/2)*math.Sin(dLng/2)
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+	return R * c
+}
+
+// Check if a point is within a bounding box
+func PointInBoundingBox(lng, lat, minLng, minLat, maxLng, maxLat float64) bool {
+	return lng >= minLng && lng <= maxLng && lat >= minLat && lat <= maxLat
+}
+
+// Convert a GeoJSON object to a string
+func GeoJSONToString(fc *geojson.FeatureCollection) (string, error) {
+	bytes, err := fc.MarshalJSON()
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
