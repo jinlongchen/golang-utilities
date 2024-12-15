@@ -70,3 +70,9 @@ func ToJSON(v interface{}) (string, error) {
 func FromJSON(data string, v interface{}) error {
 	return json.Unmarshal([]byte(data), v)
 }
+
+// IsValidJSON checks if a string is a valid JSON.
+func IsValidJSON(str string) bool {
+	var js json.RawMessage
+	return json.Unmarshal([]byte(str), &js) == nil
+}
