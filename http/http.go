@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	netHttp "net/http"
 	"net/url"
 	"os"
 	"path"
@@ -60,7 +61,7 @@ func GetDataWithHeaders(reqURL string, reqHeader netHttp.Header) (netHttp.Header
 	client.SetTLSClientConfig(&tls.Config{})
 	client.SetTimeout(30 * time.Second)
 
-	resp, err := client.R().SetHeaders(reqHeader).Get(reqURL)
+	resp, err := client.R().SetHeaders(restyHeaderFromNetHeader(reqHeader)).Get(reqURL)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -89,7 +90,7 @@ func PutDataWithHeaders(reqURL string, reqHeader netHttp.Header, contentType str
 	client.SetTimeout(30 * time.Second)
 
 	resp, err := client.R().
-		SetHeaders(reqHeader).
+		SetHeaders(restyHeaderFromNetHeader(reqHeader)).
 		SetHeader("Content-Type", contentType).
 		SetBody(data).
 		Put(reqURL)
@@ -129,7 +130,7 @@ func PostDataWithHeaders(reqURL string, reqHeader netHttp.Header, contentType st
 	client.SetTimeout(timeout)
 
 	resp, err := client.R().
-		SetHeaders(reqHeader).
+		SetHeaders(restyHeaderFromNetHeader(reqHeader)).
 		SetHeader("Content-Type", contentType).
 		SetBody(data).
 		Post(reqURL)
@@ -302,7 +303,7 @@ func DeleteDataWithHeaders(reqURL string, reqHeader netHttp.Header) (netHttp.Hea
 	client.SetTLSClientConfig(&tls.Config{})
 	client.SetTimeout(30 * time.Second)
 
-	resp, err := client.R().SetHeaders(reqHeader).Delete(reqURL)
+	resp, err := client.R().SetHeaders(restyHeaderFromNetHeader(reqHeader)).Delete(reqURL)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -340,4 +341,14 @@ func readJSON(resp *resty.Response, out interface{}) (err error) {
 
 	decoder := json.NewDecoder(reader)
 	return decoder.Decode(out)
+}
+
+func restyHeaderFromNetHeader(reqHeader netHttp.Header) map[string]string {
+	ret := make(map[string]string)
+	for key, values := range reqHeader {
+		if len(values) > 0 {
+			ret[key] = values[0]
+		}
+	}
+	return ret
 }
