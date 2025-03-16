@@ -124,6 +124,25 @@ func PostData(reqURL string, contentType string, data []byte) ([]byte, error) {
 	}
 }
 
+func PostDataProxy(reqURL string, contentType string, proxy string, data []byte) ([]byte, error) {
+	client := resty.New()
+	client.SetProxy(proxy)
+
+	resp, err := client.R().
+		SetHeader("Content-Type", contentType).
+		SetBody(data).
+		Post(reqURL)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode() == 200 {
+		return resp.Body(), nil
+	} else {
+		return resp.Body(), errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode()), resp.Status())
+	}
+}
+
 func PostDataWithHeaders(reqURL string, reqHeader netHttp.Header, contentType string, data []byte, timeout time.Duration) (netHttp.Header, []byte, error) {
 	client := resty.New()
 	client.SetTLSClientConfig(&tls.Config{})
