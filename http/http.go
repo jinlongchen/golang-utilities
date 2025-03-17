@@ -85,7 +85,7 @@ func PutDataWithHeaders(reqURL string, reqHeader netHttp.Header, contentType str
 	}
 }
 
-func PostData(reqURL string, reqHeader netHttp.Header, contentType string, proxy string, timeoutSeconds int, data []byte) ([]byte, error) {
+func PostData(reqURL string, reqHeader netHttp.Header, proxy string, timeoutSeconds int, data []byte) ([]byte, error) {
 	client := resty.New()
 
 	if len(proxy) > 0 {
@@ -103,7 +103,6 @@ func PostData(reqURL string, reqHeader netHttp.Header, contentType string, proxy
 	}
 
 	resp, err := r.
-		SetHeader("Content-Type", contentType).
 		SetBody(data).
 		Post(reqURL)
 	if err != nil {
