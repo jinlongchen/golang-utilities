@@ -24,24 +24,7 @@ import (
 	"github.com/jinlongchen/golang-utilities/errors"
 )
 
-func GetData(reqURL string) ([]byte, error) {
-	client := resty.New()
-	client.SetTLSClientConfig(&tls.Config{})
-	client.SetTimeout(30 * time.Second)
-
-	resp, err := client.R().Get(reqURL)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode() == 200 {
-		return resp.Body(), nil
-	} else {
-		return resp.Body(), errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode()), resp.Status())
-	}
-}
-
-func GetDataProxy(reqURL string, proxy string, timeoutSeconds int) ([]byte, error) {
+func GetData(reqURL string, reqHeader netHttp.Header, proxy string, timeoutSeconds int) ([]byte, error) {
 	client := resty.New()
 	client.SetTLSClientConfig(&tls.Config{})
 	if len(proxy) > 0 {
@@ -53,7 +36,12 @@ func GetDataProxy(reqURL string, proxy string, timeoutSeconds int) ([]byte, erro
 		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
 	}
 
-	resp, err := client.R().Get(reqURL)
+	r := client.R()
+	if len(reqHeader) > 0 {
+		r.SetHeaders(restyHeaderFromNetHeader(reqHeader))
+	}
+
+	resp, err := r.Get(reqURL)
 	if err != nil {
 		return nil, err
 	}
@@ -62,23 +50,6 @@ func GetDataProxy(reqURL string, proxy string, timeoutSeconds int) ([]byte, erro
 		return resp.Body(), nil
 	} else {
 		return resp.Body(), errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode()), resp.Status())
-	}
-}
-
-func GetDataWithHeaders(reqURL string, reqHeader netHttp.Header) (netHttp.Header, []byte, error) {
-	client := resty.New()
-	client.SetTLSClientConfig(&tls.Config{})
-	client.SetTimeout(30 * time.Second)
-
-	resp, err := client.R().SetHeaders(restyHeaderFromNetHeader(reqHeader)).Get(reqURL)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	if resp.StatusCode() == 200 {
-		return resp.Header(), resp.Body(), nil
-	} else {
-		return resp.Header(), resp.Body(), errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode()), resp.Status())
 	}
 }
 
