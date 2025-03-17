@@ -3,16 +3,21 @@ package http
 import (
 	"bytes"
 	"compress/gzip"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"golang.org/x/net/proxy"
 	"io"
 	"mime/multipart"
+	"net"
 	netHttp "net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -40,7 +45,9 @@ func GetDataProxy(reqURL string, proxy string, timeoutSeconds int) ([]byte, erro
 	client := resty.New()
 	client.SetTLSClientConfig(&tls.Config{})
 	if len(proxy) > 0 {
-		client.SetProxy(proxy)
+		if tr, err := setupProxyTransport(proxy); err == nil {
+			client.SetTransport(tr)
+		}
 	}
 	if timeoutSeconds > 0 {
 		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
@@ -130,7 +137,9 @@ func PostDataProxy(reqURL string, contentType string, proxy string, timeoutSecon
 	client := resty.New()
 
 	if len(proxy) > 0 {
-		client.SetProxy(proxy)
+		if tr, err := setupProxyTransport(proxy); err == nil {
+			client.SetTransport(tr)
+		}
 	}
 	if timeoutSeconds > 0 {
 		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
@@ -378,4 +387,32 @@ func restyHeaderFromNetHeader(reqHeader netHttp.Header) map[string]string {
 		}
 	}
 	return ret
+}
+func setupProxyTransport(proxyAddr string) (*netHttp.Transport, error) {
+	if strings.HasPrefix(proxyAddr, "socks5://") {
+		socks5Addr := strings.TrimPrefix(proxyAddr, "socks5://")
+
+		dialer, err := proxy.SOCKS5("tcp", socks5Addr, nil, proxy.Direct)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create SOCKS5 dialer: %v", err)
+		}
+
+		return &netHttp.Transport{
+			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+				return dialer.Dial(network, addr)
+			},
+		}, nil
+
+	} else if strings.HasPrefix(proxyAddr, "http://") || strings.HasPrefix(proxyAddr, "https://") {
+		proxyURL, err := url.Parse(proxyAddr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid HTTP proxy URL: %v", err)
+		}
+
+		return &netHttp.Transport{
+			Proxy: netHttp.ProxyURL(proxyURL),
+		}, nil
+	}
+
+	return nil, fmt.Errorf("unsupported proxy type: %s", proxyAddr)
 }
