@@ -10,7 +10,6 @@ import (
 	"io"
 	"mime/multipart"
 	netHttp "net/http"
-	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -37,12 +36,15 @@ func GetData(reqURL string) ([]byte, error) {
 	}
 }
 
-func GetDataProxy(reqURL string, proxy string) ([]byte, error) {
-	proxyUrl, err := url.Parse(proxy)
+func GetDataProxy(reqURL string, proxy string, timeoutSeconds int) ([]byte, error) {
 	client := resty.New()
 	client.SetTLSClientConfig(&tls.Config{})
-	client.SetProxy(proxyUrl.String())
-	client.SetTimeout(30 * time.Second)
+	if len(proxy) > 0 {
+		client.SetProxy(proxy)
+	}
+	if timeoutSeconds > 0 {
+		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
+	}
 
 	resp, err := client.R().Get(reqURL)
 	if err != nil {
@@ -124,9 +126,15 @@ func PostData(reqURL string, contentType string, data []byte) ([]byte, error) {
 	}
 }
 
-func PostDataProxy(reqURL string, contentType string, proxy string, data []byte) ([]byte, error) {
+func PostDataProxy(reqURL string, contentType string, proxy string, timeoutSeconds int, data []byte) ([]byte, error) {
 	client := resty.New()
-	client.SetProxy(proxy)
+
+	if len(proxy) > 0 {
+		client.SetProxy(proxy)
+	}
+	if timeoutSeconds > 0 {
+		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
+	}
 
 	resp, err := client.R().
 		SetHeader("Content-Type", contentType).
