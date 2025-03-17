@@ -85,26 +85,7 @@ func PutDataWithHeaders(reqURL string, reqHeader netHttp.Header, contentType str
 	}
 }
 
-func PostData(reqURL string, contentType string, data []byte) ([]byte, error) {
-	client := resty.New()
-	client.SetTimeout(15 * time.Second)
-
-	resp, err := client.R().
-		SetHeader("Content-Type", contentType).
-		SetBody(data).
-		Post(reqURL)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode() == 200 {
-		return resp.Body(), nil
-	} else {
-		return resp.Body(), errors.WithCode(nil, fmt.Sprintf("HTTP_%d", resp.StatusCode()), resp.Status())
-	}
-}
-
-func PostDataProxy(reqURL string, contentType string, proxy string, timeoutSeconds int, data []byte) ([]byte, error) {
+func PostData(reqURL string, reqHeader netHttp.Header, contentType string, proxy string, timeoutSeconds int, data []byte) ([]byte, error) {
 	client := resty.New()
 
 	if len(proxy) > 0 {
@@ -116,7 +97,12 @@ func PostDataProxy(reqURL string, contentType string, proxy string, timeoutSecon
 		client.SetTimeout(time.Duration(timeoutSeconds) * time.Second)
 	}
 
-	resp, err := client.R().
+	r := client.R()
+	if len(reqHeader) > 0 {
+		r.SetHeaders(restyHeaderFromNetHeader(reqHeader))
+	}
+
+	resp, err := r.
 		SetHeader("Content-Type", contentType).
 		SetBody(data).
 		Post(reqURL)
